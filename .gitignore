@@ -1,6 +1,6 @@
 node_modules/
-bower_components/
 *.log
-
+lib/
 build/
 dist/
+.idea/
