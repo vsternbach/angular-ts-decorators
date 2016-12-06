@@ -1,10 +1,24 @@
 {
-  "name": "angular-ts-decorators",
-  "version": "0.0.11",
-  "main": "lib/index.js",
-  "typings": "lib/index.d.ts",
+  "name": "angular-decorated",
+  "version": "0.0.1",
+  "author": {
+    "name": "Vlad Sternbach",
+    "email": "vlad.sternbach@gmail.com",
+    "url": "https://github.com/vsternbach"
+  },
+  "homepage": "https://github.com/vsternbach/angular-decorated",
+  "keywords": [
+    "anguar decorators",
+    "typescript decorators",
+    "decorators",
+    "anguar typescript decorators",
+    "anguarjs decorators"
+  ],
+  "main": "angular-decorated.js",
+  "types": "angular-decorated.d.ts",
   "files": [
-    "lib/index.js"
+    "angular-decorated.js",
+    "angular-decorated.d.ts"
   ],
   "dependencies": {
     "reflect-metadata": "^0.1.8"

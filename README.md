@@ -1,2 +1,2 @@
-# angular-typescript-decorators
-A collection of angular 2 decorators for angularjs 1.5.x projects written in typescript
+# angular-decorated
+A collection of angular 2 style decorators for angularjs 1.5.x projects written in typescript

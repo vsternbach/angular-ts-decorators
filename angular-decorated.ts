@@ -19,6 +19,8 @@ const nameSymbol = 'custom:name';
 const bindingsSymbol = 'custom:bindings';
 const optionsSymbol = 'custom:options';
 
+enum Declarations {component, filter}
+
 export interface IComponentOptionsDecorated {
   selector: string;
   template?: string | ng.Injectable<(...args: Array<any>) => string>;
@@ -44,13 +46,13 @@ export function NgModule(config: IModuleConfig) {
     const imports = config.imports ? config.imports.map(mod => typeof mod === 'string' ? mod : mod.name) : [];
     const module = angular.module(Class.name, imports);
     // components registration
-    const components = config.declarations.filter(declaration => getDeclarationType(declaration) === 'component');
+    const components = config.declarations.filter(declaration => getDeclarationType(declaration) === Declarations.component);
     components.forEach(component => {
       const {name, options} = getComponentMetadata(component);
       module.component(name, options);
     });
     // filters registration
-    const filters = config.declarations.filter(declaration => getDeclarationType(declaration) === 'filter');
+    const filters = config.declarations.filter(declaration => getDeclarationType(declaration) === Declarations.filter);
     filters.forEach(filter => {
       const {name} = getNameMetadata(filter);
       function transformFunc<T>(ctor: any): Function {
@@ -84,6 +86,7 @@ export function Component(decoratedOptions: IComponentOptionsDecorated) {
       options.bindings = bindings;
     }
     Reflect.defineMetadata(nameSymbol, decoratedOptions.selector, ctrl);
+    Reflect.defineMetadata(typeSymbol, Declarations.component, ctrl);
     Reflect.defineMetadata(optionsSymbol, options, ctrl);
   };
 }
@@ -106,7 +109,7 @@ export function Injectable(name?: string) {
 export function Pipe(options: {name: string}) {
   return (Class: IFunctionInjectable) => {
     Reflect.defineMetadata(nameSymbol, options.name, Class);
-    Reflect.defineMetadata(typeSymbol, 'filter', Class);
+    Reflect.defineMetadata(typeSymbol, Declarations.filter, Class);
   };
 }
 
