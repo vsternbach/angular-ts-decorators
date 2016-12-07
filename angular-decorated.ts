@@ -1,27 +1,40 @@
 import * as angular from 'angular';
 import 'reflect-metadata';
 
-export interface IFunctionInjectable extends Function {
-  name: string;
-  $inject?: Array<string>;
-}
-
-export interface IModuleDecorated extends Function {
-  new(...args: Array<any>): IModuleStatic;
-}
-
-export interface IModuleStatic {
-  module: ng.IModule;
-}
+enum Declarations { component, filter }
 
 const typeSymbol = 'custom:type';
 const nameSymbol = 'custom:name';
 const bindingsSymbol = 'custom:bindings';
 const optionsSymbol = 'custom:options';
 
-enum Declarations {component, filter}
+/**
+ * Interfaces
+ */
+// declare global {
+//   interface Function {
+//     $inject?: string[];
+//   }
+// }
 
-export interface IComponentOptionsDecorated {
+export interface ModuleConfig {
+  declarations: Array<ng.IComponentController | PipeTransform>;
+  imports?: Array<string | Function>;
+  exports?: Array<Function>;
+  providers?: Array<ng.IServiceProvider | ng.Injectable<Function>>;
+}
+
+export interface ModuleDecoratedConstructor {
+  new(...args: Array<any>): ModuleDecorated;
+  module?: ng.IModule;
+}
+
+export interface ModuleDecorated {
+  config?(...args: Array<any>): void;
+  run?(...args: Array<any>): void;
+}
+
+export interface ComponentOptionsDecorated {
   selector: string;
   template?: string | ng.Injectable<(...args: Array<any>) => string>;
   templateUrl?: string | ng.Injectable<(...args: Array<any>) => string>;
@@ -29,55 +42,61 @@ export interface IComponentOptionsDecorated {
   require?: {[controller: string]: string};
 }
 
-export interface IPipeTransform {
+export interface PipeTransformConstructor {
+  new(...args: Array<any>): PipeTransform;
+}
+
+export interface PipeTransform {
   transform(...args: Array<any>): any;
 }
 
-export interface IModuleConfig {
-  declarations: Array<any>;
-  imports?: Array<string | Function>;
-  exports?: Array<Function>;
-  providers?: Array<Function>;
-}
-
-export function NgModule(config: IModuleConfig) {
-  return (Class: IFunctionInjectable) => {
+/**
+ * Decorators
+ */
+export function NgModule({ declarations, imports, providers }: ModuleConfig) {
+  return (Class: ModuleDecoratedConstructor) => {
     // module registration
-    const imports = config.imports ? config.imports.map(mod => typeof mod === 'string' ? mod : mod.name) : [];
-    const module = angular.module(Class.name, imports);
-    // components registration
-    const components = config.declarations.filter(declaration => getDeclarationType(declaration) === Declarations.component);
-    components.forEach(component => {
-      const {name, options} = getComponentMetadata(component);
-      module.component(name, options);
-    });
-    // filters registration
-    const filters = config.declarations.filter(declaration => getDeclarationType(declaration) === Declarations.filter);
-    filters.forEach(filter => {
-      const {name} = getNameMetadata(filter);
-      function transformFunc<T>(ctor: any): Function {
-        const instance = new ctor();
-        return instance.transform.bind(instance);
+    const deps = imports ? imports.map(mod => typeof mod === 'string' ? mod : mod.name) : [];
+    const module = angular.module(Class.name, deps);
+
+    // components, directives and filters registration
+    declarations.forEach((declaration: any) => {
+      const declarationType = getDeclarationType(declaration);
+      switch (declarationType) {
+        case Declarations.component:
+          registerComponent(module, declaration);
+          break;
+        case Declarations.filter:
+          registerFilter(module, declaration);
+          break;
+        default:
+          console.error(
+            `Can't find type metadata on ${declaration.name} declaration, did you forget to decorate it?
+            Decorate your declarations using @Component, @Directive or @Pipe decorator.`
+          );
       }
-      const filterFunc = () => transformFunc(filter);
-      filterFunc.$inject = annotate(filter);
-      module.filter(name, filterFunc);
     });
+
     // services registration
-    const services = config.providers;
-    if (services) {
-      services.forEach(service => {
-        const {name} = getNameMetadata(service);
-        service.$inject = annotate(service);
-        module.service(name, [service]);
-      });
+    if (providers) {
+      registerServices(module, providers);
+    }
+    // config and run blocks registration
+    const { config, run } = Class.prototype;
+    if (config) {
+      config.$inject = annotate(config);
+      module.config(config);
+    }
+    if (run) {
+      run.$inject = annotate(run);
+      module.run(run);
     }
     // expose angular module as static property
-    (<any>Class).module = module;
+    Class.module = module;
   };
 }
 
-export function Component(decoratedOptions: IComponentOptionsDecorated) {
+export function Component(decoratedOptions: ComponentOptionsDecorated) {
   return (ctrl: ng.IControllerConstructor) => {
     const options: ng.IComponentOptions = Object.assign({}, decoratedOptions);
     options.controller = ctrl;
@@ -100,17 +119,44 @@ export function Output(alias?: string) {
 }
 
 export function Injectable(name?: string) {
-  return (Class: IFunctionInjectable) => {
+  return (Class: any) => {
     name = name || Class.name;
     Reflect.defineMetadata(nameSymbol, name, Class);
   };
 }
 
 export function Pipe(options: {name: string}) {
-  return (Class: IFunctionInjectable) => {
+  return (Class: PipeTransformConstructor) => {
     Reflect.defineMetadata(nameSymbol, options.name, Class);
     Reflect.defineMetadata(typeSymbol, Declarations.filter, Class);
   };
+}
+
+/**
+ * Private functions
+ */
+function registerComponent(module: ng.IModule, component: ng.IComponentController) {
+  const {name, options} = getComponentMetadata(component);
+  module.component(name, options);
+}
+
+function registerFilter(module: ng.IModule, filter: PipeTransformConstructor) {
+  const {name} = getNameMetadata(filter);
+  const filterFunc = (...args: Array<any>) => {
+    const instance = new filter(args);
+    return instance.transform.bind(instance);
+  };
+  filterFunc.$inject = filter.$inject || annotate(filter);
+  module.filter(name, filterFunc);
+}
+
+function registerServices(module: ng.IModule, services: Array<ng.IServiceProvider | ng.Injectable<Function>>) {
+  services.forEach((service: any) => {
+    const {name} = getNameMetadata(service);
+    service.$inject = service.$inject || annotate(service);
+    const method = service.prototype.$get ? 'provider' : 'service';
+    module[method](name, service);
+  });
 }
 
 function getComponentMetadata(component: ng.IComponentController) {
@@ -120,13 +166,13 @@ function getComponentMetadata(component: ng.IComponentController) {
   };
 }
 
-function getNameMetadata(service: Function) {
+function getNameMetadata(service: any) {
   return {
     name: Reflect.getMetadata(nameSymbol, service)
   };
 }
 
-function getDeclarationType(declaration: Function) {
+function getDeclarationType(declaration: any) {
   return Reflect.getMetadata(typeSymbol, declaration);
 }
 

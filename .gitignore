@@ -4,3 +4,5 @@ lib/
 build/
 dist/
 .idea/
+angular-decorated.d.ts
+angular-decorated.js
