@@ -1,7 +1,16 @@
 import * as angular from 'angular';
 import 'reflect-metadata';
 
-enum Declarations { component, filter }
+/**
+ * When targeting es5, name doesn't exist on Function interface
+ * https://github.com/Microsoft/TypeScript/issues/2076
+ */
+declare global {
+  interface Function {
+    readonly name: string;
+  }
+}
+enum Declarations { component, directive, pipe }
 
 const typeSymbol = 'custom:type';
 const nameSymbol = 'custom:name';
@@ -11,17 +20,13 @@ const optionsSymbol = 'custom:options';
 /**
  * Interfaces
  */
-// declare global {
-//   interface Function {
-//     $inject?: string[];
-//   }
-// }
-
 export interface ModuleConfig {
-  declarations: Array<ng.IComponentController | PipeTransform>;
+  declarations: Array<ng.IComponentController | ng.Injectable<ng.IDirectiveFactory> | PipeTransform>;
   imports?: Array<string | Function>;
   exports?: Array<Function>;
   providers?: Array<ng.IServiceProvider | ng.Injectable<Function>>;
+  constants?: Object;
+  decorators?: {[name: string]: ng.Injectable<Function>};
 }
 
 export interface ModuleDecoratedConstructor {
@@ -40,6 +45,29 @@ export interface ComponentOptionsDecorated {
   templateUrl?: string | ng.Injectable<(...args: Array<any>) => string>;
   transclude?: boolean | {[slot: string]: string};
   require?: {[controller: string]: string};
+}
+
+export interface DirectiveOptionsDecorated {
+  selector: string;
+  multiElement?: boolean;
+  priority?: number;
+  require?: string | string[] | {[controller: string]: string};
+  restrict?: string;
+  scope?: boolean | {[boundProperty: string]: string};
+  template?: string | ((tElement: JQuery, tAttrs: ng.IAttributes) => string);
+  templateNamespace?: string;
+  templateUrl?: string | ((tElement: JQuery, tAttrs: ng.IAttributes) => string);
+  terminal?: boolean;
+  transclude?: boolean | 'element' | {[slot: string]: string};
+}
+
+export interface DirectiveControllerConstructor {
+  new(...args: Array<any>): DirectiveController;
+}
+
+export interface DirectiveController {
+  compile?: ng.IDirectiveCompileFn;
+  link?: ng.IDirectiveLinkFn | ng.IDirectivePrePost;
 }
 
 export interface PipeTransformConstructor {
@@ -66,8 +94,11 @@ export function NgModule({ declarations, imports, providers }: ModuleConfig) {
         case Declarations.component:
           registerComponent(module, declaration);
           break;
-        case Declarations.filter:
-          registerFilter(module, declaration);
+        case Declarations.directive:
+          registerDirective(module, declaration);
+          break;
+        case Declarations.pipe:
+          registerPipe(module, declaration);
           break;
         default:
           console.error(
@@ -98,7 +129,7 @@ export function NgModule({ declarations, imports, providers }: ModuleConfig) {
 
 export function Component(decoratedOptions: ComponentOptionsDecorated) {
   return (ctrl: ng.IControllerConstructor) => {
-    const options: ng.IComponentOptions = Object.assign({}, decoratedOptions);
+    const options: ng.IComponentOptions = {...decoratedOptions};
     options.controller = ctrl;
     const bindings = Reflect.getMetadata(bindingsSymbol, ctrl);
     if (bindings) {
@@ -106,6 +137,19 @@ export function Component(decoratedOptions: ComponentOptionsDecorated) {
     }
     Reflect.defineMetadata(nameSymbol, decoratedOptions.selector, ctrl);
     Reflect.defineMetadata(typeSymbol, Declarations.component, ctrl);
+    Reflect.defineMetadata(optionsSymbol, options, ctrl);
+  };
+}
+
+export function Directive(decoratedOptions: DirectiveOptionsDecorated) {
+  return (ctrl: DirectiveControllerConstructor) => {
+    const options: ng.IDirective = {...decoratedOptions};
+    const bindings = Reflect.getMetadata(bindingsSymbol, ctrl);
+    if (bindings) {
+      options.scope = bindings;
+    }
+    Reflect.defineMetadata(nameSymbol, decoratedOptions.selector, ctrl);
+    Reflect.defineMetadata(typeSymbol, Declarations.directive, ctrl);
     Reflect.defineMetadata(optionsSymbol, options, ctrl);
   };
 }
@@ -128,7 +172,7 @@ export function Injectable(name?: string) {
 export function Pipe(options: {name: string}) {
   return (Class: PipeTransformConstructor) => {
     Reflect.defineMetadata(nameSymbol, options.name, Class);
-    Reflect.defineMetadata(typeSymbol, Declarations.filter, Class);
+    Reflect.defineMetadata(typeSymbol, Declarations.pipe, Class);
   };
 }
 
@@ -140,7 +184,30 @@ function registerComponent(module: ng.IModule, component: ng.IComponentControlle
   module.component(name, options);
 }
 
-function registerFilter(module: ng.IModule, filter: PipeTransformConstructor) {
+function registerDirective(module: ng.IModule, ctrl: DirectiveControllerConstructor) {
+  const {name, options} = getComponentMetadata(ctrl);
+  const directiveFunc =  (...args: Array<any>) => {
+    if (ctrl.prototype.compile) {
+      const instance = new ctrl(args);
+      options.compile = ctrl.prototype.compile.bind(instance);
+      console.info(`Directive ${ctrl.name} is registered with compile function`);
+    }
+    else if (ctrl.prototype.link) {
+      const instance = new ctrl(args);
+      options.link = ctrl.prototype.link.bind(instance);
+      console.info(`Directive ${ctrl.name} is registered with link function`);
+    }
+    else {
+      options.controller = ctrl;
+      console.info(`Directive ${ctrl.name} is registered with controller class`);
+    }
+    return options;
+  };
+  directiveFunc.$inject = directiveFunc.$inject || annotate(ctrl);
+  module.directive(name, directiveFunc);
+}
+
+function registerPipe(module: ng.IModule, filter: PipeTransformConstructor) {
   const {name} = getNameMetadata(filter);
   const filterFunc = (...args: Array<any>) => {
     const instance = new filter(args);
@@ -154,10 +221,15 @@ function registerServices(module: ng.IModule, services: Array<ng.IServiceProvide
   services.forEach((service: any) => {
     const {name} = getNameMetadata(service);
     service.$inject = service.$inject || annotate(service);
-    const method = service.prototype.$get ? 'provider' : 'service';
-    module[method](name, service);
+    if (service.prototype.$get) {
+      module.provider(name, service);
+    }
+    else {
+      module.service(name, service);
+    }
   });
 }
+
 
 function getComponentMetadata(component: ng.IComponentController) {
   return {

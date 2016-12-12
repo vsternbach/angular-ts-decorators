@@ -2,8 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es5",
-    "declaration": true,
-    "lib": ["dom", "es2015"]
+    "declaration": true
   },
   "files": [
     "angular-decorated.ts"
