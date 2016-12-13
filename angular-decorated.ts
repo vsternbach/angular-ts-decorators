@@ -52,7 +52,6 @@ export interface DirectiveOptionsDecorated {
   multiElement?: boolean;
   priority?: number;
   require?: string | string[] | {[controller: string]: string};
-  restrict?: string;
   scope?: boolean | {[boundProperty: string]: string};
   template?: string | ((tElement: JQuery, tAttrs: ng.IAttributes) => string);
   templateNamespace?: string;
@@ -144,6 +143,8 @@ export function Component(decoratedOptions: ComponentOptionsDecorated) {
 export function Directive(decoratedOptions: DirectiveOptionsDecorated) {
   return (ctrl: DirectiveControllerConstructor) => {
     const options: ng.IDirective = {...decoratedOptions};
+    // deprecate restrict for directives and firce attribute usage only
+    options.restrict = 'A';
     const bindings = Reflect.getMetadata(bindingsSymbol, ctrl);
     if (bindings) {
       options.scope = bindings;
@@ -186,25 +187,25 @@ function registerComponent(module: ng.IModule, component: ng.IComponentControlle
 
 function registerDirective(module: ng.IModule, ctrl: DirectiveControllerConstructor) {
   const {name, options} = getComponentMetadata(ctrl);
-  const directiveFunc =  (...args: Array<any>) => {
-    if (ctrl.prototype.compile) {
+  const {compile, link} = ctrl.prototype;
+  const isValid = compile && typeof compile === 'function' || link && typeof link === 'function';
+  if (isValid) {
+    const directiveFunc =  (...args: Array<any>) => {
       const instance = new ctrl(args);
-      options.compile = ctrl.prototype.compile.bind(instance);
-      console.info(`Directive ${ctrl.name} is registered with compile function`);
-    }
-    else if (ctrl.prototype.link) {
-      const instance = new ctrl(args);
-      options.link = ctrl.prototype.link.bind(instance);
-      console.info(`Directive ${ctrl.name} is registered with link function`);
-    }
-    else {
-      options.controller = ctrl;
-      console.info(`Directive ${ctrl.name} is registered with controller class`);
-    }
-    return options;
-  };
-  directiveFunc.$inject = directiveFunc.$inject || annotate(ctrl);
-  module.directive(name, directiveFunc);
+      if (compile) {
+        options.compile = compile.bind(instance);
+      }
+      else if (link) {
+        options.link = link.bind(instance);
+      }
+      return options;
+    };
+    directiveFunc.$inject = directiveFunc.$inject || annotate(ctrl);
+    module.directive(name, directiveFunc);
+  }
+  else {
+    console.error(`Directive ${ctrl.name} was not registered because no link or compile methods were provided`);
+  }
 }
 
 function registerPipe(module: ng.IModule, filter: PipeTransformConstructor) {
