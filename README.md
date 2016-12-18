@@ -29,7 +29,7 @@ Let's say we have a todo-form component from classical todo example with the fol
 </form>
 ```
 If we were writing in plain es6/typescript without decorators we'd define this component like this:
-```ecmascript 6
+```typescript
 /* ----- todo/todo-form/todo-form.component.js ----- */
 const templateUrl = require('./todo-form.html');
 
@@ -60,7 +60,7 @@ export const TodoFormComponent = {
 };
 ```
 And then we'll register our component with angular like so:
-```ecmascript 6
+```typescript
 import angular from 'angular';
 import { TodoFormComponent } from './todo-form.component';
 
