@@ -1,18 +1,28 @@
 {
   "name": "angular-decorated",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "author": {
     "name": "Vlad Sternbach",
     "email": "vlad.sternbach@gmail.com",
     "url": "https://github.com/vsternbach"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vsternbach/angular-decorated.git"
+  },
   "homepage": "https://github.com/vsternbach/angular-decorated",
   "keywords": [
     "anguar decorators",
+    "anguar-decorators",
     "typescript decorators",
+    "typescript-decorators",
     "decorators",
+    "anguar ts decorators",
+    "anguar-ts-decorators",
     "anguar typescript decorators",
-    "anguarjs decorators"
+    "anguar-typescript-decorators",
+    "anguarjs decorators",
+    "anguarjs-decorators"
   ],
   "main": "angular-decorated.js",
   "types": "angular-decorated.d.ts",

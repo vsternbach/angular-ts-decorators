@@ -29,7 +29,7 @@ Let's say we have a todo-form component from classical todo example with the fol
 </form>
 ```
 If we were writing in plain es6/typescript without decorators we'd define this component like this:
-```typescript
+```js
 /* ----- todo/todo-form/todo-form.component.js ----- */
 const templateUrl = require('./todo-form.html');
 
@@ -60,7 +60,7 @@ export const TodoFormComponent = {
 };
 ```
 And then we'll register our component with angular like so:
-```typescript
+```js
 import angular from 'angular';
 import { TodoFormComponent } from './todo-form.component';
 
@@ -71,7 +71,7 @@ export const TodoFormModule = angular
 ```
 
 Using `angular-decorated` decorators in typescript the component code will look like this
-```typescript
+```js
 /* ----- todo/todo-form/todo-form.component.ts ----- */
 import { Component, Input, Output } from 'angular-decorated';
 
@@ -101,7 +101,7 @@ export class TodoFormComponent {
 }
 ```
 And we'll register it with angular like so:
-```typescript
+```js
 /* ----- todo/todo-form/todo-form.module.ts ----- */
 import { NgModule } from 'angular-decorated';
 import { TodoFormComponent } from './todo-form.component';
