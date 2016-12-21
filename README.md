@@ -17,9 +17,20 @@ Dependencies: `angular` and `reflect-metadata`
 like Webpack or SystemJS, so no need to worry about the dependencies then, they'll be resolved automatically by your module loader,
 otherwise you need to provide `reflect-metadata` shim by yourself. 
 
-## Usage
+## Available decorators
 
-##### Introduction to @Component and @NgModule
+| Decorator     | Angular analog                            | Details   |
+|:------------- |:------------------------------------------|:----------|
+| @NgModule     | angular.module                            |   |
+| @Injectable   | angular.service / angular.provider        | registers as provider if decorated class implements $get method   |
+| @Component    | angular.component                         |   |
+| @Input        | angular.component options binding ('<')  | can be used only inside @Component decorator <br> default input binding value can be overridden by passing parameter to the decorator |
+| @Output       | angular.component options binding ('&')  | can be used only inside @Component decorator |
+| @Directive    | angular.directive                         |   |
+| @Pipe         | angular.filter                            |   |
+
+## Usage with examples
+
 Let's say we have a todo-form component from classical todo example with the following template
 ```html
 /* ----- todo/todo-form/todo-form.html ----- */
@@ -100,6 +111,11 @@ export class TodoFormComponent {
     }
 }
 ```
+> Notice how @Input and @Output decorators replace bindings of the
+component, by default @Input correlates to '<' value of the binding
+and @Output - to the '&' value, you can override bindings values 
+only in @Input decorator by passing '=' or '@' if you need to.
+
 And we'll register it with angular like so:
 ```js
 /* ----- todo/todo-form/todo-form.module.ts ----- */
@@ -111,5 +127,79 @@ import { TodoFormComponent } from './todo-form.component';
 })
 export class TodoFormModule {}
 ```
+> You should declare all of the components (@Component), directives (@Directive) and filters (@Pipe) 
+you want to register with some module in `declarations` 
+of @NgModule decorator, all of the services (@Injectable) and providers (also @Injectable with $get method) you 
+should declare as `providers` of @NgModule decorator, and all of the modules your 
+module depends on in `imports`. Name of the class decorated 
+with @NgModule is the name of the module you should provide in 
+`imports` of other module declaration that depends on this module. 
+In addition you can define config and run blocks for your module 
+by adding config and run methods to your module class  declaration. 
+Please notice, that you can't define constructor and $inject 
+anything into it, instead specify all of the injections you 
+want to provide to your module config and run blocks as arguments of config 
+and run methods of the module class and they'll be injected by their names.
 
-To be continued..
+Here's an example of provider using @Injectable decorator
+```js
+/* ----- greeting/greeting.service.ts ----- */
+import { Injectable } from 'angular-decorated';
+
+export interface IGreetingService {
+  getGreeting(): string;
+}
+
+@Injectable()
+export class GreetingService implements ng.IServiceProvider {
+  private greeting = 'Hello World!';
+
+  // Configuration function
+  public setGreeting(greeting: string) {
+    this.greeting = greeting;
+  }
+
+  // Provider's factory function
+  public $get(): IGreetingService {
+    return {
+      getGreeting: () => { return this.greeting; }
+    };
+  }
+}
+```
+This is how angular filter looks like using angular 2 style @Pipe decorator:
+```js
+/* ----- greeting/uppercase.filter.ts ----- */
+import { Pipe, PipeTransform } from 'angular-decorated';
+
+@Pipe({name: 'uppercase'})
+export class UppercasePipe implements PipeTransform {
+  public transform(item: string) {
+    return item.toUpperCase();
+  }
+}
+```
+And here's an example of provider registration with @NgModule decorator, its configuration in config method of module class and it's usage in run method:
+```js
+import { NgModule } from 'angular-decorated';
+import { TodoFormModule } from 'todo/todo-form/todo-form.module';
+import { GreetingService, IGreetingService } from 'greeting/greeting.service';
+import { UppercasePipe } from 'greeting/uppercase.filter';
+
+@NgModule({
+  imports: [
+    TodoFormModule
+  ],
+  declarations: [UppercasePipe],
+  providers: [GreetingService]
+})
+export class AppModule {
+  public config(GreetingServiceProvider: GreetingService) {
+    GreetingServiceProvider.setGreeting('Hello decorated provider');
+  }
+
+  public run(GreetingService: IGreetingService) {
+    console.log(GreetingService.getGreeting());
+  }
+}
+```
