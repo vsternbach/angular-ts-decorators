@@ -136,10 +136,6 @@ with @NgModule is the name of the module you should provide in
 `imports` of other module declaration that depends on this module. 
 In addition you can define config and run blocks for your module 
 by adding config and run methods to your module class  declaration. 
-Please notice, that you can't define constructor and $inject 
-anything into it, instead specify all of the injections you 
-want to provide to your module config and run blocks as arguments of config 
-and run methods of the module class and they'll be injected by their names.
 
 Here's an example of provider using @Injectable decorator
 ```js
@@ -203,3 +199,7 @@ export class AppModule {
   }
 }
 ```
+>Please notice, that you can't define constructor and $inject 
+ anything into it, instead specify all of the injections you 
+ want to provide to your module config and run blocks as arguments of config 
+ and run methods of the module class and they'll be injected by their names.
