@@ -5,12 +5,12 @@
     "declaration": true
   },
   "files": [
-    "angular-decorated.ts"
+    "angular-ts-decorators.ts"
   ],
   "exclude": [
     "bin",
     "node_modules",
     "src",
-    "angular-decorated.d.ts"
+    "angular-ts-decorators.d.ts"
   ]
 }

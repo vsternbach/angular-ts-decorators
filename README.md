@@ -1,8 +1,8 @@
-# angular-decorated
+# angular-ts-decorators
 A collection of angular 2 style decorators for angularjs 1.5.x projects written in typescript
 
 ## Prerequisites
-`angular-decorated` tries to mimic [angular 2 style](https://angular.io/docs/ts/latest/guide/style-guide.html) decorators as closely as possible.
+`angular-ts-decorators` tries to mimic [angular 2 style](https://angular.io/docs/ts/latest/guide/style-guide.html) decorators as closely as possible.
 
 Some of the decorator interfaces (@Component and @Directive) were heavily inspired by this excellent [Angular 1.x styleguide (ES2015)](https://github.com/toddmotto/angular-styleguide).
 
@@ -10,7 +10,7 @@ Some of the decorator interfaces (@Component and @Directive) were heavily inspir
 
 ## Installation
 
-`npm i --save-dev angular-decorated`
+`npm i --save-dev angular-ts-decorators`
 
 Dependencies: `angular` and `reflect-metadata`
 > I assume you're using this package for angular project written in typescript and using some kind of bundler
@@ -81,10 +81,10 @@ export const TodoFormModule = angular
   .name;
 ```
 
-Using `angular-decorated` decorators in typescript the component code will look like this
+Using `angular-ts-decorators` decorators in typescript the component code will look like this
 ```js
 /* ----- todo/todo-form/todo-form.component.ts ----- */
-import { Component, Input, Output } from 'angular-decorated';
+import { Component, Input, Output } from 'angular-ts-decorators';
 
 const templateUrl = require('./todo-form.html');
 
@@ -119,7 +119,7 @@ only in @Input decorator by passing '=' or '@' if you need to.
 And we'll register it with angular like so:
 ```js
 /* ----- todo/todo-form/todo-form.module.ts ----- */
-import { NgModule } from 'angular-decorated';
+import { NgModule } from 'angular-ts-decorators';
 import { TodoFormComponent } from './todo-form.component';
 
 @NgModule({
@@ -140,7 +140,7 @@ by adding config and run methods to your module class  declaration.
 Here's an example of provider using @Injectable decorator
 ```js
 /* ----- greeting/greeting.service.ts ----- */
-import { Injectable } from 'angular-decorated';
+import { Injectable } from 'angular-ts-decorators';
 
 export interface IGreetingService {
   getGreeting(): string;
@@ -166,7 +166,7 @@ export class GreetingService implements ng.IServiceProvider {
 This is how angular filter looks like using angular 2 style @Pipe decorator:
 ```js
 /* ----- greeting/uppercase.filter.ts ----- */
-import { Pipe, PipeTransform } from 'angular-decorated';
+import { Pipe, PipeTransform } from 'angular-ts-decorators';
 
 @Pipe({name: 'uppercase'})
 export class UppercasePipe implements PipeTransform {
@@ -177,7 +177,7 @@ export class UppercasePipe implements PipeTransform {
 ```
 And here's an example of provider registration with @NgModule decorator, its configuration in config method of module class and it's usage in run method:
 ```js
-import { NgModule } from 'angular-decorated';
+import { NgModule } from 'angular-ts-decorators';
 import { TodoFormModule } from 'todo/todo-form/todo-form.module';
 import { GreetingService, IGreetingService } from 'greeting/greeting.service';
 import { UppercasePipe } from 'greeting/uppercase.filter';

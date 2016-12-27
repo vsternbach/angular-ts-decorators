@@ -1,6 +1,6 @@
 {
-  "name": "angular-decorated",
-  "version": "0.0.7",
+  "name": "angular-ts-decorators",
+  "version": "0.0.17",
   "author": {
     "name": "Vlad Sternbach",
     "email": "vlad.sternbach@gmail.com",
@@ -8,9 +8,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vsternbach/angular-decorated.git"
+    "url": "git+https://github.com/vsternbach/angular-ts-decorators.git"
   },
-  "homepage": "https://github.com/vsternbach/angular-decorated",
+  "homepage": "https://github.com/vsternbach/angular-ts-decorators",
   "keywords": [
     "anguar decorators",
     "anguar-decorators",
@@ -24,11 +24,11 @@
     "anguarjs decorators",
     "anguarjs-decorators"
   ],
-  "main": "angular-decorated.js",
-  "types": "angular-decorated.d.ts",
+  "main": "angular-ts-decorators.js",
+  "types": "angular-ts-decorators.d.ts",
   "files": [
-    "angular-decorated.js",
-    "angular-decorated.d.ts"
+    "angular-ts-decorators.js",
+    "angular-ts-decorators.d.ts"
   ],
   "dependencies": {
     "reflect-metadata": "^0.1.8"
