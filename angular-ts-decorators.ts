@@ -143,11 +143,13 @@ export function Component(decoratedOptions: ComponentOptionsDecorated) {
 export function Directive(decoratedOptions: DirectiveOptionsDecorated) {
   return (ctrl: DirectiveControllerConstructor) => {
     const options: ng.IDirective = {...decoratedOptions};
-    // deprecate restrict for directives and firce attribute usage only
+    // deprecate restrict for directives and force attribute usage only
     options.restrict = 'A';
     const bindings = Reflect.getMetadata(bindingsSymbol, ctrl);
     if (bindings) {
       options.scope = bindings;
+      console.warn(`Using scope with directives is deprecated, you should consider writing it as a component.
+      See: https://github.com/toddmotto/angular-styleguide#recommended-properties`);
     }
     Reflect.defineMetadata(nameSymbol, decoratedOptions.selector, ctrl);
     Reflect.defineMetadata(typeSymbol, Declarations.directive, ctrl);

@@ -1,6 +1,6 @@
 {
   "name": "angular-ts-decorators",
-  "version": "0.0.17",
+  "version": "0.0.19",
   "author": {
     "name": "Vlad Sternbach",
     "email": "vlad.sternbach@gmail.com",
@@ -37,6 +37,9 @@
     "@types/angular": "^1.5.20",
     "angular": "^1.6.0",
     "typescript": "^2.1.4"
+  },
+  "peerDependencies": {
+    "angular": ">=1.5.0"
   },
   "scripts": {
     "prepublish": "tsc"
