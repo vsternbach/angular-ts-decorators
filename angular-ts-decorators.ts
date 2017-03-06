@@ -30,13 +30,12 @@ export interface ModuleConfig {
   decorators?: {[name: string]: ng.Injectable<Function>};
 }
 
-export interface ModuleDecoratedConstructor {
-  new(...args: Array<any>): ModuleDecorated;
+export interface NgModuleDecorated {
+  new(...args: Array<any>): NgModuleDecoratedInstance;
   module?: ng.IModule;
-  name?: string;
 }
 
-export interface ModuleDecorated {
+export interface NgModuleDecoratedInstance {
   config?(...args: Array<any>): void;
   run?(...args: Array<any>): void;
 }
@@ -83,7 +82,7 @@ export interface PipeTransform {
  * Decorators
  */
 export function NgModule({ name, declarations, imports, providers }: ModuleConfig) {
-  return (Class: ModuleDecoratedConstructor) => {
+  return (Class: NgModuleDecorated) => {
     // module registration
     const deps = imports ? imports.map(mod => typeof mod === 'string' ? mod : mod.name) : [];
     if (!name) {
@@ -127,9 +126,8 @@ export function NgModule({ name, declarations, imports, providers }: ModuleConfi
       run.$inject = annotate(run);
       module.run(run);
     }
-    // expose angular module and name as static properties
+    // expose angular module as static property
     Class.module = module;
-    Class.name = name;
   };
 }
 
