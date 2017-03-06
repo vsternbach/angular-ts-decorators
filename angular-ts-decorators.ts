@@ -33,6 +33,7 @@ export interface ModuleConfig {
 export interface ModuleDecoratedConstructor {
   new(...args: Array<any>): ModuleDecorated;
   module?: ng.IModule;
+  name?: string;
 }
 
 export interface ModuleDecorated {
@@ -126,8 +127,9 @@ export function NgModule({ name, declarations, imports, providers }: ModuleConfi
       run.$inject = annotate(run);
       module.run(run);
     }
-    // expose angular module as static property
+    // expose angular module and name as static properties
     Class.module = module;
+    Class.name = name;
   };
 }
 
