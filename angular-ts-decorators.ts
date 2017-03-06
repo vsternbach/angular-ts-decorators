@@ -21,6 +21,7 @@ const optionsSymbol = 'custom:options';
  * Interfaces
  */
 export interface ModuleConfig {
+  name?: string;
   declarations: Array<ng.IComponentController | ng.Injectable<ng.IDirectiveFactory> | PipeTransform>;
   imports?: Array<string | Function>;
   exports?: Array<Function>;
@@ -80,11 +81,15 @@ export interface PipeTransform {
 /**
  * Decorators
  */
-export function NgModule({ declarations, imports, providers }: ModuleConfig) {
+export function NgModule({ name, declarations, imports, providers }: ModuleConfig) {
   return (Class: ModuleDecoratedConstructor) => {
     // module registration
     const deps = imports ? imports.map(mod => typeof mod === 'string' ? mod : mod.name) : [];
-    const module = angular.module(Class.name, deps);
+    if (!name) {
+      console.warn('You are not providing explicit ngModule name, be careful this code might not work when uglified.');
+      name = Class.name;
+    }
+    const module = angular.module(name, deps);
 
     // components, directives and filters registration
     declarations.forEach((declaration: any) => {
@@ -167,7 +172,10 @@ export function Output(alias?: string) {
 
 export function Injectable(name?: string) {
   return (Class: any) => {
-    name = name || Class.name;
+    if (!name) {
+      console.warn('You are not providing explicit service name, be careful this code might not work when uglified.');
+      name = Class.name;
+    }
     Reflect.defineMetadata(nameSymbol, name, Class);
   };
 }
