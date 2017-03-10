@@ -2,11 +2,13 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es5",
-    "declaration": true
+    "declaration": true,
+    "experimentalDecorators": true
   },
   "files": [
     "angular-ts-decorators.ts"
   ],
+  "sourceMap": true,
   "exclude": [
     "bin",
     "node_modules",
