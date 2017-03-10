@@ -1,18 +1,23 @@
 import { Injectable } from '../angular-ts-decorators';
 
 
-@Injectable()
-export class TestService {
+export const createServiceClass = (token: string = '') => {
 
-  constructor() {
+  @Injectable(token)
+  class TestService {
 
+    constructor() {
+
+    }
+
+    public static someStaticMethod(): TestService {
+      return new TestService();
+    }
+
+    public someMethod(): void {
+
+    }
   }
 
-  public static createSelf(): TestService {
-    return new TestService;
-  }
-
-  public someMethod(): void {
-
-  }
-}
+  return TestService;
+};

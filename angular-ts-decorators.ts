@@ -25,7 +25,7 @@ export interface ModuleConfig {
   declarations: Array<ng.IComponentController | ng.Injectable<ng.IDirectiveFactory> | PipeTransform>;
   imports?: Array<string | Function>;
   exports?: Array<Function>;
-  providers?: Array<ng.IServiceProvider | ng.Injectable<Function>>;
+  providers?: Array<ng.IServiceProvider | ng.Injectable<Function> | ProviderObject>;
   constants?: Object;
   decorators?: {[name: string]: ng.Injectable<Function>};
 }
@@ -77,6 +77,23 @@ export interface PipeTransformConstructor {
 export interface PipeTransform {
   transform(...args: Array<any>): any;
 }
+
+export interface ClassProvider {
+  provide: any;
+  useClass: ng.Injectable<Function>;
+}
+
+export interface FactoryProvider {
+  provide: any;
+  useFactory: any;
+}
+
+export interface ValueProvider {
+  provide: any;
+  useValue: any;
+}
+
+export type ProviderObject = ClassProvider | FactoryProvider | ValueProvider;
 
 /**
  * Decorators
@@ -228,15 +245,29 @@ function registerPipe(module: ng.IModule, filter: PipeTransformConstructor) {
   module.filter(name, filterFunc);
 }
 
-function registerServices(module: ng.IModule, services: Array<ng.IServiceProvider | ng.Injectable<Function>>) {
-  services.forEach((service: any) => {
-    const {name} = getNameMetadata(service);
-    service.$inject = service.$inject || annotate(service);
-    if (service.prototype.$get) {
-      module.provider(name, service);
+function registerServices(module: ng.IModule, providers: Array<ng.IServiceProvider | ng.Injectable<Function> | ProviderObject>) {
+  providers.forEach((provider: any) => {
+    if (provider.provide !== undefined) {
+      const {name} = typeof provider.provide == "string" ? {name: provider.provide} : getNameMetadata(provider.provide);
+      if (provider.useClass !== undefined && provider.useClass instanceof Function) {
+        provider.useClass.$inject = provider.useClass.$inject || annotate(provider.useClass);
+        if (provider.useClass.prototype.$get) {
+          module.provider(name, provider.useClass);
+        }
+        else {
+          module.service(name, provider.useClass);
+        }
+      }
     }
     else {
-      module.service(name, service);
+      const {name} = getNameMetadata(provider);
+      provider.$inject = provider.$inject || annotate(provider);
+      if (provider.prototype.$get) {
+        module.provider(name, provider);
+      }
+      else {
+        module.service(name, provider);
+      }
     }
   });
 }

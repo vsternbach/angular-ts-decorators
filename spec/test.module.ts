@@ -1,25 +1,27 @@
 import { NgModule } from '../angular-ts-decorators';
-import { TestService } from './test.service';
 
 
-@NgModule({
-  imports: [
+export const createModuleClass = (name: string = '',
+                                  imports: any[] = [],
+                                  declarations: any[] = [],
+                                  providers: any[] = []): any => {
 
-  ],
-  declarations: [
+  @NgModule({
+    name: name,
+    imports: imports,
+    declarations: declarations,
+    providers: providers,
+  })
+  class TestModule {
 
-  ],
-  providers: [
-    TestService,
-  ],
-})
-export class TestModule {
+    public config(): void {
 
-  public config(): void {
+    }
 
+    public run(): void {
+
+    }
   }
 
-  public run(): void {
-
-  }
-}
+  return TestModule;
+};
