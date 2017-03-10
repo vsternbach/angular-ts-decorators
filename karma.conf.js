@@ -8,6 +8,7 @@ module.exports = function(config) {
         ],
         exclude: [],
         preprocessors: {
+            'angular-ts-decorators.ts': ['coverage'],
             '**/*.ts': ['karma-typescript'],
         },
         reporters: ['dots', 'coverage', 'karma-typescript'],

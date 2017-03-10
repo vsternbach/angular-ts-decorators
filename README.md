@@ -163,6 +163,9 @@ export class GreetingService implements ng.IServiceProvider {
   }
 }
 ```
+
+Providers can be registered using Angular 2 syntax. Elements of the array can be a class or provider object. The provider object has a ```provide``` property (string or class), and a ```useClass```, ```useFactory```, or ```useValue``` property to use as the provided value.
+
 This is how angular filter looks like using angular 2 style @Pipe decorator:
 ```js
 /* ----- greeting/uppercase.filter.ts ----- */
@@ -187,7 +190,12 @@ import { UppercasePipe } from 'greeting/uppercase.filter';
     TodoFormModule
   ],
   declarations: [UppercasePipe],
-  providers: [GreetingService]
+  providers: [
+      GreetingService,
+      {provide: GreetingService, useClass: GreetingService},
+      {provide: GreetingService, useFactory: () => new GreetingService()},
+      {provide: 'Greeter', useValue: new GreetingService()},
+  ]
 })
 export class AppModule {
   public config(GreetingServiceProvider: GreetingService) {
@@ -203,3 +211,14 @@ export class AppModule {
  anything into it, instead specify all of the injections you 
  want to provide to your module config and run blocks as arguments of config 
  and run methods of the module class and they'll be injected by their names.
+ 
+ ## Contributing
+ 
+ 
+ Fork project, download source and run tests:
+ ```
+ git clone git@github.com:<your-github>/angular-ts-decorators.git
+ cd angular-ts-decorators
+ npm install
+ npm test
+ ```
