@@ -14,8 +14,8 @@ export const createServiceClass = (token: string = '') => {
       return new TestService();
     }
 
-    public someMethod(): void {
-
+    public someMethod(): number {
+      return 1;
     }
   }
 

@@ -86,6 +86,7 @@ export interface ClassProvider {
 export interface FactoryProvider {
   provide: any;
   useFactory: any;
+  deps?: any[];
 }
 
 export interface ValueProvider {
@@ -259,10 +260,11 @@ function registerServices(module: ng.IModule, providers: Array<ng.IServiceProvid
         }
       }
       else if (provider.useFactory != undefined && provider.useFactory instanceof Function) {
-
+        provider.useFactory.$inject = provider.useFactory.$inject || annotate(provider.useFactory);
+        module.factory(name, provider.useFactory);
       }
       else if (provider.useValue != undefined) {
-
+        module.constant(name, provider.useValue);
       }
     }
     else {
