@@ -26,56 +26,69 @@ describe("NgModule", () => {
   describe("providers", () => {
     var providers: any[];
 
-    it("registers provider using class", () => {
-      providers = [service];
-      var constructor = createModuleClass('', [], [], providers);
-      testModule = new constructor();
-      $injector = angular.injector(['ng', constructor.name]);
+    describe("array of classes", () => {
 
-      expect(angular.module(constructor.name)['_invokeQueue'].length).toEqual(providers.length);
-      angular.module(constructor.name)['_invokeQueue'].forEach((value: any, index: number) => {
-        expect(value[2][0]).toEqual(providers[index].name);
-        expect($injector.get(providers[index].name) instanceof providers[index]);
+      it("registers provider using class type", () => {
+        providers = [service];
+        var constructor = createModuleClass('', [], [], providers);
+        testModule = new constructor();
+        $injector = angular.injector(['ng', constructor.name]);
+
+        expect(angular.module(constructor.name)['_invokeQueue'].length).toEqual(providers.length);
+        angular.module(constructor.name)['_invokeQueue'].forEach((value: any, index: number) => {
+          expect(value[2][0]).toEqual(providers[index].name);
+          expect($injector.get(providers[index].name) instanceof providers[index]);
+        });
       });
     });
 
-    it("registers provider using string token and 'useClass' property", () => {
-      providers = [{provide: serviceName, useClass: service}];
-      var constructor = createModuleClass('', [], [], providers);
-      testModule = new constructor();
+    describe("useClass", () => {
 
-      expect(angular.module(constructor.name)['_invokeQueue'].length).toEqual(providers.length);
-      angular.module(constructor.name)['_invokeQueue'].forEach((value: any, index: number) => {
-        expect(value[2][0]).toEqual(providers[index].provide);
-        expect($injector.get(providers[index].provide) instanceof providers[index].useClass);
+      it("registers provider using string token", () => {
+        providers = [{provide: serviceName, useClass: service}];
+        var constructor = createModuleClass('', [], [], providers);
+        testModule = new constructor();
+
+        expect(angular.module(constructor.name)['_invokeQueue'].length).toEqual(providers.length);
+        angular.module(constructor.name)['_invokeQueue'].forEach((value: any, index: number) => {
+          expect(value[2][0]).toEqual(providers[index].provide);
+          expect($injector.get(providers[index].provide) instanceof providers[index].useClass);
+        });
+      });
+
+      it("registers provider using class type", () => {
+        providers = [{provide: service, useClass: service}];
+        var constructor = createModuleClass('', [], [], providers);
+        testModule = new constructor();
+
+        expect(angular.module(constructor.name)['_invokeQueue'].length).toEqual(providers.length);
+        angular.module(constructor.name)['_invokeQueue'].forEach((value: any, index: number) => {
+          expect(value[2][0]).toEqual(providers[index].provide.name);
+          expect($injector.get(providers[index].provide.name) instanceof providers[index].useClass);
+        });
       });
     });
 
-    it("registers provider using class type and 'usesClass' property", () => {
-      providers = [{provide: service, useClass: service}];
-      var constructor = createModuleClass('', [], [], providers);
-      testModule = new constructor();
+    describe("useFactory", () => {
 
-      expect(angular.module(constructor.name)['_invokeQueue'].length).toEqual(providers.length);
-      angular.module(constructor.name)['_invokeQueue'].forEach((value: any, index: number) => {
-        expect(value[2][0]).toEqual(providers[index].provide.name);
-        expect($injector.get(providers[index].provide.name) instanceof providers[index].useClass);
+      it("registers provider using string token", () => {
+
+      });
+
+      it("registers provider using class type", () => {
+
       });
     });
 
-    it("registers provider using 'useFactory' property", () => {
+    describe("useValue", () => {
 
-    });
+      it("registers provider using string token", () => {
 
-    it("registers provider using 'useValue' property", () => {
+      });
 
-    });
+      it("registers provider using class type", () => {
 
-    it("sanity", () => {
-      var constructor = createModuleClass('', [], [], providers);
-      testModule = new constructor();
-
-      expect(testModule).toBeDefined();
+      });
     });
   });
 });

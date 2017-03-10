@@ -249,7 +249,7 @@ function registerServices(module: ng.IModule, providers: Array<ng.IServiceProvid
   providers.forEach((provider: any) => {
     if (provider.provide !== undefined) {
       const {name} = typeof provider.provide == "string" ? {name: provider.provide} : getNameMetadata(provider.provide);
-      if (provider.useClass !== undefined && provider.useClass instanceof Function) {
+      if (provider.useClass != undefined && provider.useClass instanceof Function) {
         provider.useClass.$inject = provider.useClass.$inject || annotate(provider.useClass);
         if (provider.useClass.prototype.$get) {
           module.provider(name, provider.useClass);
@@ -257,6 +257,12 @@ function registerServices(module: ng.IModule, providers: Array<ng.IServiceProvid
         else {
           module.service(name, provider.useClass);
         }
+      }
+      else if (provider.useFactory != undefined && provider.useFactory instanceof Function) {
+
+      }
+      else if (provider.useValue != undefined) {
+
       }
     }
     else {
