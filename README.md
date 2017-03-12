@@ -164,7 +164,7 @@ export class GreetingService implements ng.IServiceProvider {
 }
 ```
 
-Providers can be registered using Angular 2 syntax. Elements of the array can be a class or provider object. The provider object has a ```provide``` property (string or class), and a ```useClass```, ```useFactory```, or ```useValue``` property to use as the provided value.
+Providers can be registered using Angular 2 syntax. Elements of the array can be a class or provider object. The provider object has a ```provide``` property (string token), and a ```useClass```, ```useFactory```, or ```useValue``` property to use as the provided value.
 
 This is how angular filter looks like using angular 2 style @Pipe decorator:
 ```js
@@ -192,8 +192,8 @@ import { UppercasePipe } from 'greeting/uppercase.filter';
   declarations: [UppercasePipe],
   providers: [
       GreetingService,
-      {provide: GreetingService, useClass: GreetingService},
-      {provide: GreetingService, useFactory: () => new GreetingService()},
+      {provide: GreetingService.name, useClass: GreetingService},
+      {provide: GreetingService.name, useFactory: () => new GreetingService()},
       {provide: 'Greeter', useValue: new GreetingService()},
   ]
 })

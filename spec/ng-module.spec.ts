@@ -55,18 +55,6 @@ describe("NgModule", () => {
           expect($injector.get(providers[index].provide).constructor.name).toBe(providers[index].useClass.name);
         });
       });
-
-      it("registers provider using class type", () => {
-        providers = [{provide: Service, useClass: Service}];
-        var constructor = createModuleClass('', [], [], providers);
-        testModule = new constructor();
-
-        expect(angular.module(constructor.name)['_invokeQueue'].length).toEqual(providers.length);
-        angular.module(constructor.name)['_invokeQueue'].forEach((value: any, index: number) => {
-          expect(value[2][0]).toEqual(providers[index].provide.name);
-          expect($injector.get(providers[index].provide.name).constructor.name).toBe(providers[index].useClass.name);
-        });
-      });
     });
 
     describe("useFactory", () => {
@@ -82,18 +70,6 @@ describe("NgModule", () => {
           expect($injector.get(providers[index].provide).constructor.name).toBe(providers[index].useFactory().constructor.name);
         });
       });
-
-      it("registers provider using class type", () => {
-        providers = [{provide: Service, useFactory: () => new Service()}];
-        var constructor = createModuleClass('', [], [], providers);
-        testModule = new constructor();
-
-        expect(angular.module(constructor.name)['_invokeQueue'].length).toEqual(providers.length);
-        angular.module(constructor.name)['_invokeQueue'].forEach((value: any, index: number) => {
-          expect(value[2][0]).toEqual(providers[index].provide.name);
-          expect($injector.get(providers[index].provide.name).constructor.name).toBe(providers[index].useFactory().constructor.name);
-        });
-      });
     });
 
     describe("useValue", () => {
@@ -107,18 +83,6 @@ describe("NgModule", () => {
         angular.module(constructor.name)['_invokeQueue'].forEach((value: any, index: number) => {
           expect(value[2][0]).toEqual(providers[index].provide);
           expect($injector.get(providers[index].provide).constructor.name).toEqual(providers[index].useValue.constructor.name);
-        });
-      });
-
-      it("registers provider using class type", () => {
-        providers = [{provide: Service, useValue: new Service()}];
-        var constructor = createModuleClass('', [], [], providers);
-        testModule = new constructor();
-
-        expect(angular.module(constructor.name)['_invokeQueue'].length).toEqual(providers.length);
-        angular.module(constructor.name)['_invokeQueue'].forEach((value: any, index: number) => {
-          expect(value[2][0]).toEqual(providers[index].provide.name);
-          expect($injector.get(providers[index].provide.name).constructor.name).toEqual(providers[index].useValue.constructor.name);
         });
       });
     });

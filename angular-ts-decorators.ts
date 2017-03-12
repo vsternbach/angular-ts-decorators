@@ -249,7 +249,7 @@ function registerPipe(module: ng.IModule, filter: PipeTransformConstructor) {
 function registerServices(module: ng.IModule, providers: Array<ng.IServiceProvider | ng.Injectable<Function> | ProviderObject>) {
   providers.forEach((provider: any) => {
     if (provider.provide !== undefined) {
-      const {name} = typeof provider.provide == "string" ? {name: provider.provide} : getNameMetadata(provider.provide);
+      const name: string = provider.provide;
       if (provider.useClass != undefined && provider.useClass instanceof Function) {
         provider.useClass.$inject = provider.useClass.$inject || annotate(provider.useClass);
         if (provider.useClass.prototype.$get) {
