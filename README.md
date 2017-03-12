@@ -1,5 +1,7 @@
 # angular-ts-decorators
-A collection of angular 2 style decorators for angularjs 1.5.x projects written in typescript
+A collection of angular 2 style decorators for angularjs 1.5.x projects written in typescript.
+
+See example of usage [here](https://github.com/vsternbach/angularjs-typescript-webpack)
 
 ## Prerequisites
 `angular-ts-decorators` tries to mimic [angular 2 style](https://angular.io/docs/ts/latest/guide/style-guide.html) decorators as closely as possible.
