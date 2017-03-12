@@ -81,12 +81,12 @@ export interface PipeTransform {
 /**
  * Decorators
  */
-export function NgModule({ name, declarations, imports, providers }: ModuleConfig) {
+export function NgModule({ name, declarations, imports = [], providers }: ModuleConfig) {
   return (Class: NgModuleDecorated) => {
     // module registration
-    const deps = imports ? imports.map(mod => typeof mod === 'string' ? mod : mod.name) : [];
+    const deps = imports.map(mod => typeof mod === 'string' ? mod : (<NgModuleDecorated>mod).module.name);
     if (!name) {
-      console.warn('You are not providing explicit ngModule name, be careful this code might not work when uglified.');
+      console.warn('You are not providing explicit ngModule name, be careful this code won\'t work when uglified.');
       name = Class.name;
     }
     const module = angular.module(name, deps);
