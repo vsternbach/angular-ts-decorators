@@ -1,4 +1,7 @@
 # angular-ts-decorators
+
+[![Build Status](https://travis-ci.org/vsternbach/angular-ts-decorators.svg?branch=master)](https://travis-ci.org/vsternbach/angular-ts-decorators)
+
 A collection of angular 2 style decorators for angularjs 1.5.x projects written in typescript.
 
 See example of usage [here](https://github.com/vsternbach/angularjs-typescript-webpack)
