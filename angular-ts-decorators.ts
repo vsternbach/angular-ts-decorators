@@ -79,18 +79,18 @@ export interface PipeTransform {
 }
 
 export interface ClassProvider {
-  provide: any;
+  provide: string;
   useClass: ng.Injectable<Function>;
 }
 
 export interface FactoryProvider {
-  provide: any;
+  provide: string;
   useFactory: any;
   deps?: any[];
 }
 
 export interface ValueProvider {
-  provide: any;
+  provide: string;
   useValue: any;
 }
 
@@ -238,19 +238,21 @@ function registerDirective(module: ng.IModule, ctrl: DirectiveControllerConstruc
 
 function registerPipe(module: ng.IModule, filter: PipeTransformConstructor) {
   const {name} = getNameMetadata(filter);
-  const filterFunc = (...args: Array<any>) => {
-    const instance = new filter(args);
+  const filterFactory = (...args: Array<any>) => {
+    const injector = args[0]; // reference to $injector
+    const instance = injector.instantiate(filter);
     return instance.transform.bind(instance);
   };
-  filterFunc.$inject = filter.$inject || annotate(filter);
-  module.filter(name, filterFunc);
+  filterFactory.$inject = ['$injector', ...(filter.$inject || annotate(filter))];
+  module.filter(name, filterFactory);
 }
 
 function registerServices(module: ng.IModule, providers: Array<ng.IServiceProvider | ng.Injectable<Function> | ProviderObject>) {
   providers.forEach((provider: any) => {
-    if (provider.provide !== undefined) {
-      const name: string = provider.provide;
-      if (provider.useClass != undefined && provider.useClass instanceof Function) {
+    // providers registered using { provide, useClass/useFactory/useValue } syntax
+    if (provider.provide) {
+      const name = provider.provide;
+      if (provider.useClass && provider.useClass instanceof Function) {
         provider.useClass.$inject = provider.useClass.$inject || annotate(provider.useClass);
         if (provider.useClass.prototype.$get) {
           module.provider(name, provider.useClass);
@@ -259,14 +261,15 @@ function registerServices(module: ng.IModule, providers: Array<ng.IServiceProvid
           module.service(name, provider.useClass);
         }
       }
-      else if (provider.useFactory != undefined && provider.useFactory instanceof Function) {
+      else if (provider.useFactory && provider.useFactory instanceof Function) {
         provider.useFactory.$inject = provider.useFactory.$inject || annotate(provider.useFactory);
         module.factory(name, provider.useFactory);
       }
-      else if (provider.useValue != undefined) {
+      else if (provider.useValue) {
         module.constant(name, provider.useValue);
       }
     }
+    // providers registered as classes
     else {
       const {name} = getNameMetadata(provider);
       provider.$inject = provider.$inject || annotate(provider);
@@ -279,7 +282,6 @@ function registerServices(module: ng.IModule, providers: Array<ng.IServiceProvid
     }
   });
 }
-
 
 function getComponentMetadata(component: ng.IComponentController) {
   return {

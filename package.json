@@ -1,6 +1,6 @@
 {
   "name": "angular-ts-decorators",
-  "version": "0.0.25",
+  "version": "0.0.26",
   "author": {
     "name": "Vlad Sternbach",
     "email": "vlad.sternbach@gmail.com",
@@ -45,13 +45,15 @@
     "karma-phantomjs-launcher": "^1.0.2",
     "karma-typescript": "^3.0.0-beta.1",
     "phantomjs-prebuilt": "^2.1.14",
-    "typescript": "^2.1.4"
+    "typescript": "^2.2.2"
   },
   "peerDependencies": {
     "angular": ">=1.5.0"
   },
   "scripts": {
-    "prepublish": "tsc",
-    "test": "karma start karma.conf.js --single-run"
+    "prebuild": "npm install",
+    "build": "npm run test",
+    "test": "karma start karma.conf.js --single-run",
+    "prepublish": "tsc"
   }
 }

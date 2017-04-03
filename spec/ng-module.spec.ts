@@ -1,88 +1,103 @@
 import { NgModule, Injectable, Component, NgModuleDecoratedInstance } from '../angular-ts-decorators';
-import { createModuleClass } from './test.module';
-import { createServiceClass } from './test.service';
+import { registerNgModule } from './module.mock';
+import { serviceName, TestService } from './service.mock';
 import * as angular from 'angular';
 
 
-describe("NgModule", () => {
-  var testModule: NgModuleDecoratedInstance;
-  var serviceName: string;
-  var Service: any;
-  var $injector: ng.auto.IInjectorService;
+describe('NgModule', () => {
+  const moduleName = 'TestModule';
 
-  beforeEach(() => {
-    serviceName = "TestService";
-    Service = createServiceClass();
+  describe('has run and config methods', () => {
+    it('module should have run and config blocks', () => {
+      const NgModuleClass = registerNgModule(moduleName, [], [], []);
+      const ngModuleInstance = new NgModuleClass();
+      expect(angular.module(moduleName)['_runBlocks'].length).toBe(1);
+      expect(angular.module(moduleName)['_configBlocks'].length).toBe(1);
+      expect(angular.module(moduleName)['_configBlocks'][0].length).toBe(3);
+
+      expect(angular.module(moduleName)['_runBlocks'][0].$inject).toEqual(['$rootScope']);
+      expect(angular.module(moduleName)['_configBlocks'][0][2][0].$inject).toEqual(['$httpProvider'] );
+
+      expect(angular.module(moduleName)['_runBlocks'][0]).toBe(ngModuleInstance.run);
+      expect(angular.module(moduleName)['_configBlocks'][0][2][0]).toBe(ngModuleInstance.config);
+    })
   });
 
-  describe("imports", () => {
+  describe('imports', () => {
+    it('should define required module as dependency', () => {
+      const importedModuleName = 'ImportedModule';
+      const importedModule = registerNgModule(importedModuleName, [], [], []);
+      registerNgModule(moduleName, [importedModule], [], []);
+      expect(angular.module(moduleName).requires).toEqual([importedModuleName]);
+    });
+  });
+
+  describe('declarations', () => {
     // TODO
   });
 
-  describe("declarations", () => {
-    // TODO
-  });
+  describe('providers', () => {
+    
+    describe('provided as array of classes', () => {
+      it('registers provider using class type', () => {
+        const providers = [TestService];
+        registerNgModule(moduleName, [], [], providers);
 
-  describe("providers", () => {
-    var providers: any[];
-
-    describe("array of classes", () => {
-
-      it("registers provider using class type", () => {
-        providers = [Service];
-        var constructor = createModuleClass('', [], [], providers);
-        testModule = new constructor();
-        $injector = angular.injector(['ng', constructor.name]);
-
-        expect(angular.module(constructor.name)['_invokeQueue'].length).toEqual(providers.length);
-        angular.module(constructor.name)['_invokeQueue'].forEach((value: any, index: number) => {
-          expect(value[2][0]).toEqual(providers[index].name);
-          expect($injector.get(providers[index].name).constructor).toBe(providers[index]);
+        expect(angular.module(moduleName)['_invokeQueue'].length).toEqual(providers.length);
+        angular.module(moduleName)['_invokeQueue'].forEach((value: any, index: number) => {
+          // expect(value[2][0]).toEqual(serviceName);
+          expect(value[2][1]).toEqual(TestService);
         });
       });
     });
 
-    describe("useClass", () => {
+    describe('provided using useClass syntax', () => {
+      it('registers provider using provide token', () => {
+        const providers = [{provide: 'useClassTestService', useClass: TestService}];
+        registerNgModule(moduleName, [], [], providers);
 
-      it("registers provider using string token", () => {
-        providers = [{provide: serviceName, useClass: Service}];
-        var constructor = createModuleClass('', [], [], providers);
-        testModule = new constructor();
-
-        expect(angular.module(constructor.name)['_invokeQueue'].length).toEqual(providers.length);
-        angular.module(constructor.name)['_invokeQueue'].forEach((value: any, index: number) => {
+        // const $injector = angular.injector([moduleName]);
+        const invokeQueue = angular.module(moduleName)['_invokeQueue'];
+        expect(invokeQueue.length).toEqual(providers.length);
+        invokeQueue.forEach((value: any, index: number) => {
           expect(value[2][0]).toEqual(providers[index].provide);
-          expect($injector.get(providers[index].provide).constructor.name).toBe(providers[index].useClass.name);
+          expect(value[2][1]).toEqual(providers[index].useClass);
+          expect(TestService).toEqual(providers[index].useClass);
+        });
+        // expect($injector.get(anotherServiceName)).toEqual($injector.get(serviceName));
+      });
+    });
+
+    describe('useFactory', () => {
+
+      it('registers provider using string token', () => {
+        const providers = [{provide: 'useFactoryTestService', useFactory: (...args) => new TestService(args)}];
+        registerNgModule(moduleName, [], [], providers);
+
+        const invokeQueue = angular.module(moduleName)['_invokeQueue'];
+        expect(invokeQueue.length).toEqual(providers.length);
+        invokeQueue.forEach((value: any, index: number) => {
+          expect(value[0]).toEqual('$provide');
+          expect(value[1]).toEqual('factory');
+          expect(value[2][0]).toEqual(providers[index].provide);
+          expect(value[2][1]).toBe(providers[index].useFactory);
         });
       });
     });
 
-    describe("useFactory", () => {
+    describe('useValue', () => {
 
-      it("registers provider using string token", () => {
-        providers = [{provide: serviceName, useFactory: () => new Service()}];
-        var constructor = createModuleClass('', [], [], providers);
-        testModule = new constructor();
+      it('registers provider using string token', () => {
+        const providers = [{provide: 'useValueTestService', useValue: (...args) => new TestService(args)}];
+        registerNgModule(moduleName, [], [], providers);
 
-        expect(angular.module(constructor.name)['_invokeQueue'].length).toEqual(providers.length);
-        angular.module(constructor.name)['_invokeQueue'].forEach((value: any, index: number) => {
+        const invokeQueue = angular.module(moduleName)['_invokeQueue'];
+        expect(invokeQueue.length).toEqual(providers.length);
+        invokeQueue.forEach((value: any, index: number) => {
+          expect(value[0]).toEqual('$provide');
+          expect(value[1]).toEqual('constant');
           expect(value[2][0]).toEqual(providers[index].provide);
-          expect($injector.get(providers[index].provide).constructor.name).toBe(providers[index].useFactory().constructor.name);
-        });
-      });
-    });
-
-    describe("useValue", () => {
-
-      it("registers provider using string token", () => {
-        providers = [{provide: serviceName, useValue: new Service()}];
-        var constructor = createModuleClass('', [], [], providers);
-        testModule = new constructor();
-
-        expect(angular.module(constructor.name)['_invokeQueue'].length).toEqual(providers.length);
-        angular.module(constructor.name)['_invokeQueue'].forEach((value: any, index: number) => {
-          expect(value[2][0]).toEqual(providers[index].provide);
-          expect($injector.get(providers[index].provide).constructor.name).toEqual(providers[index].useValue.constructor.name);
+          expect(value[2][1]).toEqual(providers[index].useValue);
         });
       });
     });

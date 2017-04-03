@@ -10,7 +10,7 @@
   ],
   "sourceMap": true,
   "exclude": [
-    "bin",
+    "spec",
     "node_modules",
     "src",
     "angular-ts-decorators.d.ts"

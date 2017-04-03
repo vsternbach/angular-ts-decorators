@@ -6,7 +6,7 @@ module.exports = function(config) {
             "angular-ts-decorators.ts",
             "spec/**/*.ts",
         ],
-        exclude: [],
+        exclude: ['src'],
         preprocessors: {
             'angular-ts-decorators.ts': ['coverage'],
             '**/*.ts': ['karma-typescript'],
