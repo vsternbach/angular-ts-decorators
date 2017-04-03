@@ -3,6 +3,10 @@ language: node_js
 node_js:
   - "7"
 
+sudo: required
+
+dist: trusty
+
 branches:
   only:
     - master
