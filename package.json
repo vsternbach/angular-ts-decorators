@@ -1,6 +1,6 @@
 {
   "name": "angular-ts-decorators",
-  "version": "0.0.29",
+  "version": "0.0.30",
   "license": "MIT",
   "author": {
     "name": "Vlad Sternbach",
@@ -25,11 +25,11 @@
     "anguarjs decorators",
     "anguarjs-decorators"
   ],
-  "main": "angular-ts-decorators.js",
-  "types": "angular-ts-decorators.d.ts",
+  "main": "dist/angular-ts-decorators.js",
+  "types": "dist/angular-ts-decorators.d.ts",
   "files": [
-    "angular-ts-decorators.js",
-    "angular-ts-decorators.d.ts"
+    "dist/angular-ts-decorators.js",
+    "dist/angular-ts-decorators.d.ts"
   ],
   "dependencies": {
     "reflect-metadata": "^0.1.8"
@@ -37,14 +37,16 @@
   "devDependencies": {
     "@types/angular": "^1.5.20",
     "@types/jasmine": "^2.5.43",
+    "@types/node": "^7.0.12",
     "angular": "^1.6.0",
     "angular-mocks": "^1.6.3",
+    "coveralls": "^2.13.0",
     "jasmine-core": "^2.5.2",
     "karma": "^1.5.0",
     "karma-chrome-launcher": "^2.0.0",
     "karma-coverage": "^1.1.1",
     "karma-jasmine": "^1.1.0",
-    "karma-typescript": "^3.0.0-beta.1",
+    "karma-typescript": "^3.0.0",
     "typescript": "^2.2.2"
   },
   "peerDependencies": {
@@ -52,7 +54,10 @@
   },
   "scripts": {
     "prebuild": "npm install",
-    "build": "npm run test",
-    "test": "karma start karma.conf.js --single-run"
+    "build": "tsc",
+    "test": "karma start --single-run",
+    "travis": "npm run build && npm run test",
+    "prepublish": "npm run travis",
+    "coveralls": "cat ./coverage/lcov.info | coveralls"
   }
 }

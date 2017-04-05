@@ -1,18 +1,13 @@
 {
+//  "extends": "tsconfig-base",
   "compilerOptions": {
     "module": "commonjs",
     "target": "es5",
+    "experimentalDecorators": true,
     "declaration": true,
-    "experimentalDecorators": true
+    "outDir": "dist"
   },
   "files": [
-    "angular-ts-decorators.ts"
-  ],
-  "sourceMap": true,
-  "exclude": [
-    "spec",
-    "node_modules",
-    "src",
-    "angular-ts-decorators.d.ts"
+    "src/angular-ts-decorators.ts"
   ]
 }

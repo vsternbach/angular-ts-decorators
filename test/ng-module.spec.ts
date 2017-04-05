@@ -1,7 +1,6 @@
-import { NgModule, Injectable, Component, NgModuleDecoratedInstance } from '../angular-ts-decorators';
-import { registerNgModule } from './module.mock';
-import { serviceName, TestService } from './service.mock';
 import * as angular from 'angular';
+import { NgModule } from '../src/angular-ts-decorators';
+import { registerNgModule, TestService } from './mocks';
 
 
 describe('NgModule', () => {

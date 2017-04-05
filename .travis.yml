@@ -24,4 +24,4 @@ script:
   - npm run build
 
 after_success:
-  - npm publish
+  - npm run coveralls

@@ -1,4 +1,22 @@
-import { NgModule } from '../angular-ts-decorators';
+import { NgModule } from '../src/angular-ts-decorators';
+import { Injectable } from '../src/angular-ts-decorators';
+
+export const serviceName = 'TestService';
+
+@Injectable(serviceName)
+export class TestService {
+  private someProp = 'This is private property';
+
+  constructor(private $http: any) {}
+
+  public static someStaticMethod() {
+    return 'This is static method';
+  }
+
+  public someMethod(): string {
+    return this.someProp;
+  }
+}
 
 export const registerNgModule = (name: string = '',
                                  imports: any[] = [],
