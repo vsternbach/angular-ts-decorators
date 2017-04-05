@@ -57,7 +57,6 @@
     "build": "tsc",
     "test": "karma start --single-run",
     "travis": "npm run build && npm run test",
-    "prepublish": "npm run travis",
     "coveralls": "cat ./coverage/lcov.info | coveralls"
   }
 }
