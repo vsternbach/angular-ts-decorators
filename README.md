@@ -2,8 +2,8 @@
 
 [![Build Status](https://travis-ci.org/vsternbach/angular-ts-decorators.svg?branch=master)](https://travis-ci.org/vsternbach/angular-ts-decorators)
 [![dependencies Status](https://david-dm.org/vsternbach/angular-ts-decorators/status.svg)](https://david-dm.org/vsternbach/angular-ts-decorators)
-[![npm-version](https://img.shields.io/npm/v/angular-ts-decorators.svg?maxAge=2592000)](https://npmjs.org/package/angular-ts-decorators)
-[![npm-downloads](https://img.shields.io/npm/dt/angular-ts-decorators.svg?maxAge=2592000)](https://npmjs.org/package/angular-ts-decorators)
+
+[![NPM](https://nodei.co/npm/angular-ts-decorators.png?downloads=true)](https://nodei.co/npm/angular-ts-decorators/)
 
 A collection of angular 2 style decorators for angularjs 1.5.x projects written in typescript.
 
