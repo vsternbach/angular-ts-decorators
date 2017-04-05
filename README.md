@@ -1,6 +1,7 @@
 # angular-ts-decorators
 
 [![Build Status](https://travis-ci.org/vsternbach/angular-ts-decorators.svg?branch=master)](https://travis-ci.org/vsternbach/angular-ts-decorators)
+[![Coverage Status](https://coveralls.io/repos/github/vsternbach/angular-ts-decorators/badge.svg?branch=master)](https://coveralls.io/github/vsternbach/angular-ts-decorators?branch=master)
 [![dependencies Status](https://david-dm.org/vsternbach/angular-ts-decorators/status.svg)](https://david-dm.org/vsternbach/angular-ts-decorators)
 [![bitHound Overall Score](https://www.bithound.io/github/vsternbach/angular-ts-decorators/badges/score.svg)](https://www.bithound.io/github/vsternbach/angular-ts-decorators)
 
