@@ -1,6 +1,6 @@
 {
   "name": "angular-ts-decorators",
-  "version": "0.0.30",
+  "version": "0.0.36",
   "license": "MIT",
   "author": {
     "name": "Vlad Sternbach",
@@ -25,11 +25,11 @@
     "anguarjs decorators",
     "anguarjs-decorators"
   ],
-  "main": "dist/angular-ts-decorators.js",
-  "types": "dist/angular-ts-decorators.d.ts",
+  "main": "angular-ts-decorators.js",
+  "types": "angular-ts-decorators.d.ts",
   "files": [
-    "dist/angular-ts-decorators.js",
-    "dist/angular-ts-decorators.d.ts"
+    "angular-ts-decorators.js",
+    "angular-ts-decorators.d.ts"
   ],
   "dependencies": {
     "reflect-metadata": "^0.1.8"
@@ -57,6 +57,7 @@
     "build": "tsc",
     "test": "karma start --single-run",
     "travis": "npm run build && npm run test",
-    "coveralls": "cat ./coverage/lcov.info | coveralls"
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
+    "npm-publish": "cp dist/angular-ts-decorators.* ./ && npm publish && rm angular-ts-decorators.*"
   }
 }
