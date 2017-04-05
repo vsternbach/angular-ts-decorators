@@ -1,6 +1,7 @@
 # angular-ts-decorators
 
 [![Build Status](https://travis-ci.org/vsternbach/angular-ts-decorators.svg?branch=master)](https://travis-ci.org/vsternbach/angular-ts-decorators)
+[![npm](https://img.shields.io/npm/dt/express.svg)](https://www.npmjs.com/package/angular-ts-decorators)
 
 A collection of angular 2 style decorators for angularjs 1.5.x projects written in typescript.
 
