@@ -237,8 +237,8 @@ function registerDirective(module: ng.IModule, ctrl: DirectiveControllerConstruc
     directiveFunc.$inject = ['$injector', ...(ctrl.$inject || annotate(ctrl))];
   }
   else {
-    directiveFunc = (...args: Array<any>) => ({...options, controller: ctrl});
-    directiveFunc.$inject = ctrl.$inject || annotate(ctrl);
+    ctrl.$inject = ctrl.$inject || annotate(ctrl);
+    directiveFunc = () => ({...options, controller: ctrl});
     // console.error(`Directive ${ctrl.name} was not registered because no link or compile methods were provided`);
   }
   module.directive(name, directiveFunc);
