@@ -1,11 +1,12 @@
 import * as angular from 'angular';
 import { NgModule } from '../src/angular-ts-decorators';
-import { registerNgModule, TestService } from './mocks';
+import { MyDirective, myDirective, registerNgModule, TestService } from './mocks';
 
 
 describe('NgModule', () => {
   const moduleName = 'TestModule';
 
+  debugger;
   describe('has run and config methods', () => {
     it('module should have run and config blocks', () => {
       const NgModuleClass = registerNgModule(moduleName, [], [], []);
@@ -32,7 +33,20 @@ describe('NgModule', () => {
   });
 
   describe('declarations', () => {
-    // TODO
+    describe('directive', () => {
+      it('registers directive', () => {
+        const myModule = registerNgModule(moduleName, [], [MyDirective]);
+        // myModule['module'].directive('myDirective', myDirective);
+        expect(angular.module(moduleName)['_invokeQueue'].length).toEqual(1);
+        angular.module(moduleName)['_invokeQueue'].forEach((value: any, index: number) => {
+          console.error(value);
+          expect(value[0]).toEqual('$compileProvider');
+          expect(value[1]).toEqual('directive');
+          expect(value[2][0]).toEqual('myDirective');
+          // expect(value[2][1]).toEqual(MyDirective);
+        });
+      })
+    });
   });
 
   describe('providers', () => {
@@ -59,6 +73,8 @@ describe('NgModule', () => {
         const invokeQueue = angular.module(moduleName)['_invokeQueue'];
         expect(invokeQueue.length).toEqual(providers.length);
         invokeQueue.forEach((value: any, index: number) => {
+          expect(value[0]).toEqual('$provide');
+          expect(value[1]).toEqual('service');
           expect(value[2][0]).toEqual(providers[index].provide);
           expect(value[2][1]).toEqual(providers[index].useClass);
           expect(TestService).toEqual(providers[index].useClass);

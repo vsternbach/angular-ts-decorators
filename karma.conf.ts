@@ -24,6 +24,7 @@ module.exports = (config) => {
     },
     colors: true,
     browsers: ['Chrome'],
+    logLevel: config.INFO
   });
 
   if (process.env.TRAVIS) {

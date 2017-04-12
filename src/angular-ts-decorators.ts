@@ -166,13 +166,17 @@ export function Component(decoratedOptions: ComponentOptionsDecorated) {
 export function Directive(decoratedOptions: DirectiveOptionsDecorated) {
   return (ctrl: DirectiveControllerConstructor) => {
     const options: ng.IDirective = {...decoratedOptions};
-    // deprecate restrict for directives and force attribute usage only
-    options.restrict = 'A';
     const bindings = Reflect.getMetadata(bindingsSymbol, ctrl);
     if (bindings) {
-      options.scope = bindings;
-      console.warn(`Using scope with directives is deprecated, you should consider writing it as a component.
-      See: https://github.com/toddmotto/angular-styleguide#recommended-properties`);
+      options.bindToController = bindings;
+    }
+    if (options.restrict !== 'A') {
+      console.warn(`Consider removing restrict option from ${decoratedOptions.selector} directive and using it only as 
+      attribute directive.`);
+      options.restrict = options.restrict || 'A';
+    }
+    if (options.link || options.compile) {
+      console.warn(`Consider refactoring ${decoratedOptions.selector} directive using controller class.`);
     }
     Reflect.defineMetadata(nameSymbol, decoratedOptions.selector, ctrl);
     Reflect.defineMetadata(typeSymbol, Declarations.directive, ctrl);
@@ -191,7 +195,7 @@ export function Output(alias?: string) {
 export function Injectable(name?: string) {
   return (Class: any) => {
     if (!name) {
-      console.warn('You are not providing explicit service name, be careful this code might not work when uglified.');
+      console.warn('You are not providing explicit service name, be careful this code might not work as expected when uglified.');
       name = Class.name;
     }
     Reflect.defineMetadata(nameSymbol, name, Class);
@@ -214,12 +218,14 @@ function registerComponent(module: ng.IModule, component: ng.IComponentControlle
 }
 
 function registerDirective(module: ng.IModule, ctrl: DirectiveControllerConstructor) {
+  let directiveFunc;
   const {name, options} = getComponentMetadata(ctrl);
   const {compile, link} = ctrl.prototype;
-  const isValid = compile && typeof compile === 'function' || link && typeof link === 'function';
-  if (isValid) {
-    const directiveFunc =  (...args: Array<any>) => {
-      const instance = new ctrl(args);
+  const legacy = compile && typeof compile === 'function' || link && typeof link === 'function';
+  if (legacy) {
+    directiveFunc =  (...args: Array<any>) => {
+      const injector = args[0]; // reference to $injector
+      const instance = injector.instantiate(ctrl);
       if (compile) {
         options.compile = compile.bind(instance);
       }
@@ -228,12 +234,14 @@ function registerDirective(module: ng.IModule, ctrl: DirectiveControllerConstruc
       }
       return options;
     };
-    directiveFunc.$inject = directiveFunc.$inject || annotate(ctrl);
-    module.directive(name, directiveFunc);
+    directiveFunc.$inject = ['$injector', ...(ctrl.$inject || annotate(ctrl))];
   }
   else {
-    console.error(`Directive ${ctrl.name} was not registered because no link or compile methods were provided`);
+    directiveFunc = (...args: Array<any>) => ({...options, controller: ctrl});
+    directiveFunc.$inject = ctrl.$inject || annotate(ctrl);
+    // console.error(`Directive ${ctrl.name} was not registered because no link or compile methods were provided`);
   }
+  module.directive(name, directiveFunc);
 }
 
 function registerPipe(module: ng.IModule, filter: PipeTransformConstructor) {
