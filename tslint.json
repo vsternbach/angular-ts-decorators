@@ -1,0 +1,81 @@
+{
+  "extends": "tslint:recommended",
+  "rules": {
+    "curly": false,
+    "arrow-parens": false,
+    "array-type": [
+      true,
+      "array-simple"
+    ],
+    "interface-name": false,
+    "ordered-imports": false,
+    "no-unsafe-finally": true,
+    "object-literal-sort-keys": false,
+    "no-var-requires": false,
+    "no-string-literal": false,
+    "no-console": false,
+    "no-namespace": false,
+    "no-consecutive-blank-lines": [
+      true,
+      2
+    ],
+    "trailing-comma": [
+      true,
+      {
+        "singleline": "never"
+      }
+    ],
+    "quotemark": [
+      true,
+      "single",
+      "avoid-escape"
+    ],
+    "variable-name": [
+      true,
+      "ban-keywords",
+      "check-format",
+      "allow-pascal-case",
+      "allow-leading-underscore"
+    ],
+    "linebreak-style": [
+      true,
+      "LF"
+    ],
+    "whitespace": [
+      true,
+      "check-branch",
+      "check-decl",
+      "check-operator",
+      "check-separator",
+      "check-module",
+      "check-type"
+    ],
+    "member-access": false,
+    "member-ordering": [
+      true,
+      "static-before-instance",
+      "variables-before-functions"
+    ],
+    "one-line": [
+      true,
+      "check-catch",
+      "check-finally",
+      "check-open-brace",
+      "check-whitespace"
+    ],
+    "no-empty": false,
+    "ban-types": [
+      true,
+      "Function"
+    ]
+  },
+  "jsRules": {
+    "quotemark": [
+      "single",
+      "avoid-escape"
+    ],
+    "object-literal-sort-keys": false,
+    "trailing-comma": false,
+    "no-trailing-whitespace": true
+  }
+}

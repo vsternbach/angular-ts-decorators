@@ -7,19 +7,19 @@ export const serviceName = 'TestService';
 export class TestService {
   private someProp = 'This is private property';
 
-  constructor(private $http: any) {}
-
-  public static someStaticMethod() {
+  static someStaticMethod() {
     return 'This is static method';
   }
 
-  public someMethod(): string {
+  constructor(private $http: any) {}
+
+  someMethod(): string {
     return this.someProp;
   }
 }
 
 @Directive({
-  selector: "myDirective",
+  selector: 'myDirective',
   scope: true
 })
 export class MyDirective {
@@ -39,7 +39,7 @@ export function myDirective($log, $parse): ng.IDirective {
     link: () => {
       console.log($log, $parse);
     }
-  }
+  };
 }
 
 export const registerNgModule = (name: string = '',
@@ -48,16 +48,16 @@ export const registerNgModule = (name: string = '',
                                  providers: any[] = []): any => {
 
   @NgModule({
-    name: name,
-    imports: imports,
-    declarations: declarations,
-    providers: providers,
+    name,
+    imports,
+    declarations,
+    providers,
   })
   class TestModule {
 
-    public config($httpProvider: ng.IHttpProvider) {}
+    config($httpProvider: ng.IHttpProvider) {}
 
-    public run($rootScope: ng.IRootScopeService) {}
+    run($rootScope: ng.IRootScopeService) {}
   }
 
   return TestModule;

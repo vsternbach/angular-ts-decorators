@@ -24,26 +24,26 @@ export interface ModuleConfig {
   name?: string;
   declarations: Array<ng.IComponentController | ng.Injectable<ng.IDirectiveFactory> | PipeTransform>;
   imports?: Array<string | Function>;
-  exports?: Array<Function>;
+  exports?: Function[];
   providers?: Array<ng.IServiceProvider | ng.Injectable<Function> | ProviderObject>;
-  constants?: Object;
+  constants?: object;
   decorators?: {[name: string]: ng.Injectable<Function>};
 }
 
 export interface NgModuleDecorated {
-  new(...args: Array<any>): NgModuleDecoratedInstance;
   module?: ng.IModule;
+  new(...args: any[]): NgModuleDecoratedInstance;
 }
 
 export interface NgModuleDecoratedInstance {
-  config?(...args: Array<any>): void;
-  run?(...args: Array<any>): void;
+  config?(...args: any[]): void;
+  run?(...args: any[]): void;
 }
 
 export interface ComponentOptionsDecorated {
   selector: string;
-  template?: string | ng.Injectable<(...args: Array<any>) => string>;
-  templateUrl?: string | ng.Injectable<(...args: Array<any>) => string>;
+  template?: string | ng.Injectable<(...args: any[]) => string>;
+  templateUrl?: string | ng.Injectable<(...args: any[]) => string>;
   transclude?: boolean | {[slot: string]: string};
   require?: {[controller: string]: string};
   controllerAs?: string;
@@ -70,7 +70,7 @@ export interface DirectiveOptionsDecorated {
 }
 
 export interface DirectiveControllerConstructor {
-  new(...args: Array<any>): DirectiveController;
+  new(...args: any[]): DirectiveController;
 }
 
 export interface DirectiveController {
@@ -79,11 +79,11 @@ export interface DirectiveController {
 }
 
 export interface PipeTransformConstructor {
-  new(...args: Array<any>): PipeTransform;
+  new(...args: any[]): PipeTransform;
 }
 
 export interface PipeTransform {
-  transform(...args: Array<any>): any;
+  transform(...args: any[]): any;
 }
 
 export interface ClassProvider {
@@ -110,7 +110,7 @@ export type ProviderObject = ClassProvider | FactoryProvider | ValueProvider;
 export function NgModule({ name, declarations, imports = [], providers }: ModuleConfig) {
   return (Class: NgModuleDecorated) => {
     // module registration
-    const deps = imports.map(mod => typeof mod === 'string' ? mod : (<NgModuleDecorated>mod).module.name);
+    const deps = imports.map(mod => typeof mod === 'string' ? mod : (mod as NgModuleDecorated).module.name);
     if (!name) {
       console.warn('You are not providing explicit ngModule name, be careful this code won\'t work when uglified.');
       name = Class.name;
@@ -174,7 +174,7 @@ export function Component(decoratedOptions: ComponentOptionsDecorated) {
     }
 
     if (isAttrSelector) {
-      (<ng.IDirective>options).restrict = 'A';
+      (options as ng.IDirective).restrict = 'A';
     }
 
     const selector = isAttrSelector ?
@@ -194,8 +194,8 @@ export function Directive(decoratedOptions: DirectiveOptionsDecorated) {
       options.bindToController = bindings;
     }
     if (options.restrict !== 'A') {
-      console.warn(`Consider removing restrict option from ${decoratedOptions.selector} directive and using it only as 
-      attribute directive.`);
+      console.warn(`Consider removing restrict option from ${decoratedOptions.selector} directive and using it only as
+       attribute directive.`);
       options.restrict = options.restrict || 'A';
     }
     if (options.link || options.compile) {
@@ -208,17 +208,18 @@ export function Directive(decoratedOptions: DirectiveOptionsDecorated) {
 }
 
 export function Input(alias?: string) {
-  return (target: Object, key: string) => addBindingToMetadata(target, key, '<', alias);
+  return (target: object, key: string) => addBindingToMetadata(target, key, '<', alias);
 }
 
 export function Output(alias?: string) {
-  return (target: Object, key: string) => addBindingToMetadata(target, key, '&', alias);
+  return (target: object, key: string) => addBindingToMetadata(target, key, '&', alias);
 }
 
 export function Injectable(name?: string) {
   return (Class: any) => {
     if (!name) {
-      console.warn('You are not providing explicit service name, be careful this code might not work as expected when uglified.');
+      console.warn('You are not providing explicit service name, ' +
+        'be careful this code might not work as expected when uglified.');
       name = Class.name;
     }
     Reflect.defineMetadata(nameSymbol, name, Class);
@@ -246,7 +247,7 @@ function registerDirective(module: ng.IModule, ctrl: DirectiveControllerConstruc
   const {compile, link} = ctrl.prototype;
   const legacy = compile && typeof compile === 'function' || link && typeof link === 'function';
   if (legacy) {
-    directiveFunc =  (...args: Array<any>) => {
+    directiveFunc =  (...args: any[]) => {
       const injector = args[0]; // reference to $injector
       const instance = injector.instantiate(ctrl);
       if (compile) {
@@ -269,7 +270,7 @@ function registerDirective(module: ng.IModule, ctrl: DirectiveControllerConstruc
 
 function registerPipe(module: ng.IModule, filter: PipeTransformConstructor) {
   const {name} = getNameMetadata(filter);
-  const filterFactory = (...args: Array<any>) => {
+  const filterFactory = (...args: any[]) => {
     const injector = args[0]; // reference to $injector
     const instance = injector.instantiate(filter);
     return instance.transform.bind(instance);
@@ -278,7 +279,8 @@ function registerPipe(module: ng.IModule, filter: PipeTransformConstructor) {
   module.filter(name, filterFactory);
 }
 
-function registerServices(module: ng.IModule, providers: Array<ng.IServiceProvider | ng.Injectable<Function> | ProviderObject>) {
+function registerServices(module: ng.IModule,
+                          providers: Array<ng.IServiceProvider | ng.Injectable<Function> | ProviderObject>) {
   providers.forEach((provider: any) => {
     // providers registered using { provide, useClass/useFactory/useValue } syntax
     if (provider.provide) {
@@ -331,7 +333,7 @@ function getDeclarationType(declaration: any) {
   return Reflect.getMetadata(typeSymbol, declaration);
 }
 
-function addBindingToMetadata(target: Object, key: string, direction: string, alias?: string) {
+function addBindingToMetadata(target: object, key: string, direction: string, alias?: string) {
   const targetConstructor = target.constructor;
   const bindings = Reflect.getMetadata(bindingsSymbol, targetConstructor) || {};
   bindings[key] = alias || direction;
