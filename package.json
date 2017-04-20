@@ -1,6 +1,6 @@
 {
   "name": "angular-ts-decorators",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "license": "MIT",
   "author": {
     "name": "Vlad Sternbach",
@@ -47,6 +47,7 @@
     "karma-coverage": "^1.1.1",
     "karma-jasmine": "^1.1.0",
     "karma-typescript": "^3.0.0",
+    "tslint": "^5.1.0",
     "typescript": "^2.2.2"
   },
   "peerDependencies": {

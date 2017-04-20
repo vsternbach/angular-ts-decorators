@@ -6,7 +6,6 @@ import { MyDirective, myDirective, registerNgModule, TestService } from './mocks
 describe('NgModule', () => {
   const moduleName = 'TestModule';
 
-  debugger;
   describe('has run and config methods', () => {
     it('module should have run and config blocks', () => {
       const NgModuleClass = registerNgModule(moduleName, [], [], []);
@@ -20,7 +19,7 @@ describe('NgModule', () => {
 
       expect(angular.module(moduleName)['_runBlocks'][0]).toBe(ngModuleInstance.run);
       expect(angular.module(moduleName)['_configBlocks'][0][2][0]).toBe(ngModuleInstance.config);
-    })
+    });
   });
 
   describe('imports', () => {
@@ -45,12 +44,11 @@ describe('NgModule', () => {
           expect(value[2][0]).toEqual('myDirective');
           // expect(value[2][1]).toEqual(MyDirective);
         });
-      })
+      });
     });
   });
 
   describe('providers', () => {
-    
     describe('provided as array of classes', () => {
       it('registers provider using class type', () => {
         const providers = [TestService];
