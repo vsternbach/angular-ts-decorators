@@ -38,7 +38,6 @@ describe('NgModule', () => {
         // myModule['module'].directive('myDirective', myDirective);
         expect(angular.module(moduleName)['_invokeQueue'].length).toEqual(1);
         angular.module(moduleName)['_invokeQueue'].forEach((value: any, index: number) => {
-          console.error(value);
           expect(value[0]).toEqual('$compileProvider');
           expect(value[1]).toEqual('directive');
           expect(value[2][0]).toEqual('myDirective');
