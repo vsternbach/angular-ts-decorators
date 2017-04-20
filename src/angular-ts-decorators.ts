@@ -46,6 +46,12 @@ export interface ComponentOptionsDecorated {
   templateUrl?: string | ng.Injectable<(...args: Array<any>) => string>;
   transclude?: boolean | {[slot: string]: string};
   require?: {[controller: string]: string};
+  controllerAs?: string;
+  restrict?: string;
+  /**
+   * @deprecated
+   */
+  replace?: boolean;
 }
 
 export interface DirectiveOptionsDecorated {
@@ -59,6 +65,8 @@ export interface DirectiveOptionsDecorated {
   templateUrl?: string | ((tElement: JQuery, tAttrs: ng.IAttributes) => string);
   terminal?: boolean;
   transclude?: boolean | 'element' | {[slot: string]: string};
+  controllerAs?: string;
+  restrict?: string;
 }
 
 export interface DirectiveControllerConstructor {
@@ -153,12 +161,27 @@ export function Component(decoratedOptions: ComponentOptionsDecorated) {
   return (ctrl: ng.IControllerConstructor) => {
     const options: ng.IComponentOptions = {...decoratedOptions};
     options.controller = ctrl;
+
+    const isAttrSelector = /^[\[].*[\]]$/g.test(decoratedOptions.selector);
+
     const bindings = Reflect.getMetadata(bindingsSymbol, ctrl);
     if (bindings) {
-      options.bindings = bindings;
+      if (isAttrSelector) {
+        options['bindToController'] = bindings;
+        options['controllerAs'] = options['controllerAs'] || '$ctrl';
+      }
+      else options['bindings'] = bindings;
     }
-    Reflect.defineMetadata(nameSymbol, decoratedOptions.selector, ctrl);
-    Reflect.defineMetadata(typeSymbol, Declarations.component, ctrl);
+
+    if (isAttrSelector) {
+      (<ng.IDirective>options).restrict = 'A';
+    }
+
+    const selector = isAttrSelector ?
+      decoratedOptions.selector.substr(1, decoratedOptions.selector.length - 2) : decoratedOptions.selector;
+
+    Reflect.defineMetadata(nameSymbol, selector, ctrl);
+    Reflect.defineMetadata(typeSymbol, isAttrSelector ? Declarations.directive : Declarations.component, ctrl);
     Reflect.defineMetadata(optionsSymbol, options, ctrl);
   };
 }
