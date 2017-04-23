@@ -1,4 +1,4 @@
-import { Directive, NgModule } from '../src/angular-ts-decorators';
+import { Component, Directive, NgModule } from '../src/angular-ts-decorators';
 import { Injectable } from '../src/angular-ts-decorators';
 
 export const serviceName = 'TestService';
@@ -18,18 +18,35 @@ export class TestService {
   }
 }
 
-@Directive({
-  selector: 'myDirective',
-  scope: true
-})
-export class MyDirective {
+export function directive(selector: string) {
+  @Directive({
+    selector,
+    scope: true
+  })
+  class MyDirective {
 
-  // static $inject = ["$log", "$parse"];
-  constructor(private $log: ng.ILogService,
-              private $parse: ng.IParseService) { }
-  $onInit() {
-    console.log(this.$log, this.$parse);
+    constructor(private $log: ng.ILogService,
+                private $parse: ng.IParseService) { }
+    $onInit() {
+      console.log(this.$log, this.$parse);
+    }
   }
+  return MyDirective;
+}
+
+export function component(selector: string) {
+  @Component({
+    selector
+  })
+  class MyComponent {
+
+    constructor(private $log: ng.ILogService,
+                private $parse: ng.IParseService) { }
+    $onInit() {
+      console.log(this.$log, this.$parse);
+    }
+  }
+  return MyComponent;
 }
 
 export function myDirective($log, $parse): ng.IDirective {
