@@ -40,33 +40,14 @@ export interface NgModuleDecoratedInstance {
   run?(...args: any[]): void;
 }
 
-export interface ComponentOptionsDecorated {
+export interface ComponentOptionsDecorated extends ng.IComponentOptions {
   selector: string;
-  template?: string | ng.Injectable<(...args: any[]) => string>;
-  templateUrl?: string | ng.Injectable<(...args: any[]) => string>;
-  transclude?: boolean | {[slot: string]: string};
-  require?: {[controller: string]: string};
-  controllerAs?: string;
   restrict?: string;
-  /**
-   * @deprecated
-   */
   replace?: boolean;
 }
 
-export interface DirectiveOptionsDecorated {
+export interface DirectiveOptionsDecorated extends ng.IDirective {
   selector: string;
-  multiElement?: boolean;
-  priority?: number;
-  require?: string | string[] | {[controller: string]: string};
-  scope?: boolean | {[boundProperty: string]: string};
-  template?: string | ((tElement: JQuery, tAttrs: ng.IAttributes) => string);
-  templateNamespace?: string;
-  templateUrl?: string | ((tElement: JQuery, tAttrs: ng.IAttributes) => string);
-  terminal?: boolean;
-  transclude?: boolean | 'element' | {[slot: string]: string};
-  controllerAs?: string;
-  restrict?: string;
 }
 
 export interface DirectiveControllerConstructor {
@@ -157,12 +138,12 @@ export function NgModule({ name, declarations, imports = [], providers }: Module
   };
 }
 
-export function Component(decoratedOptions: ComponentOptionsDecorated) {
+export function Component({selector, ...options}: ComponentOptionsDecorated) {
   return (ctrl: ng.IControllerConstructor) => {
-    const options: ng.IComponentOptions = {...decoratedOptions};
+    // const options: ng.IComponentOptions = {...decoratedOptions};
     options.controller = ctrl;
 
-    const isAttrSelector = /^[\[].*[\]]$/g.test(decoratedOptions.selector);
+    const isAttrSelector = isAttributeSelector(selector);
 
     const bindings = Reflect.getMetadata(bindingsSymbol, ctrl);
     if (bindings) {
@@ -177,31 +158,31 @@ export function Component(decoratedOptions: ComponentOptionsDecorated) {
       (options as ng.IDirective).restrict = 'A';
     }
 
-    const selector = isAttrSelector ?
-      decoratedOptions.selector.substr(1, decoratedOptions.selector.length - 2) : decoratedOptions.selector;
+    const selectorName = isAttrSelector ? getAttributeName(selector) : selector;
 
-    Reflect.defineMetadata(nameSymbol, selector, ctrl);
+    Reflect.defineMetadata(nameSymbol, kebabToCamel(selectorName), ctrl);
     Reflect.defineMetadata(typeSymbol, isAttrSelector ? Declarations.directive : Declarations.component, ctrl);
     Reflect.defineMetadata(optionsSymbol, options, ctrl);
   };
 }
 
-export function Directive(decoratedOptions: DirectiveOptionsDecorated) {
+export function Directive({selector, ...options}: DirectiveOptionsDecorated) {
   return (ctrl: DirectiveControllerConstructor) => {
-    const options: ng.IDirective = {...decoratedOptions};
+    // const options: ng.IDirective = {...options};
     const bindings = Reflect.getMetadata(bindingsSymbol, ctrl);
     if (bindings) {
       options.bindToController = bindings;
     }
+    options.restrict = options.restrict || 'A';
     if (options.restrict !== 'A') {
-      console.warn(`Consider removing restrict option from ${decoratedOptions.selector} directive and using it only as
+      console.warn(`Consider removing restrict option from ${selector} directive and using it only as
        attribute directive.`);
-      options.restrict = options.restrict || 'A';
     }
     if (options.link || options.compile) {
-      console.warn(`Consider refactoring ${decoratedOptions.selector} directive using controller class.`);
+      console.warn(`Consider refactoring ${selector} directive using controller class.`);
     }
-    Reflect.defineMetadata(nameSymbol, decoratedOptions.selector, ctrl);
+    const selectorName = isAttributeSelector(selector) ? getAttributeName(selector) : selector;
+    Reflect.defineMetadata(nameSymbol, kebabToCamel(selectorName), ctrl);
     Reflect.defineMetadata(typeSymbol, Declarations.directive, ctrl);
     Reflect.defineMetadata(optionsSymbol, options, ctrl);
   };
@@ -342,4 +323,16 @@ function addBindingToMetadata(target: object, key: string, direction: string, al
 
 function annotate(func: any) {
   return angular.injector().annotate(func);
+}
+
+export function kebabToCamel(input: string) {
+  return input.replace(/(-\w)/g, (m) => m[1].toUpperCase());
+}
+
+function getAttributeName(selector: string) {
+  return selector.substr(1, selector.length - 2);
+}
+
+function isAttributeSelector(selector: string) {
+  return /^[\[].*[\]]$/g.test(selector);
 }

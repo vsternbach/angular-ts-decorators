@@ -56,6 +56,7 @@
   "scripts": {
     "prebuild": "npm install",
     "build": "tsc",
+    "test-dev": "karma start",
     "test": "karma start --single-run",
     "travis": "npm run build && npm run test",
     "coveralls": "cat ./coverage/lcov.info | coveralls",

@@ -1,6 +1,6 @@
 import * as angular from 'angular';
-import { NgModule } from '../src/angular-ts-decorators';
-import { MyDirective, myDirective, registerNgModule, TestService } from './mocks';
+import { kebabToCamel, NgModule } from '../src/angular-ts-decorators';
+import { component, directive, registerNgModule, TestService } from './mocks';
 
 
 describe('NgModule', () => {
@@ -32,16 +32,37 @@ describe('NgModule', () => {
   });
 
   describe('declarations', () => {
-    describe('directive', () => {
-      it('registers directive', () => {
-        const myModule = registerNgModule(moduleName, [], [MyDirective]);
-        // myModule['module'].directive('myDirective', myDirective);
-        expect(angular.module(moduleName)['_invokeQueue'].length).toEqual(1);
+    describe('@Component', () => {
+      it('registers as directive', () => {
+        registerNgModule(moduleName, [], [
+          component('camelCaseName'),
+          component('camel-case-name'),
+          component('[camelCaseName]'),
+          component('[camel-case-name]'),
+        ]);
+        expect(angular.module(moduleName)['_invokeQueue'].length).toEqual(4);
         angular.module(moduleName)['_invokeQueue'].forEach((value: any, index: number) => {
           expect(value[0]).toEqual('$compileProvider');
+          if (index < 2) expect(value[1]).toEqual('component');
+          else expect(value[1]).toEqual('directive');
+          expect(value[2][0]).toEqual('camelCaseName');
+        });
+      });
+    });
+    describe('@Directive', () => {
+      it('registers as directive', () => {
+        registerNgModule(moduleName, [], [
+          directive('camelCaseName'),
+          directive('camel-case-name'),
+          directive('[camelCaseName]'),
+          directive('[camel-case-name]'),
+        ]);
+        const invokeQueue = angular.module(moduleName)['_invokeQueue'];
+        expect(invokeQueue.length).toEqual(4);
+        invokeQueue.forEach((value: any) => {
+          expect(value[0]).toEqual('$compileProvider');
           expect(value[1]).toEqual('directive');
-          expect(value[2][0]).toEqual('myDirective');
-          // expect(value[2][1]).toEqual(MyDirective);
+          expect(value[2][0]).toEqual('camelCaseName');
         });
       });
     });
@@ -113,5 +134,17 @@ describe('NgModule', () => {
         });
       });
     });
+  });
+});
+
+describe ('kebabToCamel', () => {
+  it('should convert kebab to camel case', () => {
+    expect(kebabToCamel('long-component-name')).toEqual('longComponentName');
+  });
+  it('should convert kebab to camel case', () => {
+    expect(kebabToCamel('[long-component-name]')).toEqual('[longComponentName]');
+  });
+  it('should leave camel case as it is', () => {
+    expect(kebabToCamel('longComponentName')).toEqual('longComponentName');
   });
 });
