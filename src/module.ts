@@ -6,13 +6,15 @@ import { registerComponent } from './component';
 import { registerDirective } from './directive';
 
 export interface ModuleConfig {
+  id?: string;
+  /**
+   * @deprecated
+   */
   name?: string;
   declarations: Array<ng.IComponentController | ng.Injectable<ng.IDirectiveFactory> | PipeTransform>;
   imports?: Array<string | NgModule>;
   exports?: Function[];
   providers?: Array<ng.IServiceProvider | ng.Injectable<Function> | ProviderObject>;
-  constants?: object;
-  decorators?: {[name: string]: ng.Injectable<Function>};
 }
 
 export interface NgModule {
@@ -21,15 +23,19 @@ export interface NgModule {
   run?(...args: any[]): void;
 }
 
-export function NgModule({ name, declarations, imports = [], providers }: ModuleConfig) {
+export function NgModule({ id, name, declarations, imports = [], providers }: ModuleConfig) {
   return (Class: NgModule) => {
     // module registration
     const deps = imports.map(mod => typeof mod === 'string' ? mod : mod.module.name);
-    if (!name) {
+    if (!id) {
       console.warn('You are not providing explicit ngModule name, be careful this code won\'t work when uglified.');
-      name = (Class as any).name;
+      id = (Class as any).name;
     }
-    const module = angular.module(name, deps);
+    if (name) {
+      console.warn('"name" property in @NgModule is deprecated, please use "id" to align to angular 2+ syntax.');
+      id = name;
+    }
+    const module = angular.module(id, deps);
 
     // components, directives and filters registration
     declarations.forEach((declaration: any) => {

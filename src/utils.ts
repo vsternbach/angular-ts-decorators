@@ -33,11 +33,11 @@ export function isAttributeSelector(selector: string) {
 }
 
 /** @internal */
-export function getMetadata(metadataKey: any, target: object): any {
+export function getMetadata(metadataKey: any, target: any): any {
   return Reflect.getMetadata(metadataKey, target);
 }
 
 /** @internal */
-export function defineMetadata(metadataKey: any, metadataValue: any, target: Object): void {
+export function defineMetadata(metadataKey: any, metadataValue: any, target: any): void {
   Reflect.defineMetadata(metadataKey, metadataValue, target);
 }

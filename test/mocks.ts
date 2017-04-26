@@ -61,7 +61,7 @@ export const registerNgModule = (name: string = '',
                                  providers: any[] = []): any => {
 
   @NgModule({
-    name,
+    id,
     imports,
     declarations,
     providers,

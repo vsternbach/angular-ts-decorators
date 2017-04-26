@@ -9,7 +9,6 @@ export default {
   plugins: [
     typescript({
       typescript: require('typescript'),
-      // tsconfig: 'tsconfig-es2015.json'
     })
   ],
   targets: [
@@ -17,7 +16,7 @@ export default {
       dest: 'dist/' + pkg.main,
       format: 'umd',
       exports: 'named',
-      moduleName: 'angular-ts-decorators',
+      moduleName: pkg.name,
       sourceMap: true
     },
     {
