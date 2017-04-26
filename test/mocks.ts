@@ -1,6 +1,8 @@
-import { Component, Directive, NgModule } from '../src/angular-ts-decorators';
-import { Injectable } from '../src/angular-ts-decorators';
-
+import { Injectable } from '../src/injectable';
+import { Directive } from '../src/directive';
+import { Component } from '../src/component';
+import { NgModule } from '../src/module';
+import { Input, Output } from '../src/input';
 export const serviceName = 'TestService';
 
 @Injectable(serviceName)
@@ -24,6 +26,8 @@ export function directive(selector: string) {
     scope: true
   })
   class MyDirective {
+    @Input() testInput;
+    @Output() testOutput;
 
     constructor(private $log: ng.ILogService,
                 private $parse: ng.IParseService) { }
@@ -39,6 +43,8 @@ export function component(selector: string) {
     selector
   })
   class MyComponent {
+    @Input() testInput;
+    @Output() testOutput;
 
     constructor(private $log: ng.ILogService,
                 private $parse: ng.IParseService) { }
@@ -49,32 +55,22 @@ export function component(selector: string) {
   return MyComponent;
 }
 
-export function myDirective($log, $parse): ng.IDirective {
-  return {
-    restrict: 'A',
-    scope: {},
-    link: () => {
-      console.log($log, $parse);
-    }
-  };
-}
-
 export const registerNgModule = (name: string = '',
                                  imports: any[] = [],
                                  declarations: any[] = [],
                                  providers: any[] = []): any => {
 
   @NgModule({
-    name,
+    id,
     imports,
     declarations,
     providers,
   })
   class TestModule {
 
-    config($httpProvider: ng.IHttpProvider) {}
+    static config($httpProvider: ng.IHttpProvider) {}
 
-    run($rootScope: ng.IRootScopeService) {}
+    static run($rootScope: ng.IRootScopeService) {}
   }
 
   return TestModule;

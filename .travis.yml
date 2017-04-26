@@ -25,3 +25,8 @@ script:
 
 after_success:
   - npm run coveralls
+
+deploy:
+  api_key: $NPM_TOKEN
+  email: vlad.sternbach@gmail.com
+  provider: npm
