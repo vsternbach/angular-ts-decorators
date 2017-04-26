@@ -39,6 +39,7 @@
     "@types/node": "^7.0.12",
     "angular": "^1.6.0",
     "angular-mocks": "^1.6.3",
+    "copyfiles": "^1.2.0",
     "coveralls": "^2.13.0",
     "dts-bundle": "^0.7.2",
     "jasmine-core": "^2.5.2",
