@@ -21,12 +21,18 @@ before_install:
  - sudo dpkg -i google-chrome*.deb
 
 script:
-  - npm run travis
+  - npm run test
 
 after_success:
   - npm run coveralls
+
+before_deploy:
+  - npm run build
 
 deploy:
   api_key: $NPM_TOKEN
   email: vlad.sternbach@gmail.com
   provider: npm
+  on:
+    tags: true
+    branch: master
