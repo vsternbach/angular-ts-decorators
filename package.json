@@ -1,6 +1,6 @@
 {
   "name": "angular-ts-decorators",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "license": "MIT",
   "author": {
     "name": "Vlad Sternbach",
@@ -51,6 +51,7 @@
     "rimraf": "^2.6.1",
     "rollup": "^0.41.6",
     "rollup-plugin-typescript": "^0.8.1",
+    "standard-version": "^4.0.0",
     "tslint": "^5.1.0",
     "typescript": "^2.2.2"
   },
@@ -60,13 +61,11 @@
   },
   "scripts": {
     "clean": "rimraf dist",
-    "prebuild": "npm install",
     "dts": "tsc && rimraf dist/es2015",
-    "test-dev": "karma start",
     "test": "karma start --single-run",
-    "travis": "npm run build && npm run test",
-    "coveralls": "cat ./coverage/lcov.info | coveralls",
-    "build": "npm run clean && npm run dts && rollup -c && copyfiles package.json README.md LICENSE dist/ && cd dist",
-    "publish": "npm version patch && git push --follow-tags"
+    "posttest": "cat ./coverage/lcov.info | coveralls",
+    "build": "npm run clean && npm run dts && rollup -c && copyfiles package.json README.md LICENSE dist/",
+    "release": "standard-version",
+    "postrelease": "git push --follow-tags origin master"
   }
 }
