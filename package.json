@@ -67,6 +67,6 @@
     "build": "npm run clean && npm run dts && rollup -c && copyfiles package.json README.md LICENSE dist/",
     "release": "standard-version",
     "postrelease": "git push --follow-tags origin master",
-    "prepublish": "npm test && npm build && npm release"
+    "prepublishOnly": "npm test && npm run build && npm release"
   }
 }
