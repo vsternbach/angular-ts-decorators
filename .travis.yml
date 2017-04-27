@@ -7,11 +7,6 @@ sudo: required
 
 dist: trusty
 
-# safelist
-branches:
-  only:
-    - master
-
 # install headless chrome
 before_install:
  - export CHROME_BIN=/usr/bin/google-chrome
