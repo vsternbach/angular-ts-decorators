@@ -67,6 +67,6 @@
     "travis": "npm run build && npm run test",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "build": "npm run clean && npm run dts && rollup -c && copyfiles package.json README.md LICENSE dist/ && cd dist",
-    "npm-publish": "npm version [version] && git push --follow-tags"
+    "npm-publish": "npm version patch && git push --follow-tags"
   }
 }
