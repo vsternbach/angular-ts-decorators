@@ -9,8 +9,8 @@ dist: trusty
 
 branches:
   only:
-    - gh-pages
-    - /.*/
+    - master
+    - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
 
 # install headless chrome
 before_install:
@@ -21,11 +21,6 @@ before_install:
  - sudo apt-get install -y libappindicator1 fonts-liberation
  - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
  - sudo dpkg -i google-chrome*.deb
-
-branches:
-  only:
-    - master
-    - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
 
 install:
  - npm install
