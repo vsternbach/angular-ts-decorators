@@ -7,10 +7,12 @@ sudo: required
 
 dist: trusty
 
+# safelist
 branches:
   only:
     - master
 
+# install headless chrome
 before_install:
  - export CHROME_BIN=/usr/bin/google-chrome
  - export DISPLAY=:99.0
@@ -20,19 +22,22 @@ before_install:
  - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
  - sudo dpkg -i google-chrome*.deb
 
-script:
-  - npm run test
+install:
+ - npm install
 
-after_success:
-  - npm run coveralls
+before_script:
+ - npm test
+
+script:
+ - npm run build
 
 before_deploy:
-  - npm run build
+ - cd dist
 
 deploy:
+  provider: npm
   api_key: $NPM_TOKEN
   email: vlad.sternbach@gmail.com
-  provider: npm
+  skip_cleanup: true
   on:
     tags: true
-    branch: master
