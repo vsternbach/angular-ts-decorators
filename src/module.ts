@@ -27,13 +27,13 @@ export function NgModule({ id, name, declarations, imports = [], providers }: Mo
   return (Class: NgModule) => {
     // module registration
     const deps = imports.map(mod => typeof mod === 'string' ? mod : mod.module.name);
-    if (!id) {
-      console.warn('You are not providing explicit ngModule name, be careful this code won\'t work when uglified.');
-      id = (Class as any).name;
-    }
     if (name) {
       console.warn('"name" property in @NgModule is deprecated, please use "id" to align to angular 2+ syntax.');
       id = name;
+    }
+    if (!id) {
+      console.warn('You are not providing ngModule id, be careful this code won\'t work when uglified.');
+      id = (Class as any).name;
     }
     const module = angular.module(id, deps);
 
