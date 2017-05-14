@@ -1,16 +1,10 @@
-import typescript from 'rollup-plugin-typescript';
-
 const pkg = require('./package.json');
 const external = [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)];
 
 export default {
-  entry: 'src/index.ts',
+  entry: 'dist/es2015/index.js',
   external,
-  plugins: [
-    typescript({
-      typescript: require('typescript'),
-    })
-  ],
+  plugins: [],
   targets: [
     {
       dest: 'dist/' + pkg.main,

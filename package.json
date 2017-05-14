@@ -61,10 +61,9 @@
   },
   "scripts": {
     "clean": "rimraf dist coverage",
-    "dts": "tsc && rimraf dist/es2015",
     "test": "karma start --single-run",
     "posttest": "cat ./coverage/lcov.info | coveralls",
-    "build": "npm run clean && npm run dts && rollup -c && copyfiles package.json README.md LICENSE dist/",
+    "build": "npm run clean && tsc && rollup -c && copyfiles package.json README.md LICENSE dist/ && rimraf dist/es2015",
     "release": "standard-version",
     "postrelease": "git push origin master --follow-tags"
   }

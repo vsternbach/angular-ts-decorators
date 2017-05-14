@@ -22,7 +22,7 @@ export function Injectable(name?: string) {
   return (Class: any) => {
     if (!name) {
       console.warn('You are not providing explicit service name, ' +
-        'be careful this code might not work as expected when minified.');
+        'be careful this code might not work as expected when uglified with mangling enabled.');
       name = Class.name;
     }
     defineMetadata(metadataKeys.name, name, Class);
@@ -55,7 +55,7 @@ export function registerProviders(module: ng.IModule,
     }
     // providers registered as classes
     else {
-      const name = getMetadata(metadataKeys.name, provider)
+      const name = getMetadata(metadataKeys.name, provider);
       provider.$inject = provider.$inject || annotate(provider);
       if (provider.prototype.$get) {
         module.provider(name, provider);
