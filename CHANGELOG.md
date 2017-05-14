@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.0.14"></a>
+## [1.0.14](https://github.com/vsternbach/angular-ts-decorators/compare/v1.0.13...v1.0.14) (2017-05-14)
+
+
+### Bug Fixes
+
+* **build:** fix interfaces export issue ([bdf6cfe](https://github.com/vsternbach/angular-ts-decorators/commit/bdf6cfe))
+
+
+
 <a name="1.0.13"></a>
 ## [1.0.13](https://github.com/vsternbach/angular-ts-decorators/compare/v1.0.12...v1.0.13) (2017-04-27)
 
