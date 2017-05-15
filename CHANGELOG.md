@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.0.15"></a>
+## [1.0.15](https://github.com/vsternbach/angular-ts-decorators/compare/v1.0.14...v1.0.15) (2017-05-15)
+
+
+### Bug Fixes
+
+* **build:** add minified build ([10db0e0](https://github.com/vsternbach/angular-ts-decorators/commit/10db0e0))
+* **deploy:** change string substitution to POSIX format ([0eea0d9](https://github.com/vsternbach/angular-ts-decorators/commit/0eea0d9))
+
+
+
 <a name="1.0.14"></a>
 ## [1.0.14](https://github.com/vsternbach/angular-ts-decorators/compare/v1.0.13...v1.0.14) (2017-05-14)
 
