@@ -2,7 +2,11 @@ const pkg = require('./package.json');
 const external = [...Object.keys(pkg.dependencies), ...Object.keys(pkg.peerDependencies)];
 
 export default {
-  entry: 'dist/es2015/index.js',
+  entry: 'dist/temp/index.js',
+  globals: {
+    angular: 'angular',
+    tslib: 'tslib'
+  },
   external,
   plugins: [],
   targets: [

@@ -7,7 +7,7 @@
     "declaration": true,
     "declarationDir": "dist/types",
     "stripInternal": true,
-    "outDir": "dist/es2015",
+    "outDir": "dist/temp",
     "importHelpers": true
   },
   "files": [
