@@ -1,5 +1,6 @@
 import * as angular from 'angular';
 import { component, directive, registerNgModule, TestService } from './mocks';
+import { getMetadata } from '../src/utils';
 
 
 describe('NgModule', () => {
@@ -32,7 +33,7 @@ describe('NgModule', () => {
 
   describe('declarations', () => {
     describe('@Component', () => {
-      it('registers as directive', () => {
+      it('registers as component or directive', () => {
         registerNgModule(moduleName, [], [
           component('camelCaseName'), // registers as component
           component('camel-case-name'), // registers as component
@@ -63,7 +64,21 @@ describe('NgModule', () => {
           });
         });
       });
+
+      describe('@HostListener', () => {
+        it('injects $element and adds $postLink and $onDestroy lifecycle hooks' , () => {
+          registerNgModule(moduleName, [], [
+            component('camelCaseName')
+          ]);
+          const invokeQueue = angular.module(moduleName)['_invokeQueue'];
+          const ctrlProto = invokeQueue[0][2][1].controller.prototype;
+          expect(ctrlProto['constructor']['$inject'][0]).toEqual('$element');
+          expect(ctrlProto['$postLink']).toBeDefined();
+          expect(ctrlProto['$onDestroy']).toBeDefined();
+        });
+      });
     });
+
     describe('@Directive', () => {
       it('registers as directive', () => {
         registerNgModule(moduleName, [], [

@@ -3,6 +3,7 @@ import { Directive } from '../src/directive';
 import { Component } from '../src/component';
 import { NgModule } from '../src/module';
 import { Input, Output } from '../src/input';
+import { HostListener } from '../src/hostListener';
 export const serviceName = 'TestService';
 
 @Injectable(serviceName)
@@ -50,6 +51,11 @@ export function component(selector: string) {
                 private $parse: ng.IParseService) { }
     $onInit() {
       console.log(this.$log, this.$parse);
+    }
+
+    @HostListener('click')
+    onClick() {
+      console.log('click');
     }
   }
   return MyComponent;
