@@ -1,6 +1,5 @@
 import * as angular from 'angular';
 import { component, directive, registerNgModule, TestService } from './mocks';
-import { getMetadata } from '../src/utils';
 
 
 describe('NgModule', () => {
@@ -74,6 +73,21 @@ describe('NgModule', () => {
           const ctrlProto = invokeQueue[0][2][1].controller.prototype;
           expect(ctrlProto['constructor']['$inject'][0]).toEqual('$element');
           expect(ctrlProto['$postLink']).toBeDefined();
+          expect(ctrlProto['$onDestroy']).toBeDefined();
+        });
+      });
+
+      describe('lifecycle hooks', () => {
+        it('replaces angular lifecycle hooks to angularjs lifecycle hooks' , () => {
+          registerNgModule(moduleName, [], [
+            component('camelCaseName')
+          ]);
+          const invokeQueue = angular.module(moduleName)['_invokeQueue'];
+          const ctrlProto = invokeQueue[0][2][1].controller.prototype;
+          expect(ctrlProto['$onInit']).toBeDefined();
+          expect(ctrlProto['$postLink']).toBeDefined();
+          expect(ctrlProto['$onChanges']).toBeDefined();
+          expect(ctrlProto['$doCheck']).toBeDefined();
           expect(ctrlProto['$onDestroy']).toBeDefined();
         });
       });

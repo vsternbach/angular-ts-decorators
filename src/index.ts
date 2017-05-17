@@ -5,3 +5,4 @@ export { Pipe, PipeTransform } from './pipe';
 export { Input, Output } from './input';
 export { NgModule } from './module';
 export { HostListener } from './hostListener';
+export * from './lifecycle_hooks';

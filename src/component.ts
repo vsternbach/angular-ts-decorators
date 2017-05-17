@@ -3,6 +3,7 @@ import {
   metadataKeys
 } from './utils';
 import { IHostListeners } from './hostListener';
+import { LifecycleHooks, ngLifecycleHooksMap } from './lifecycle_hooks';
 
 export interface ComponentOptionsDecorated extends ng.IComponentOptions {
   selector: string;
@@ -27,8 +28,9 @@ export function Component({selector, ...options}: ComponentOptionsDecorated) {
       (options as ng.IDirective).restrict = 'A';
     }
 
-    const selectorName = isAttrSelector ? getAttributeName(selector) : selector;
+    replaceLifecycleHooks(ctrl);
 
+    const selectorName = isAttrSelector ? getAttributeName(selector) : selector;
     defineMetadata(metadataKeys.name, kebabToCamel(selectorName), ctrl);
     defineMetadata(metadataKeys.declaration, isAttrSelector ? Declarations.directive : Declarations.component, ctrl);
     defineMetadata(metadataKeys.options, options, ctrl);
@@ -75,4 +77,16 @@ function extendWithHostListeners(ctrl: {new(...args: any[])}, listeners: IHostLi
   }
   NewCtrl.$inject = ['$element', ...ctrl.$inject];
   return NewCtrl;
+}
+
+/** @internal */
+function replaceLifecycleHooks(ctrl: ng.IControllerConstructor) {
+  const ctrlClass = ctrl.prototype;
+  Object.keys(ctrlClass).forEach(key => {
+    const hook = key.substr(2);
+    if (LifecycleHooks[hook] >= 0) {
+      ctrlClass[ngLifecycleHooksMap[LifecycleHooks[hook]]] = ctrlClass[key];
+      delete ctrlClass[key];
+    }
+  });
 }

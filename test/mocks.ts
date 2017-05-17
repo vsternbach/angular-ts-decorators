@@ -3,7 +3,9 @@ import { Directive } from '../src/directive';
 import { Component } from '../src/component';
 import { NgModule } from '../src/module';
 import { Input, Output } from '../src/input';
+import { AfterViewInit, DoCheck, OnChanges, OnDestroy, OnInit, SimpleChanges } from '../src/lifecycle_hooks';
 import { HostListener } from '../src/hostListener';
+
 export const serviceName = 'TestService';
 
 @Injectable(serviceName)
@@ -43,15 +45,27 @@ export function component(selector: string) {
   @Component({
     selector
   })
-  class MyComponent {
+  class MyComponent implements OnInit, OnChanges, DoCheck, OnDestroy, AfterViewInit {
     @Input() testInput;
     @Output() testOutput;
 
     constructor(private $log: ng.ILogService,
                 private $parse: ng.IParseService) { }
-    $onInit() {
+    ngOnInit() {
       console.log(this.$log, this.$parse);
     }
+
+    ngOnChanges(changes: SimpleChanges) {
+      console.log(this.$log, this.$parse);
+    }
+
+    ngDoCheck() {
+      console.log(this.$log, this.$parse);
+    }
+
+    ngOnDestroy() {}
+
+    ngAfterViewInit() {}
 
     @HostListener('click')
     onClick() {
