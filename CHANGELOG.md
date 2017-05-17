@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.1.0"></a>
+# [1.1.0](https://github.com/vsternbach/angular-ts-decorators/compare/v1.0.15...v1.1.0) (2017-05-17)
+
+
+### Bug Fixes
+
+* **@NgModule:** add backward compatibility for deprecated NgModuleDecorated ([97f7fd5](https://github.com/vsternbach/angular-ts-decorators/commit/97f7fd5))
+
+
+### Features
+
+* **@Component:** add [@HostListener](https://github.com/HostListener) ([26f5094](https://github.com/vsternbach/angular-ts-decorators/commit/26f5094)), closes [#13](https://github.com/vsternbach/angular-ts-decorators/issues/13)
+* **@Component:** add angular 2+ style lifecycle hooks support ([b2fd1bf](https://github.com/vsternbach/angular-ts-decorators/commit/b2fd1bf))
+
+
+
 <a name="1.0.15"></a>
 ## [1.0.15](https://github.com/vsternbach/angular-ts-decorators/compare/v1.0.14...v1.0.15) (2017-05-15)
 
