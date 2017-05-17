@@ -238,7 +238,7 @@ export class AppModule {
    }
  }
  ```
- The implementation of it angularjs will be as follows, it attaches method decorated with @HostListener as event handler on component's $element in $postLink and dettaches it in $onDestroy:
+ The implementation of it in angularjs as follows, it injects $element into component constructor and attaches method decorated with @HostListener as event handler on $element in $postLink and dettaches it in $onDestroy:
   ```js
   
   export class MyComponent {
