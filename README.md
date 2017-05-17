@@ -36,7 +36,7 @@ otherwise you need to provide `reflect-metadata` shim by yourself.
 | @Component    | angular.component                         |   |
 | @Input        | angular.component options binding ('<')  | can be used only inside @Component decorator <br> default input binding value can be overridden by passing parameter to the decorator |
 | @Output       | angular.component options binding ('&')  | can be used only inside @Component decorator |
-| @HostListener       | ---  | see [@HostListener](#@HostListener) for details |
+| @HostListener       | ---  | see [@HostListener](#HostListener) for details |
 | @Directive    | angular.directive                         |   |
 | @Pipe         | angular.filter                            |   |
 
@@ -223,7 +223,7 @@ export class AppModule {
  want to provide to your module config and run blocks as arguments of config 
  and run methods of the module class and they'll be injected by their names.
  
- ## @HostListener
+ ## HostListener
  
  @HostListener is a special method decorator introduced in angular 2, see [official docs](https://angular.io/docs/ts/latest/guide/style-guide.html#!#directives)
  
