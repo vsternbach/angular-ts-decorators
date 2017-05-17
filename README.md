@@ -29,13 +29,14 @@ otherwise you need to provide `reflect-metadata` shim by yourself.
 
 ## Available decorators
 
-| Decorator     | Angular analog                            | Details   |
+| Decorator     | angularjs analog                            | Details   |
 |:------------- |:------------------------------------------|:----------|
 | @NgModule     | angular.module                            |   |
 | @Injectable   | angular.service / angular.provider        | registers as provider if decorated class implements $get method   |
 | @Component    | angular.component                         |   |
 | @Input        | angular.component options binding ('<')  | can be used only inside @Component decorator <br> default input binding value can be overridden by passing parameter to the decorator |
 | @Output       | angular.component options binding ('&')  | can be used only inside @Component decorator |
+| @HostListener       | ---  | see [@HostListener](#@HostListener) for details |
 | @Directive    | angular.directive                         |   |
 | @Pipe         | angular.filter                            |   |
 
@@ -222,6 +223,41 @@ export class AppModule {
  want to provide to your module config and run blocks as arguments of config 
  and run methods of the module class and they'll be injected by their names.
  
+ ## @HostListener
+ 
+ @HostListener is a special method decorator introduced in angular 2, see [official docs](https://angular.io/docs/ts/latest/guide/style-guide.html#!#directives)
+ 
+ Usage:
+ ```js
+ import { HostListener } from 'angular-ts-decorators';
+ 
+ export class MyComponent {
+   @HostListener('click mouseover')
+   onClick() {
+     console.log('click');
+   }
+ }
+ ```
+ The implementation of it angularjs will be as follows, it attaches method decorated with @HostListener as event handler on component's $element in $postLink and dettaches it in $onDestroy:
+  ```js
+  
+  export class MyComponent {
+    constructor(private $element: ng.IAugmentedJQuery) {}
+    
+    $postLink() {
+      this.$element.on('click mouseover', this.onClick.bind(this));
+    }  
+    
+    $onDestroy() {
+      this.$element.off('click mouseover', this.onClick);
+    }
+    
+    onClick() {
+      console.log('click');
+    }
+  }
+  ```
+  
  ## Contributing
  
  
