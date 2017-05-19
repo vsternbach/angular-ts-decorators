@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.1.1"></a>
+## [1.1.1](https://github.com/vsternbach/angular-ts-decorators/compare/v1.1.0...v1.1.1) (2017-05-19)
+
+
+### Bug Fixes
+
+* **@Component:** fix injection error when original controller has no dependencies ([5b5b6a9](https://github.com/vsternbach/angular-ts-decorators/commit/5b5b6a9))
+
+
+
 <a name="1.1.0"></a>
 # [1.1.0](https://github.com/vsternbach/angular-ts-decorators/compare/v1.0.15...v1.1.0) (2017-05-17)
 
