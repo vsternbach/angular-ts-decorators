@@ -75,7 +75,6 @@ describe('NgModule', () => {
 
           inject.forEach(dependency => expect(typeof dependency).toBe('string'));
           expect(inject[0]).toEqual('$element');
-          expect(ctrlProto['constructor']['$inject'][0]).toEqual('$element');
           expect(ctrlProto['$postLink']).toBeDefined();
           expect(ctrlProto['$onDestroy']).toBeDefined();
         });
