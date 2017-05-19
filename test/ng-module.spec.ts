@@ -71,6 +71,10 @@ describe('NgModule', () => {
           ]);
           const invokeQueue = angular.module(moduleName)['_invokeQueue'];
           const ctrlProto = invokeQueue[0][2][1].controller.prototype;
+          const inject = ctrlProto['constructor']['$inject'];
+
+          inject.forEach(dependency => expect(typeof dependency).toBe('string'));
+          expect(inject[0]).toEqual('$element');
           expect(ctrlProto['constructor']['$inject'][0]).toEqual('$element');
           expect(ctrlProto['$postLink']).toBeDefined();
           expect(ctrlProto['$onDestroy']).toBeDefined();

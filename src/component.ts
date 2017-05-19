@@ -75,7 +75,7 @@ function extendWithHostListeners(ctrl: {new(...args: any[])}, listeners: IHostLi
       });
     }
   }
-  NewCtrl.$inject = ['$element', ...ctrl.$inject];
+  NewCtrl.$inject = ['$element', ...ctrl.$inject || []];
   return NewCtrl;
 }
 
