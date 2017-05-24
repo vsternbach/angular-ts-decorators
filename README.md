@@ -20,12 +20,10 @@ Some of the decorator interfaces (@Component and @Directive) were heavily inspir
 
 ## Installation
 
-`npm i --save-dev angular-ts-decorators`
+`npm i -S angular-ts-decorators`
 
-Dependencies: `angular` and `reflect-metadata`
-> I assume you're using this package for angular project written in typescript and using some kind of bundler
-like Webpack or SystemJS, so no need to worry about the dependencies then, they'll be resolved automatically by your module loader,
-otherwise you need to provide `reflect-metadata` shim by yourself. 
+Dependencies: `tslib` and `reflect-metadata`
+Peer dependencies: `"angular": ">=1.5.0"`
 
 ## Available decorators
 
