@@ -207,11 +207,11 @@ import { UppercasePipe } from 'greeting/uppercase.filter';
   ]
 })
 export class AppModule {
-  public config(GreetingServiceProvider: GreetingService) {
+  static config(GreetingServiceProvider: GreetingService) {
     GreetingServiceProvider.setGreeting('Hello decorated provider');
   }
 
-  public run(GreetingService: IGreetingService) {
+  static run(GreetingService: IGreetingService) {
     console.log(GreetingService.getGreeting());
   }
 }
