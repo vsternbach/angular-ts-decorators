@@ -58,14 +58,16 @@
     "angular": ">=1.5.0",
     "typescript": ">=2.2.0"
   },
+
   "scripts": {
     "clean": "rimraf dist coverage",
     "test": "karma start --single-run",
-    "test-dev": "karma start",
+    "test:dev": "karma start",
     "posttest": "cat ./coverage/lcov.info | coveralls",
-    "build": "npm run clean && tsc && rollup -c && npm run uglify && copyfiles package.json README.md LICENSE dist/ && rimraf dist/temp",
+    "build": "npm run clean && tsc && rollup -c && npm run uglify && copyfiles package.json README.md CHANGELOG.md LICENSE dist/ && rimraf dist/temp",
     "uglify": "for f in dist/*.js; do ./node_modules/uglify-es/bin/uglifyjs $f --compress drop_console --mangle --output ${f%.js}.min.js; done",
     "release": "standard-version",
     "postrelease": "git push origin master --follow-tags"
   }
+
 }
