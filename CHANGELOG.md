@@ -6,6 +6,11 @@ All notable changes to this project will be documented in this file. See [standa
 ## [1.1.2](https://github.com/vsternbach/angular-ts-decorators/compare/v1.1.1...v1.1.2) (2017-06-21)
 
 
+### Features
+
+* **@Component:** add support for styles using webpack require ([f0703ed](https://github.com/vsternbach/angular-ts-decorators/commit/f0703ed)), closes [#25](https://github.com/vsternbach/angular-ts-decorators/issues/25)
+
+
 
 <a name="1.1.1"></a>
 ## [1.1.1](https://github.com/vsternbach/angular-ts-decorators/compare/v1.1.0...v1.1.1) (2017-05-19)
