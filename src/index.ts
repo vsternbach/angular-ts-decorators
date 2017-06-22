@@ -1,3 +1,4 @@
+export { platformBrowserDynamic } from './bootstrap';
 export { Component } from './component';
 export { Directive } from './directive';
 export { Injectable } from './injectable';
