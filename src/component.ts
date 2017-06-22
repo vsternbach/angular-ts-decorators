@@ -4,6 +4,7 @@ import {
 } from './utils';
 import { IHostListeners } from './hostListener';
 import { LifecycleHooks, ngLifecycleHooksMap } from './lifecycle_hooks';
+import { extendWithHostListeners } from './directive';
 
 export interface ComponentOptionsDecorated extends ng.IComponentOptions {
   selector: string;
@@ -47,37 +48,6 @@ export function registerComponent(module: ng.IModule, component: ng.IComponentCo
     options.controller = extendWithHostListeners(options.controller, listeners);
   }
   module.component(name, options);
-}
-
-/** @internal */
-function extendWithHostListeners(ctrl: {new(...args: any[])}, listeners: IHostListeners) {
-  const handlers = Object.keys(listeners);
-
-  class NewCtrl extends ctrl {
-    constructor(private $element, ...args: any[]) {
-      super(...args);
-    }
-    $postLink() {
-      if (super.$postLink) {
-        super.$postLink();
-      }
-      handlers.forEach(handler => {
-        const { eventName } = listeners[handler];
-        this.$element.on(eventName, this[handler].bind(this));
-      });
-    }
-    $onDestroy() {
-      if (super.$onDestroy) {
-        super.$onDestroy();
-      }
-      handlers.forEach(handler => {
-        const { eventName } = listeners[handler];
-        this.$element.off(eventName, this[handler]);
-      });
-    }
-  }
-  NewCtrl.$inject = ['$element', ...ctrl.$inject || []];
-  return NewCtrl;
 }
 
 /** @internal */
