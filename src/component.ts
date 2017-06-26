@@ -3,7 +3,8 @@ import {
   metadataKeys
 } from './utils';
 import { IHostListeners } from './hostListener';
-import { LifecycleHooks, ngLifecycleHooksMap } from './lifecycle_hooks';
+import { ngLifecycleHooksMap } from './lifecycle_hooks';
+import { isFunction } from 'angular';
 
 export interface ComponentOptionsDecorated extends ng.IComponentOptions {
   selector: string;
@@ -83,11 +84,19 @@ function extendWithHostListeners(ctrl: {new(...args: any[])}, listeners: IHostLi
 /** @internal */
 function replaceLifecycleHooks(ctrl: ng.IControllerConstructor) {
   const ctrlClass = ctrl.prototype;
-  Object.keys(ctrlClass).forEach(key => {
-    const hook = key.substr(2);
-    if (LifecycleHooks[hook] >= 0) {
-      ctrlClass[ngLifecycleHooksMap[LifecycleHooks[hook]]] = ctrlClass[key];
-      delete ctrlClass[key];
-    }
+  const ngHooksFound: string[] = getHooksOnCtrlClass(ctrlClass);
+
+  ngHooksFound.forEach((ngHook: string) => {
+    const angularJsHook: string = ngLifecycleHooksMap[ngHook];
+
+    ctrlClass[angularJsHook] = ctrlClass[ngHook];
+
+    delete ctrlClass[ngHook];
   });
+}
+
+/** @internal */
+function getHooksOnCtrlClass(ctrlClass: any): string[] {
+  return Object.keys(ngLifecycleHooksMap)
+    .filter((hook: string) => isFunction(ctrlClass[hook]));
 }
