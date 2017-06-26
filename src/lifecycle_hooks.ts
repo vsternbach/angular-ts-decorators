@@ -1,24 +1,13 @@
 /**
  * @internal
- */
-export enum LifecycleHooks {
-  OnInit,
-  OnDestroy,
-  DoCheck,
-  OnChanges,
-  AfterViewInit
-}
-
-/**
- * @internal
  * @desc Mapping between angular and angularjs LifecycleHooks
  */
-export const ngLifecycleHooksMap = {
-  [LifecycleHooks.OnInit]: '$onInit',
-  [LifecycleHooks.OnDestroy]: '$onDestroy',
-  [LifecycleHooks.DoCheck]: '$doCheck',
-  [LifecycleHooks.OnChanges]: '$onChanges',
-  [LifecycleHooks.AfterViewInit]: '$postLink'
+export const ngLifecycleHooksMap: object = {
+  ngOnInit: '$onInit',
+  ngOnDestroy: '$onDestroy',
+  ngDoCheck: '$doCheck',
+  ngOnChanges: '$onChanges',
+  ngAfterViewInit: '$postLink'
 };
 
 /**
