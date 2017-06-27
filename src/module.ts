@@ -22,6 +22,7 @@ export interface NgModule {
   module?: ng.IModule;
   config?(...args: any[]): void;
   run?(...args: any[]): void;
+  [p: string]: any;
 }
 
 export function NgModule({ id, name, declarations = [], imports = [], providers = [] }: ModuleConfig) {
