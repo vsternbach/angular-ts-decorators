@@ -1,9 +1,10 @@
 import * as angular from 'angular';
 import { PipeTransform, registerPipe } from './pipe';
-import { ProviderObject, registerProviders } from './injectable';
+import { registerProviders } from './injectable';
 import { annotate, Declarations, getMetadata, metadataKeys } from './utils';
 import { registerComponent } from './component';
 import { registerDirective } from './directive';
+import { Provider } from './provider';
 
 export interface ModuleConfig {
   id?: string;
@@ -14,7 +15,7 @@ export interface ModuleConfig {
   declarations?: Array<ng.IComponentController | ng.Injectable<ng.IDirectiveFactory> | PipeTransform>;
   imports?: Array<string | NgModule>;
   exports?: Function[];
-  providers?: Array<ng.IServiceProvider | ng.Injectable<Function> | ProviderObject>;
+  providers?: Provider[];
 }
 
 export interface NgModule {
@@ -23,7 +24,7 @@ export interface NgModule {
   run?(...args: any[]): void;
 }
 
-export function NgModule({ id, name, declarations, imports = [], providers }: ModuleConfig) {
+export function NgModule({ id, name, declarations = [], imports = [], providers = [] }: ModuleConfig) {
   return (Class: NgModule) => {
     // module registration
     const deps = imports.map(mod => typeof mod === 'string' ? mod : mod.module.name);

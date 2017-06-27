@@ -1,10 +1,6 @@
 import * as angular from 'angular';
 import { NgModule } from './module';
-export declare const Type: FunctionConstructor;
-export declare function isType(v: any): v is Type<any>;
-export interface Type<T> extends Function {
-  new (...args: any[]): T;
-}
+import { Type } from './type';
 
 export interface CompilerOptions {
   strictDi?: boolean;
