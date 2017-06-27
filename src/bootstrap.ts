@@ -1,4 +1,4 @@
-import * as angular from 'angular';
+import { bootstrap, element } from 'angular';
 import { NgModule } from './module';
 import { Type } from './type';
 
@@ -27,8 +27,8 @@ export const PlatformRef = {
     let strictDi = true;
     if (compilerOptions) strictDi = compilerOptions.strictDi;
 
-    angular.element(document).ready(() => {
-      angular.bootstrap(document, [(moduleType as NgModule).module.name], { strictDi });
+    element(document).ready(() => {
+      bootstrap(document, [(moduleType as NgModule).module.name], { strictDi });
     });
   }
 };

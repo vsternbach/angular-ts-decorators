@@ -15,6 +15,7 @@ export interface DirectiveControllerConstructor {
 export interface DirectiveController {
   compile?: ng.IDirectiveCompileFn;
   link?: ng.IDirectiveLinkFn | ng.IDirectivePrePost;
+  [p: string]: any;
 }
 
 export function Directive({selector, ...options}: DirectiveOptionsDecorated) {
