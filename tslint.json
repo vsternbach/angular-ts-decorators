@@ -64,6 +64,7 @@
       "check-whitespace"
     ],
     "no-empty": false,
+    "no-empty-interface": false,
     "ban-types": [
       true,
       "Function"

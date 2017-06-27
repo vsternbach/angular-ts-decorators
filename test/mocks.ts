@@ -37,6 +37,11 @@ export function directive(selector: string) {
     $onInit() {
       console.log(this.$log, this.$parse);
     }
+
+    @HostListener('click')
+    onClick() {
+      console.log('click');
+    }
   }
   return MyDirective;
 }

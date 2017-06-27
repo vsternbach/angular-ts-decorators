@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.2.2"></a>
+## [1.2.2](https://github.com/vsternbach/angular-ts-decorators/compare/v1.2.1...v1.2.2) (2017-06-27)
+
+
+### Bug Fixes
+
+* **build:** rename package-lock to npm-shrinkwrap ([853a8d6](https://github.com/vsternbach/angular-ts-decorators/commit/853a8d6))
+
+
+
+<a name="1.2.1"></a>
+## [1.2.1](https://github.com/vsternbach/angular-ts-decorators/compare/v1.2.0...v1.2.1) (2017-06-27)
+
+
+### Bug Fixes
+
+* **build:** add package-lock and upgrade to typescript 2.4.1 ([fd7b43e](https://github.com/vsternbach/angular-ts-decorators/commit/fd7b43e))
+
+
+
+<a name="1.2.0"></a>
+# [1.2.0](https://github.com/vsternbach/angular-ts-decorators/compare/v1.1.2...v1.2.0) (2017-06-27)
+
+
+### Bug Fixes
+
+* **NgModule:** make declarations optional ([6c510d1](https://github.com/vsternbach/angular-ts-decorators/commit/6c510d1))
+* add Type and Provider from angular source code ([2174cec](https://github.com/vsternbach/angular-ts-decorators/commit/2174cec))
+
+
+### Features
+
+* **bootstrap:** add bootstrap abstraction as in angular 2 ([84356ca](https://github.com/vsternbach/angular-ts-decorators/commit/84356ca))
+* **directive:** add [@HostListener](https://github.com/HostListener) support ([b34250f](https://github.com/vsternbach/angular-ts-decorators/commit/b34250f))
+
+
+
 <a name="1.1.2"></a>
 ## [1.1.2](https://github.com/vsternbach/angular-ts-decorators/compare/v1.1.1...v1.1.2) (2017-06-21)
 

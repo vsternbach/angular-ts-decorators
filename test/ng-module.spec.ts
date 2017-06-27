@@ -1,7 +1,6 @@
 import * as angular from 'angular';
 import { component, directive, registerNgModule, TestService } from './mocks';
 
-
 describe('NgModule', () => {
   const moduleName = 'TestModule';
 
@@ -31,7 +30,7 @@ describe('NgModule', () => {
   });
 
   describe('declarations', () => {
-    describe('@Component', () => {
+    describe('@Component:', () => {
       it('registers as component or directive', () => {
         registerNgModule(moduleName, [], [
           component('camelCaseName'), // registers as component
@@ -96,7 +95,7 @@ describe('NgModule', () => {
       });
     });
 
-    describe('@Directive', () => {
+    describe('@Directive:', () => {
       it('registers as directive', () => {
         registerNgModule(moduleName, [], [
           directive('camelCaseName'),
@@ -122,15 +121,27 @@ describe('NgModule', () => {
           const invokeQueue = angular.module(moduleName)['_invokeQueue'];
           const directiveObject = invokeQueue[0][2][1]();
           expect(directiveObject).toBeDefined();
-          expect(directiveObject).toEqual({
-            bindToController: {
+          expect(directiveObject.bindToController).toEqual({
               testInput: '<',
               testOutput: '&',
-            },
-            restrict: 'A',
-            scope: true,
-            controller: myDirective
           });
+        });
+      });
+
+
+      describe('@HostListener', () => {
+        it('injects $element and adds $postLink and $onDestroy lifecycle hooks' , () => {
+          registerNgModule(moduleName, [], [
+            directive('[camel-case-name]')
+          ]);
+          const invokeQueue = angular.module(moduleName)['_invokeQueue'];
+          const ctrlProto = invokeQueue[0][2][1]().controller.prototype;
+          const inject = ctrlProto['constructor']['$inject'];
+
+          inject.forEach(dependency => expect(typeof dependency).toBe('string'));
+          expect(inject[0]).toEqual('$element');
+          expect(ctrlProto['$postLink']).toBeDefined();
+          expect(ctrlProto['$onDestroy']).toBeDefined();
         });
       });
     });

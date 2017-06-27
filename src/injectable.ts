@@ -1,22 +1,5 @@
 import { annotate, defineMetadata, getMetadata, metadataKeys } from './utils';
-
-export interface ClassProvider {
-  provide: string;
-  useClass: ng.Injectable<Function>;
-}
-
-export interface FactoryProvider {
-  provide: string;
-  useFactory: any;
-  deps?: any[];
-}
-
-export interface ValueProvider {
-  provide: string;
-  useValue: any;
-}
-
-export type ProviderObject = ClassProvider | FactoryProvider | ValueProvider;
+import { Provider } from './provider';
 
 export function Injectable(name?: string) {
   return (Class: any) => {
@@ -30,8 +13,7 @@ export function Injectable(name?: string) {
 }
 
 /** @internal */
-export function registerProviders(module: ng.IModule,
-                                  providers: Array<ng.IServiceProvider | ng.Injectable<Function> | ProviderObject>) {
+export function registerProviders(module: ng.IModule, providers: Provider[]) {
   providers.forEach((provider: any) => {
     // providers registered using { provide, useClass/useFactory/useValue } syntax
     if (provider.provide) {
