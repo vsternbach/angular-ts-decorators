@@ -22,12 +22,7 @@ export interface NgModule {
   module?: ng.IModule;
   config?(...args: any[]): void;
   run?(...args: any[]): void;
-
-
-  // NgModule implementations frequently do not implement any of its methods
-  // and module is gets applied by the decorator at runtime.
-  // A string indexer indicates to TypeScript 2.4 not to issue a weak type error in this case.
-  [s: string]: any;
+  [p: string]: any;
 }
 
 export function NgModule({ id, name, declarations = [], imports = [], providers = [] }: ModuleConfig) {
