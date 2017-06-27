@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.2.2"></a>
+## [1.2.2](https://github.com/vsternbach/angular-ts-decorators/compare/v1.2.1...v1.2.2) (2017-06-27)
+
+
+### Bug Fixes
+
+* **build:** rename package-lock to npm-shrinkwrap ([853a8d6](https://github.com/vsternbach/angular-ts-decorators/commit/853a8d6))
+
+
+
 <a name="1.2.1"></a>
 ## [1.2.1](https://github.com/vsternbach/angular-ts-decorators/compare/v1.2.0...v1.2.1) (2017-06-27)
 
