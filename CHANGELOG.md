@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.2.4"></a>
+## [1.2.4](https://github.com/vsternbach/angular-ts-decorators/compare/v1.2.3...v1.2.4) (2017-06-28)
+
+
+### Bug Fixes
+
+* **component:** add support for automatic injection ([3e53658](https://github.com/vsternbach/angular-ts-decorators/commit/3e53658)), closes [#29](https://github.com/vsternbach/angular-ts-decorators/issues/29)
+
+
+
 <a name="1.2.3"></a>
 ## [1.2.3](https://github.com/vsternbach/angular-ts-decorators/compare/v1.2.2...v1.2.3) (2017-06-27)
 
