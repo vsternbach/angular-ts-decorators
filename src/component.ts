@@ -1,4 +1,5 @@
 import {
+  annotate,
   Declarations, defineMetadata, getAttributeName, getMetadata, isAttributeSelector, kebabToCamel,
   metadataKeys
 } from './utils';
@@ -47,6 +48,7 @@ export function registerComponent(module: ng.IModule, component: ng.IComponentCo
   if (listeners) {
     options.controller = extendWithHostListeners(options.controller, listeners);
   }
+  component.$inject = component.$inject || annotate(component);
   module.component(name, options);
 }
 
