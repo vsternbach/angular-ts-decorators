@@ -101,11 +101,11 @@ const templateUrl = require('./todo-form.html');
   selector: 'todoForm',
   templateUrl
 })
-export class TodoFormComponent {
+export class TodoFormComponent implements OnChanges {
     @Input() todo;
     @Output() onAddTodo;
     
-    $onChanges(changes) {
+    ngOnChanges(changes) {
       if (changes.todo) {
         this.todo = {...this.todo};
       }
@@ -224,12 +224,13 @@ export class AppModule {
  ## HostListener
  
  @HostListener is a special method decorator introduced in angular 2, see [official docs](https://angular.io/docs/ts/latest/guide/style-guide.html#!#directives)
+ >Please notice, that this feature is kind of experimental, because the way it's implemented is kind of hacky: classes that have @HostListener methods are replaced with a new class that extends the original class. It works with basic use cases, but there could be some implications in some edge cases, so be aware.
  
  Usage:
  ```js
  import { HostListener } from 'angular-ts-decorators';
  
- export class MyComponent {
+ export class MyDirective {
    @HostListener('click mouseover')
    onClick() {
      console.log('click');
@@ -239,7 +240,7 @@ export class AppModule {
  The implementation of it in angularjs as follows, it injects $element into component constructor and attaches method decorated with @HostListener as event handler on $element in $postLink and dettaches it in $onDestroy:
   ```js
   
-  export class MyComponent {
+  export class MyDirective {
     constructor(private $element: ng.IAugmentedJQuery) {}
     
     $postLink() {
@@ -256,13 +257,16 @@ export class AppModule {
   }
   ```
   
- ## Contributing
+ ## Bootstraping angularjs application the angular way
  
- 
- Fork project, download source and run tests:
+ In angularjs way the manual boostrap would look like this
  ```
- git clone git@github.com:<your-github>/angular-ts-decorators.git
- cd angular-ts-decorators
- npm install
- npm test
+angular.element(document).ready(() => {
+  angular.bootstrap(document, ['AppModule'], {strictDi: true});
+});
  ```
+Using `angular-ts-decorators` you can boostrap your application with angular syntax
+```
+platformBrowserDynamic().bootstrapModule(AppModule);
+```
+>`strictDi = true` by default, you can override it, passing `{strictDi: false}` as the second argument to bootstrapModule
