@@ -4,18 +4,14 @@
   "lockfileVersion": 1,
   "dependencies": {
     "@types/angular": {
-      "version": "https://registry.npmjs.org/@types/angular/-/angular-1.6.21.tgz",
-      "integrity": "sha1-AQwVlUy/6HWxRLCVuIuTpyk+jxI=",
+      "version": "1.6.24",
+      "resolved": "https://registry.npmjs.org/@types/angular/-/angular-1.6.24.tgz",
+      "integrity": "sha512-ZIgHvXTO6sZTff0+FYjjXcvvlzCs1piMbH4PaRxHF+pd5ADTQ3/FxqM6gPMvjxMJCd8BpQOaGoIlQ7+e72IXnA==",
       "dev": true
     },
     "@types/jasmine": {
       "version": "https://registry.npmjs.org/@types/jasmine/-/jasmine-2.5.53.tgz",
       "integrity": "sha1-TgzvrQnfXsSMjdQEM1EvhLFWjWE=",
-      "dev": true
-    },
-    "@types/jquery": {
-      "version": "https://registry.npmjs.org/@types/jquery/-/jquery-3.2.4.tgz",
-      "integrity": "sha1-UtGa7LYjepQHcB/BJ89p0gRXbgQ=",
       "dev": true
     },
     "@types/node": {
