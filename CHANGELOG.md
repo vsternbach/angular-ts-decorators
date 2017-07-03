@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.2.5"></a>
+## [1.2.5](https://github.com/vsternbach/angular-ts-decorators/compare/v1.2.4...v1.2.5) (2017-07-03)
+
+
+### Bug Fixes
+
+* **directive:** add support for controller and angular hooks ([2eef743](https://github.com/vsternbach/angular-ts-decorators/commit/2eef743)), closes [#31](https://github.com/vsternbach/angular-ts-decorators/issues/31) [#32](https://github.com/vsternbach/angular-ts-decorators/issues/32)
+
+
+
 <a name="1.2.4"></a>
 ## [1.2.4](https://github.com/vsternbach/angular-ts-decorators/compare/v1.2.3...v1.2.4) (2017-06-28)
 
