@@ -61,6 +61,7 @@ export function registerDirective(module: ng.IModule, ctrl: DirectiveControllerC
     directiveFunc.$inject = ['$injector', ...(ctrl.$inject || annotate(ctrl))];
   }
   else {
+    options.controller = ctrl;
     ctrl.$inject = ctrl.$inject || annotate(ctrl);
     const listeners: IHostListeners = getMetadata(metadataKeys.listeners, ctrl);
     if (listeners) {
