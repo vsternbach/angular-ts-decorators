@@ -3,6 +3,7 @@ import {
   metadataKeys
 } from './utils';
 import { IHostListeners } from './hostListener';
+import { replaceLifecycleHooks } from './component';
 
 export interface DirectiveOptionsDecorated extends ng.IDirective {
   selector: string;
@@ -62,10 +63,9 @@ export function registerDirective(module: ng.IModule, ctrl: DirectiveControllerC
   }
   else {
     ctrl.$inject = ctrl.$inject || annotate(ctrl);
+    replaceLifecycleHooks(ctrl);
     const listeners: IHostListeners = getMetadata(metadataKeys.listeners, ctrl);
-    if (listeners) {
-      options.controller = extendWithHostListeners(ctrl, listeners);
-    }
+    options.controller = listeners ? extendWithHostListeners(ctrl, listeners) : ctrl;
     directiveFunc = () => options;
   }
   module.directive(name, directiveFunc);

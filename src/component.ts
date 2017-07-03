@@ -84,7 +84,7 @@ function extendWithHostListeners(ctrl: {new(...args: any[])}, listeners: IHostLi
 }
 
 /** @internal */
-function replaceLifecycleHooks(ctrl: ng.IControllerConstructor) {
+export function replaceLifecycleHooks(ctrl: ng.IControllerConstructor) {
   const ctrlClass = ctrl.prototype;
   const ngHooksFound: string[] = getHooksOnCtrlClass(ctrlClass);
 
