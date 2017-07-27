@@ -12,7 +12,7 @@ export interface ModuleConfig {
    * @deprecated
    */
   name?: string;
-  declarations?: Array<ng.IComponentController | ng.Injectable<ng.IDirectiveFactory> | PipeTransform>;
+  declarations?: Function[];
   imports?: Array<string | NgModule>;
   exports?: Function[];
   providers?: Provider[];
