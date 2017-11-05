@@ -14,13 +14,15 @@ export const ngLifecycleHooksMap: object = {
  * Represents a basic change from a previous to a new value.
  * @stable
  */
-export class SimpleChange {
-  constructor(public previousValue: any, public currentValue: any, public firstChange: boolean) {}
+export declare class SimpleChange<T> implements ng.IChangesObject<T> {
+  previousValue: T;
+  currentValue: T;
+  constructor(previousValue: T, currentValue: T);
 
   /**
    * Check whether the new value is the first value assigned.
    */
-  isFirstChange(): boolean { return this.firstChange; }
+  isFirstChange(): boolean;
 }
 
 /**
@@ -28,7 +30,7 @@ export class SimpleChange {
  * values are instances of {@link SimpleChange}. See {@link OnChanges}
  * @stable
  */
-export interface SimpleChanges { [propName: string]: SimpleChange; }
+export interface SimpleChanges extends ng.IOnChangesObject { [propName: string]: SimpleChange<any>; }
 
 /**
  * @whatItDoes Lifecycle hook that is called when any data-bound property of a directive changes.
