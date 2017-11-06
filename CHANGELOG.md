@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Bug Fixes
 
-* **providers:** Support deps for useFactory provider registration ([f51eea9](https://github.com/vsternbach/angular-ts-decorators/commit/f51eea9)), closes [#46](https://github.com/vsternbach/angular-ts-decorators/issues/46)
+* **providers:** Support deps for useFactory provider registration ([f51eea9](https://github.com/vsternbach/angular-ts-decorators/commit/f51eea9)), closes [#45](https://github.com/vsternbach/angular-ts-decorators/issues/45)
 
 
 ### Features
