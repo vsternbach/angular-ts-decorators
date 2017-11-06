@@ -11,24 +11,24 @@ export const ngLifecycleHooksMap: object = {
 };
 
 /**
- * Represents a basic change from a previous to a new value.
+ * Represents a basic change from a previous to a new value using generic type
  * @stable
  */
-export class SimpleChange {
-  constructor(public previousValue: any, public currentValue: any, public firstChange: boolean) {}
-
-  /**
-   * Check whether the new value is the first value assigned.
-   */
-  isFirstChange(): boolean { return this.firstChange; }
+export interface SimpleChange<T = any> {
+  previousValue: T;
+  currentValue: T;
+  isFirstChange(): boolean;
 }
 
 /**
  * A `changes` object whose keys are property names and
  * values are instances of {@link SimpleChange}. See {@link OnChanges}
+ * taken from angular: https://github.com/angular/angular/issues/17560#issuecomment-314678911
  * @stable
  */
-export interface SimpleChanges { [propName: string]: SimpleChange; }
+export type SimpleChanges<C = any> = {
+  [P in keyof C]: SimpleChange<C[P]>;
+};
 
 /**
  * @whatItDoes Lifecycle hook that is called when any data-bound property of a directive changes.
