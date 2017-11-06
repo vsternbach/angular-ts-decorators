@@ -28,7 +28,7 @@ export function registerProviders(module: ng.IModule, providers: Provider[]) {
         }
       }
       else if (provider.useFactory && provider.useFactory instanceof Function) {
-        provider.useFactory.$inject = provider.useFactory.$inject || annotate(provider.useFactory);
+        provider.useFactory.$inject = provider.deps || provider.useFactory.$inject || annotate(provider.useFactory);
         module.factory(name, provider.useFactory);
       }
       else if (provider.useValue) {
