@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.3.0"></a>
+# [1.3.0](https://github.com/vsternbach/angular-ts-decorators/compare/v1.2.5...v1.3.0) (2017-11-06)
+
+
+### Bug Fixes
+
+* **providers:** Support deps for useFactory provider registration ([f51eea9](https://github.com/vsternbach/angular-ts-decorators/commit/f51eea9)), closes [#46](https://github.com/vsternbach/angular-ts-decorators/issues/46)
+
+
+### Features
+
+* **lifecycle_hooks:** Support generic SimpleChange<T> for use in ngOnChanges ([c730215](https://github.com/vsternbach/angular-ts-decorators/commit/c730215)), closes [#46](https://github.com/vsternbach/angular-ts-decorators/issues/46)
+
+
+
 <a name="1.2.5"></a>
 ## [1.2.5](https://github.com/vsternbach/angular-ts-decorators/compare/v1.2.4...v1.2.5) (2017-07-03)
 
