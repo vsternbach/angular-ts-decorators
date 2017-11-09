@@ -26,13 +26,7 @@ export function Directive({selector, ...options}: DirectiveOptionsDecorated) {
       options.bindToController = bindings;
     }
     options.restrict = options.restrict || 'A';
-    if (options.restrict !== 'A') {
-      console.warn(`Consider removing restrict option from ${selector} directive and using it only as
-       attribute directive.`);
-    }
-    if (options.link || options.compile) {
-      console.warn(`Consider refactoring ${selector} directive using controller class.`);
-    }
+
     const selectorName = isAttributeSelector(selector) ? getAttributeName(selector) : selector;
     defineMetadata(metadataKeys.name, kebabToCamel(selectorName), ctrl);
     defineMetadata(metadataKeys.declaration, Declarations.directive, ctrl);
