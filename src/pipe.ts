@@ -7,7 +7,7 @@ export interface PipeTransform {
   transform(...args: any[]): any;
 }
 
-export function Pipe(options: {name: string}) {
+export function Pipe(options: {name: string, stateful: boolean}) {
   return (Class: PipeTransformConstructor) => {
     defineMetadata(metadataKeys.name, options.name, Class);
     defineMetadata(metadataKeys.declaration, Declarations.pipe, Class);
