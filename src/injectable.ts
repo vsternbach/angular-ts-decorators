@@ -39,12 +39,7 @@ export function registerProviders(module: ng.IModule, providers: Provider[]) {
     else {
       const name = getMetadata(metadataKeys.name, provider);
       provider.$inject = provider.$inject || annotate(provider);
-      if (provider.prototype.$get) {
-        module.provider(name, provider);
+      module.service(name, provider);
       }
-      else {
-        module.service(name, provider);
-      }
-    }
   });
 }

@@ -10,13 +10,7 @@ export interface DirectiveOptionsDecorated extends ng.IDirective {
 }
 
 export interface DirectiveControllerConstructor {
-  new(...args: any[]): DirectiveController;
-}
-
-export interface DirectiveController {
-  compile?: ng.IDirectiveCompileFn;
-  link?: ng.IDirectiveLinkFn | ng.IDirectivePrePost;
-  [p: string]: any;
+  new (...args: any[]): ng.IController;
 }
 
 export function Directive({selector, ...options}: DirectiveOptionsDecorated) {
@@ -39,29 +33,11 @@ export function registerDirective(module: ng.IModule, ctrl: DirectiveControllerC
   let directiveFunc;
   const name = getMetadata(metadataKeys.name, ctrl);
   const options = getMetadata(metadataKeys.options, ctrl);
-  const {compile, link} = ctrl.prototype;
-  const legacy = compile && typeof compile === 'function' || link && typeof link === 'function';
-  if (legacy) {
-    directiveFunc =  (...args: any[]) => {
-      const injector = args[0]; // reference to $injector
-      const instance = injector.instantiate(ctrl);
-      if (compile) {
-        options.compile = compile.bind(instance);
-      }
-      else if (link) {
-        options.link = link.bind(instance);
-      }
-      return options;
-    };
-    directiveFunc.$inject = ['$injector', ...(ctrl.$inject || annotate(ctrl))];
-  }
-  else {
-    ctrl.$inject = ctrl.$inject || annotate(ctrl);
-    replaceLifecycleHooks(ctrl);
-    const listeners: IHostListeners = getMetadata(metadataKeys.listeners, ctrl);
-    options.controller = listeners ? extendWithHostListeners(ctrl, listeners) : ctrl;
-    directiveFunc = () => options;
-  }
+  ctrl.$inject = ctrl.$inject || annotate(ctrl);
+  replaceLifecycleHooks(ctrl);
+  const listeners: IHostListeners = getMetadata(metadataKeys.listeners, ctrl);
+  options.controller = listeners ? extendWithHostListeners(ctrl, listeners) : ctrl;
+  directiveFunc = () => options;
   module.directive(name, directiveFunc);
 }
 
