@@ -146,34 +146,23 @@ with @NgModule is the name of the module you should provide in
 In addition you can define config and run blocks for your module 
 by adding config and run methods to your module class  declaration. 
 
-Here's an example of provider using @Injectable decorator
+Here's an example of service using @Injectable decorator
 ```js
 /* ----- greeting/greeting.service.ts ----- */
 import { Injectable } from 'angular-ts-decorators';
 
-export interface IGreetingService {
-  getGreeting(): string;
-}
-
 @Injectable()
-export class GreetingService implements ng.IServiceProvider {
+export class GreetingService {
   private greeting = 'Hello World!';
 
   // Configuration function
   public setGreeting(greeting: string) {
     this.greeting = greeting;
   }
-
-  // Provider's factory function
-  public $get(): IGreetingService {
-    return {
-      getGreeting: () => { return this.greeting; }
-    };
-  }
 }
 ```
 
-Providers can be registered using Angular 2 syntax. Elements of the array can be a class or provider object. The provider object has a ```provide``` property (string token), and a ```useClass```, ```useFactory```, or ```useValue``` property to use as the provided value.
+Services, factories and constants can be registered using Angular 2 syntax by providing an array of provider objects. The provider object has a ```provide``` property (string token), and a ```useClass```, ```useFactory```, or ```useValue``` property to use as the provided value.
 
 This is how angular filter looks like using angular 2 style @Pipe decorator:
 ```js
@@ -187,31 +176,35 @@ export class UppercasePipe implements PipeTransform {
   }
 }
 ```
+>Please note, that using @Pipe decorator you can register only stateless filters, for stateful filters you need to fallback to original angularjs filter declaration
+
 And here's an example of provider registration with @NgModule decorator, its configuration in config method of module class and it's usage in run method:
 ```js
 import { NgModule } from 'angular-ts-decorators';
 import { TodoFormModule } from 'todo/todo-form/todo-form.module';
-import { GreetingService, IGreetingService } from 'greeting/greeting.service';
+import { GreetingService } from 'greeting/greeting.service';
 import { UppercasePipe } from 'greeting/uppercase.filter';
 
 @NgModule({
+  id: 'AppModule',
   imports: [
     TodoFormModule
   ],
   declarations: [UppercasePipe],
   providers: [
-      GreetingService,
-      {provide: GreetingService.name, useClass: GreetingService},
-      {provide: GreetingService.name, useFactory: () => new GreetingService()},
-      {provide: 'Greeter', useValue: new GreetingService()},
+      GreetingService, // you can register this way only if you provide class name to @Injectable decorator
+      {provide: 'GreetingService', useClass: GreetingService},
+      {provide: 'GreetingServiceFactory', useFactory: () => new GreetingService()}
   ]
 })
 export class AppModule {
-  static config(GreetingServiceProvider: GreetingService) {
-    GreetingServiceProvider.setGreeting('Hello decorated provider');
+  /*@ngInject*/
+  static config($compileProvider: ng.ICompileProvider) {
+    $compileProvider.debugInfoEnabled(false);
   }
 
-  static run(GreetingService: IGreetingService) {
+  /*@ngInject*/
+  static run(GreetingService: GreetingService) {
     console.log(GreetingService.getGreeting());
   }
 }
@@ -267,6 +260,6 @@ angular.element(document).ready(() => {
  ```
 Using `angular-ts-decorators` you can boostrap your application with angular syntax
 ```
-platformBrowserDynamic().bootstrapModule(AppModule);
+platformBrowserDynamic().bootstrapModule((AppModule as NgModule).module.name);
 ```
 >`strictDi = true` by default, you can override it, passing `{strictDi: false}` as the second argument to bootstrapModule
