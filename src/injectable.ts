@@ -20,12 +20,7 @@ export function registerProviders(module: ng.IModule, providers: Provider[]) {
       const name = provider.provide;
       if (provider.useClass && provider.useClass instanceof Function) {
         provider.useClass.$inject = provider.useClass.$inject || annotate(provider.useClass);
-        if (provider.useClass.prototype.$get) {
-          module.provider(name, provider.useClass);
-        }
-        else {
-          module.service(name, provider.useClass);
-        }
+        module.service(name, provider.useClass);
       }
       else if (provider.useFactory && provider.useFactory instanceof Function) {
         provider.useFactory.$inject = provider.deps || provider.useFactory.$inject || annotate(provider.useFactory);
@@ -38,8 +33,14 @@ export function registerProviders(module: ng.IModule, providers: Provider[]) {
     // providers registered as classes
     else {
       const name = getMetadata(metadataKeys.name, provider);
-      provider.$inject = provider.$inject || annotate(provider);
-      module.service(name, provider);
+      if (!name) {
+        console.error(`${provider.name} was not registered as angular service:
+        Provide explicit name in @Injectable when using class syntax or register it using object provider syntax:
+        { provide: '${provider.name}', useClass: ${provider.name} }`);
+      } else {
+        provider.$inject = provider.$inject || annotate(provider);
+        module.service(name, provider);
       }
+    }
   });
 }
