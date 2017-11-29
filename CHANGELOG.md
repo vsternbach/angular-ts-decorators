@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.0.0"></a>
+# [2.0.0](https://github.com/vsternbach/angular-ts-decorators/compare/v1.3.1...v2.0.0) (2017-11-29)
+
+
+### Bug Fixes
+
+* handle use case of service registration without explicit name ([667e921](https://github.com/vsternbach/angular-ts-decorators/commit/667e921)), closes [#39](https://github.com/vsternbach/angular-ts-decorators/issues/39)
+
+
+### Features
+
+* add utility function to get Type name ([390bc80](https://github.com/vsternbach/angular-ts-decorators/commit/390bc80))
+* Remove support for link, compile and $provider ([f92351d](https://github.com/vsternbach/angular-ts-decorators/commit/f92351d))
+
+
+### BREAKING CHANGES
+
+* remove support for directive's link and compile, so you
+if you want to migrate directives with link or compile, you need to
+register them the old angularjs way.
+* remove support for classes registered as $providers, so
+if you have custom providers you need to register them the old way.
+
+
+
 <a name="1.3.1"></a>
 ## [1.3.1](https://github.com/vsternbach/angular-ts-decorators/compare/v1.3.0...v1.3.1) (2017-11-14)
 
