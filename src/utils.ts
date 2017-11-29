@@ -42,3 +42,7 @@ export function getMetadata(metadataKey: any, target: any): any {
 export function defineMetadata(metadataKey: any, metadataValue: any, target: any): void {
   Reflect.defineMetadata(metadataKey, metadataValue, target);
 }
+
+export function getTypeName(target: any) {
+  return getMetadata(metadataKeys.name, target);
+}
