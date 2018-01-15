@@ -8,14 +8,12 @@ export interface CompilerOptions {
 
 export const platformBrowserDynamic = () => PlatformRef;
 
-export const PlatformRef = {
-
-  bootstrapModule: (moduleType: Type<any>, compilerOptions?: CompilerOptions) => {
-    let strictDi = true;
-    if (compilerOptions) strictDi = compilerOptions.strictDi;
-
+export class PlatformRef {
+  static bootstrapModule(moduleType: Type<any>|string, compilerOptions?: CompilerOptions) {
+    const moduleName = typeof moduleType === 'string' ? moduleType : (moduleType as NgModule).module.name;
+    const strictDi = (compilerOptions.strictDi === true);
     element(document).ready(() => {
-      bootstrap(document, [(moduleType as NgModule).module.name], { strictDi });
+      bootstrap('body', [moduleName], { strictDi });
     });
   }
-};
+}

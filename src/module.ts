@@ -1,38 +1,32 @@
 import * as angular from 'angular';
 import { PipeTransform, registerPipe } from './pipe';
 import { registerProviders } from './injectable';
-import { annotate, Declarations, getMetadata, metadataKeys } from './utils';
+import { camelToKebab, Declarations, getMetadata, getTypeName, metadataKeys } from './utils';
 import { registerComponent } from './component';
 import { registerDirective } from './directive';
 import { Provider } from './provider';
+import { IComponentController, IDirectiveFactory, IModule, Injectable } from 'angular';
 
 export interface ModuleConfig {
   id?: string;
-  /**
-   * @deprecated
-   */
-  name?: string;
-  declarations?: Array<ng.IComponentController | ng.Injectable<ng.IDirectiveFactory> | PipeTransform>;
+  declarations?: Array<IComponentController | Injectable<IDirectiveFactory> | PipeTransform>;
   imports?: Array<string | NgModule>;
   exports?: Function[];
   providers?: Provider[];
+  bootstrap?: IComponentController[];
 }
 
 export interface NgModule {
-  module?: ng.IModule;
-  config?(...args: any[]): void;
-  run?(...args: any[]): void;
+  module?: IModule;
+  config?(...args: any[]): any;
+  run?(...args: any[]): any;
   [p: string]: any;
 }
 
-export function NgModule({ id, name, declarations = [], imports = [], providers = [] }: ModuleConfig) {
+export function NgModule({ id, bootstrap = [], declarations = [], imports = [], providers = [] }: ModuleConfig) {
   return (Class: NgModule) => {
     // module registration
     const deps = imports.map(mod => typeof mod === 'string' ? mod : mod.module.name);
-    if (name) {
-      console.warn('"name" property in @NgModule is deprecated, please use "id" to align to angular 2+ syntax.');
-      id = name;
-    }
     if (!id) {
       console.warn('You are not providing ngModule id, be careful this code won\'t work when uglified.');
       id = (Class as any).name;
@@ -67,14 +61,26 @@ export function NgModule({ id, name, declarations = [], imports = [], providers 
     // config and run blocks registration
     const { config, run } = Class;
     if (config) {
-      config.$inject = annotate(config);
       module.config(config);
     }
     if (run) {
-      run.$inject = annotate(run);
       module.run(run);
     }
+
+    // add bootstrap elements to DOM
+    bootstrap.forEach(component => {
+      module.run(insertComponentToDOM(component));
+    });
     // expose angular module as static property
     Class.module = module;
+  };
+}
+
+function insertComponentToDOM(component: IComponentController) {
+  return () => {
+    const componentName = getTypeName(component);
+    const selector = camelToKebab(componentName);
+    const $el = `<${selector}></${selector}>`;
+    angular.element('body').append($el);
   };
 }

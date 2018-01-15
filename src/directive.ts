@@ -1,16 +1,17 @@
 import {
-  annotate, Declarations, defineMetadata, getAttributeName, getMetadata, isAttributeSelector, kebabToCamel,
+  Declarations, defineMetadata, getAttributeName, getMetadata, isAttributeSelector, kebabToCamel,
   metadataKeys
 } from './utils';
 import { IHostListeners } from './hostListener';
 import { replaceLifecycleHooks } from './component';
+import { IController, IDirective, IModule } from 'angular';
 
-export interface DirectiveOptionsDecorated extends ng.IDirective {
+export interface DirectiveOptionsDecorated extends IDirective {
   selector: string;
 }
 
 export interface DirectiveControllerConstructor {
-  new (...args: any[]): ng.IController;
+  new (...args: any[]): IController;
 }
 
 export function Directive({selector, ...options}: DirectiveOptionsDecorated) {
@@ -29,11 +30,10 @@ export function Directive({selector, ...options}: DirectiveOptionsDecorated) {
 }
 
 /** @internal */
-export function registerDirective(module: ng.IModule, ctrl: DirectiveControllerConstructor) {
+export function registerDirective(module: IModule, ctrl: DirectiveControllerConstructor) {
   let directiveFunc;
   const name = getMetadata(metadataKeys.name, ctrl);
   const options = getMetadata(metadataKeys.options, ctrl);
-  ctrl.$inject = ctrl.$inject || annotate(ctrl);
   replaceLifecycleHooks(ctrl);
   const listeners: IHostListeners = getMetadata(metadataKeys.listeners, ctrl);
   options.controller = listeners ? extendWithHostListeners(ctrl, listeners) : ctrl;

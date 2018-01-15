@@ -1,13 +1,13 @@
 import {
-  annotate,
   Declarations, defineMetadata, getAttributeName, getMetadata, isAttributeSelector, kebabToCamel,
   metadataKeys
 } from './utils';
 import { IHostListeners } from './hostListener';
 import { ngLifecycleHooksMap } from './lifecycle_hooks';
-import { isFunction } from 'angular';
+import { isFunction, IControllerConstructor, IDirective, IModule, IComponentController,
+  IComponentOptions } from 'angular';
 
-export interface ComponentOptionsDecorated extends ng.IComponentOptions {
+export interface ComponentOptionsDecorated extends IComponentOptions {
   selector: string;
   styles?: any[];
   restrict?: string;
@@ -15,7 +15,7 @@ export interface ComponentOptionsDecorated extends ng.IComponentOptions {
 }
 
 export function Component({selector, ...options}: ComponentOptionsDecorated) {
-  return (ctrl: ng.IControllerConstructor) => {
+  return (ctrl: IControllerConstructor) => {
     options.controller = ctrl;
     const isAttrSelector = isAttributeSelector(selector);
     const bindings = getMetadata(metadataKeys.bindings, ctrl);
@@ -28,7 +28,7 @@ export function Component({selector, ...options}: ComponentOptionsDecorated) {
     }
 
     if (isAttrSelector) {
-      (options as ng.IDirective).restrict = 'A';
+      (options as IDirective).restrict = 'A';
     }
 
     replaceLifecycleHooks(ctrl);
@@ -41,14 +41,13 @@ export function Component({selector, ...options}: ComponentOptionsDecorated) {
 }
 
 /** @internal */
-export function registerComponent(module: ng.IModule, component: ng.IComponentController) {
+export function registerComponent(module: IModule, component: IComponentController) {
   const name = getMetadata(metadataKeys.name, component);
   const options = getMetadata(metadataKeys.options, component);
   const listeners: IHostListeners = getMetadata(metadataKeys.listeners, options.controller);
   if (listeners) {
     options.controller = extendWithHostListeners(options.controller, listeners);
   }
-  component.$inject = component.$inject || annotate(component);
   module.component(name, options);
 }
 
@@ -84,7 +83,7 @@ function extendWithHostListeners(ctrl: {new(...args: any[])}, listeners: IHostLi
 }
 
 /** @internal */
-export function replaceLifecycleHooks(ctrl: ng.IControllerConstructor) {
+export function replaceLifecycleHooks(ctrl: IControllerConstructor) {
   const ctrlClass = ctrl.prototype;
   const ngHooksFound: string[] = getHooksOnCtrlClass(ctrlClass);
 

@@ -1,4 +1,6 @@
-import { annotate, Declarations, defineMetadata, getMetadata, metadataKeys } from './utils';
+import { Declarations, defineMetadata, getMetadata, metadataKeys } from './utils';
+import { IModule } from 'angular';
+
 export interface PipeTransformConstructor {
   new(...args: any[]): PipeTransform;
 }
@@ -15,13 +17,13 @@ export function Pipe(options: {name: string}) {
 }
 
 /** @internal */
-export function registerPipe(module: ng.IModule, filter: PipeTransformConstructor) {
+export function registerPipe(module: IModule, filter: PipeTransformConstructor) {
   const name = getMetadata(metadataKeys.name, filter);
   const filterFactory = (...args: any[]) => {
     const injector = args[0]; // reference to $injector
     const instance = injector.instantiate(filter);
     return instance.transform.bind(instance);
   };
-  filterFactory.$inject = ['$injector', ...(filter.$inject || annotate(filter))];
+  filterFactory.$inject = ['$injector', ...filter.$inject];
   module.filter(name, filterFactory);
 }

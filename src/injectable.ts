@@ -1,29 +1,26 @@
-import { annotate, defineMetadata, getMetadata, metadataKeys } from './utils';
+import { defineMetadata, getMetadata, metadataKeys } from './utils';
 import { Provider } from './provider';
+import { IModule } from 'angular';
 
 export function Injectable(name?: string) {
   return (Class: any) => {
-    if (!name) {
-      console.warn('You are not providing explicit service name, ' +
-        'be careful this code might not work as expected when uglified with mangling enabled.');
-      name = Class.name;
+    if (name) {
+      defineMetadata(metadataKeys.name, name, Class);
     }
-    defineMetadata(metadataKeys.name, name, Class);
   };
 }
 
 /** @internal */
-export function registerProviders(module: ng.IModule, providers: Provider[]) {
+export function registerProviders(module: IModule, providers: Provider[]) {
   providers.forEach((provider: any) => {
     // providers registered using { provide, useClass/useFactory/useValue } syntax
     if (provider.provide) {
       const name = provider.provide;
       if (provider.useClass && provider.useClass instanceof Function) {
-        provider.useClass.$inject = provider.useClass.$inject || annotate(provider.useClass);
         module.service(name, provider.useClass);
       }
       else if (provider.useFactory && provider.useFactory instanceof Function) {
-        provider.useFactory.$inject = provider.deps || provider.useFactory.$inject || annotate(provider.useFactory);
+        provider.useFactory.$inject = provider.deps || provider.useFactory.$inject;
         module.factory(name, provider.useFactory);
       }
       else if (provider.useValue) {
@@ -38,7 +35,6 @@ export function registerProviders(module: ng.IModule, providers: Provider[]) {
         Provide explicit name in @Injectable when using class syntax or register it using object provider syntax:
         { provide: '${provider.name}', useClass: ${provider.name} }`);
       } else {
-        provider.$inject = provider.$inject || annotate(provider);
         module.service(name, provider);
       }
     }
