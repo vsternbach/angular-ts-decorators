@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.0.0"></a>
+# [3.0.0](https://github.com/vsternbach/angular-ts-decorators/compare/v2.1.0...v3.0.0) (2018-01-15)
+
+
+### Features
+
+* Remove support for implicit annotations ([19f8ad9](https://github.com/vsternbach/angular-ts-decorators/commit/19f8ad9))
+
+
+### BREAKING CHANGES
+
+* Implicit annotations were error prone and didn't work
+correctly with uglified code, so this feature is removed completely now
+and it's user's responsibility to take care of angular annotations,
+either by explicitly providing them or by using tools like ng-annotate.
+
+feat: Add support for bootstrap elements in NgModule
+
+fix: use explicit imports fro angular definitions instead of namespaced
+
+build: update typescript
+
+
+
 <a name="2.1.0"></a>
 # [2.1.0](https://github.com/vsternbach/angular-ts-decorators/compare/v2.0.0...v2.1.0) (2017-11-29)
 
