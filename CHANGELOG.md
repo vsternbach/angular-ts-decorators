@@ -9,7 +9,12 @@ All notable changes to this project will be documented in this file. See [standa
 ### Features
 
 * Remove support for implicit annotations ([19f8ad9](https://github.com/vsternbach/angular-ts-decorators/commit/19f8ad9))
+* **NgModule:** Add support for bootstrap elements in NgModule
 
+### Bug Fixes
+
+* use explicit imports from angular definitions instead of namespaced
+* **build:** update typescript
 
 ### BREAKING CHANGES
 
@@ -17,13 +22,6 @@ All notable changes to this project will be documented in this file. See [standa
 correctly with uglified code, so this feature is removed completely now
 and it's user's responsibility to take care of angular annotations,
 either by explicitly providing them or by using tools like ng-annotate.
-
-feat: Add support for bootstrap elements in NgModule
-
-fix: use explicit imports fro angular definitions instead of namespaced
-
-build: update typescript
-
 
 
 <a name="2.1.0"></a>
