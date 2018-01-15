@@ -12,9 +12,6 @@ describe('NgModule', () => {
       expect(angular.module(moduleName)['_configBlocks'].length).toBe(1);
       expect(angular.module(moduleName)['_configBlocks'][0].length).toBe(3);
 
-      expect(angular.module(moduleName)['_runBlocks'][0].$inject).toEqual(['$rootScope']);
-      expect(angular.module(moduleName)['_configBlocks'][0][2][0].$inject).toEqual(['$httpProvider'] );
-
       expect(angular.module(moduleName)['_runBlocks'][0]).toBe(NgModuleClass.run);
       expect(angular.module(moduleName)['_configBlocks'][0][2][0]).toBe(NgModuleClass.config);
     });
