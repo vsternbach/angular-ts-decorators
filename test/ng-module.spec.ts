@@ -1,5 +1,6 @@
 import * as angular from 'angular';
 import { component, directive, registerNgModule, TestService } from './mocks';
+import { Pipe, PipeTransform } from '../src';
 
 describe('NgModule', () => {
   const moduleName = 'TestModule';
@@ -125,7 +126,6 @@ describe('NgModule', () => {
         });
       });
 
-
       describe('@HostListener', () => {
         it('injects $element and adds $postLink and $onDestroy lifecycle hooks' , () => {
           registerNgModule(moduleName, [], [
@@ -208,6 +208,51 @@ describe('NgModule', () => {
           expect(value[2][0]).toEqual(providers[index].provide);
           expect(value[2][1]).toEqual(providers[index].useValue);
         });
+      });
+    });
+  });
+
+  describe('@Pipe', () => {
+    const name = 'formatDateTime';
+    describe('without injection', () => {
+      @Pipe({ name })
+      class FormatDateTimeFilter implements PipeTransform {
+        public transform(input: number): string {
+          return new Date(input).toLocaleString();
+        }
+      }
+      it('registers as filter', () => {
+        registerNgModule(moduleName, [], [
+          FormatDateTimeFilter
+        ]);
+        const invokeQueue = angular.module(moduleName)['_invokeQueue'];
+        expect(invokeQueue.length).toEqual(1);
+        expect(invokeQueue[0][0]).toEqual('$filterProvider');
+        expect(invokeQueue[0][1]).toEqual('register');
+        expect(invokeQueue[0][2][0]).toEqual(name);
+        expect(invokeQueue[0][2][1].$inject).toEqual(['$injector']);
+      });
+    });
+
+    describe('with injection', () => {
+      @Pipe({ name })
+      class FormatDateTimeFilter implements PipeTransform {
+        constructor($timeout: any) {}
+        public transform(input: number): string {
+          return new Date(input).toLocaleString();
+        }
+      }
+      FormatDateTimeFilter.$inject = ['$timeout'];
+      it('registers as filter', () => {
+        registerNgModule(moduleName, [], [
+          FormatDateTimeFilter
+        ]);
+        const invokeQueue = angular.module(moduleName)['_invokeQueue'];
+        expect(invokeQueue.length).toEqual(1);
+        expect(invokeQueue[0][0]).toEqual('$filterProvider');
+        expect(invokeQueue[0][1]).toEqual('register');
+        expect(invokeQueue[0][2][0]).toEqual(name);
+        expect(invokeQueue[0][2][1].$inject).toEqual(['$injector', '$timeout']);
       });
     });
   });
