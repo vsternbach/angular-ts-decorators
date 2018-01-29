@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.0.4"></a>
+## [3.0.4](https://github.com/vsternbach/angular-ts-decorators/compare/v3.0.3...v3.0.4) (2018-01-29)
+
+
+### Bug Fixes
+
+* **HostListener:** fix deregistering host listeners ([e8e4a14](https://github.com/vsternbach/angular-ts-decorators/commit/e8e4a14)), closes [#52](https://github.com/vsternbach/angular-ts-decorators/issues/52)
+
+
+
 <a name="3.0.3"></a>
 ## [3.0.3](https://github.com/vsternbach/angular-ts-decorators/compare/v3.0.2...v3.0.3) (2018-01-29)
 
