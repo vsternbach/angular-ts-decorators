@@ -52,8 +52,9 @@ export function registerComponent(module: IModule, component: IComponentControll
 }
 
 /** @internal */
-function extendWithHostListeners(ctrl: {new(...args: any[])}, listeners: IHostListeners) {
+export function extendWithHostListeners(ctrl: {new(...args: any[])}, listeners: IHostListeners) {
   const handlers = Object.keys(listeners);
+  const namespace = '.HostListener';
 
   class NewCtrl extends ctrl {
     constructor(private $element, ...args: any[]) {
@@ -65,17 +66,14 @@ function extendWithHostListeners(ctrl: {new(...args: any[])}, listeners: IHostLi
       }
       handlers.forEach(handler => {
         const { eventName } = listeners[handler];
-        this.$element.on(eventName, this[handler].bind(this));
+        this.$element.on(eventName + namespace, this[handler].bind(this));
       });
     }
     $onDestroy() {
       if (super.$onDestroy) {
         super.$onDestroy();
       }
-      handlers.forEach(handler => {
-        const { eventName } = listeners[handler];
-        this.$element.off(eventName, this[handler]);
-      });
+      this.$element.off(namespace);
     }
   }
   NewCtrl.$inject = ['$element', ...ctrl.$inject || []];

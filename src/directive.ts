@@ -3,7 +3,7 @@ import {
   metadataKeys
 } from './utils';
 import { IHostListeners } from './hostListener';
-import { replaceLifecycleHooks } from './component';
+import { extendWithHostListeners, replaceLifecycleHooks } from './component';
 import { IController, IDirective, IModule } from 'angular';
 
 export interface DirectiveOptionsDecorated extends IDirective {
@@ -39,35 +39,4 @@ export function registerDirective(module: IModule, ctrl: DirectiveControllerCons
   options.controller = listeners ? extendWithHostListeners(ctrl, listeners) : ctrl;
   directiveFunc = () => options;
   module.directive(name, directiveFunc);
-}
-
-/** @internal */
-export function extendWithHostListeners(ctrl: {new(...args: any[])}, listeners: IHostListeners) {
-  const handlers = Object.keys(listeners);
-
-  class NewCtrl extends ctrl {
-    constructor(private $element, ...args: any[]) {
-      super(...args);
-    }
-    $postLink() {
-      if (super.$postLink) {
-        super.$postLink();
-      }
-      handlers.forEach(handler => {
-        const { eventName } = listeners[handler];
-        this.$element.on(eventName, this[handler].bind(this));
-      });
-    }
-    $onDestroy() {
-      if (super.$onDestroy) {
-        super.$onDestroy();
-      }
-      handlers.forEach(handler => {
-        const { eventName } = listeners[handler];
-        this.$element.off(eventName, this[handler]);
-      });
-    }
-  }
-  NewCtrl.$inject = ['$element', ...ctrl.$inject || []];
-  return NewCtrl;
 }
