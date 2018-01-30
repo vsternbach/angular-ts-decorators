@@ -4279,7 +4279,8 @@
       }
     },
     "reflect-metadata": {
-      "version": "https://registry.npmjs.org/reflect-metadata/-/reflect-metadata-0.1.10.tgz",
+      "version": "0.1.10",
+      "resolved": "https://registry.npmjs.org/reflect-metadata/-/reflect-metadata-0.1.10.tgz",
       "integrity": "sha1-tPg3BEFqytiZiMmxVjXUfgO5NEo="
     },
     "regex-cache": {
