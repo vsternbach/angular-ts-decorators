@@ -31,6 +31,7 @@ Peer dependencies: `"angular": ">=1.5.0"`
 |:------------- |:------------------------------------------|:----------|
 | @NgModule     | angular.module                            |   |
 | @Injectable   | angular.service / angular.provider        | registers as provider if decorated class implements $get method   |
+| @Inject       | ---  | see [@Inject](#inject) for details |
 | @Component    | angular.component                         |   |
 | @Input        | angular.component options binding ('<')  | can be used only inside @Component decorator <br> default input binding value can be overridden by passing parameter to the decorator |
 | @Output       | angular.component options binding ('&')  | can be used only inside @Component decorator |
@@ -248,6 +249,20 @@ export class AppModule {
       console.log('click');
     }
   }
+  ```
+   
+ ## Inject
+ 
+@Inject decorator allows to inject providers under a different name, for example if you have a provider like this:
+ ```js
+@Injectable('My.Service')
+export class MyService {}
+ ```
+You can use it like this:
+ ```js
+export class MyController {
+  constructor(@Inject('My.Service') service: MyService) {}
+}
   ```
   
  ## Bootstraping angularjs application the angular way

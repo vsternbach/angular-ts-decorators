@@ -10,6 +10,16 @@ export function Injectable(name?: string) {
   };
 }
 
+export function Inject(name: string) {
+  return (target: any, propertyKey: string, parameterIndex: number) => {
+    if (target.$inject) {
+      target.$inject.splice(parameterIndex, 1, name);
+    } else {
+      console.error(`Annotations should be provided as static $inject property in order to use @Inject decorator`);
+    }
+  };
+}
+
 /** @internal */
 export function registerProviders(module: IModule, providers: Provider[]) {
   providers.forEach((provider: any) => {

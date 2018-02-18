@@ -1,7 +1,7 @@
 export { platformBrowserDynamic } from './bootstrap';
 export { Component } from './component';
 export { Directive } from './directive';
-export { Injectable } from './injectable';
+export { Injectable, Inject } from './injectable';
 export { Pipe, PipeTransform } from './pipe';
 export { Input, Output } from './input';
 export { NgModule, ModuleConfig } from './module';
