@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.1.0"></a>
+# [3.1.0](https://github.com/vsternbach/angular-ts-decorators/compare/v3.0.5...v3.1.0) (2018-02-18)
+
+
+### Features
+
+* **Inject:** add support for Inject decorator ([167dce0](https://github.com/vsternbach/angular-ts-decorators/commit/167dce0)), closes [#57](https://github.com/vsternbach/angular-ts-decorators/issues/57)
+
+
+
 <a name="3.0.5"></a>
 ## [3.0.5](https://github.com/vsternbach/angular-ts-decorators/compare/v3.0.4...v3.0.5) (2018-01-30)
 
