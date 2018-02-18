@@ -10,6 +10,7 @@ export const metadataKeys = {
   bindings: 'custom:bindings',
   options: 'custom:options',
   listeners: 'custom:listeners',
+  queries: 'custom:queries',
 };
 
 /** @internal */

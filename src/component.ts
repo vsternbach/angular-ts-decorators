@@ -1,8 +1,10 @@
+import * as angular from 'angular';
 import {
   Declarations, defineMetadata, getAttributeName, getMetadata, isAttributeSelector, kebabToCamel,
   metadataKeys
 } from './utils';
 import { IHostListeners } from './hostListener';
+import { IQueries } from './query';
 import { ngLifecycleHooksMap } from './lifecycle_hooks';
 import { isFunction, IControllerConstructor, IDirective, IModule, IComponentController,
   IComponentOptions } from 'angular';
@@ -45,16 +47,18 @@ export function registerComponent(module: IModule, component: IComponentControll
   const name = getMetadata(metadataKeys.name, component);
   const options = getMetadata(metadataKeys.options, component);
   const listeners: IHostListeners = getMetadata(metadataKeys.listeners, options.controller);
-  if (listeners) {
-    options.controller = extendWithHostListeners(options.controller, listeners);
+  const queries: IQueries = getMetadata(metadataKeys.queries, component);
+  if (listeners || queries) {
+    options.controller = extendWithHostListenersAndQueries(options.controller, listeners, queries);
   }
   module.component(name, options);
 }
 
 /** @internal */
-export function extendWithHostListeners(ctrl: {new(...args: any[])}, listeners: IHostListeners) {
+export function extendWithHostListenersAndQueries(ctrl: {new(...args: any[])}, listeners: IHostListeners = {}, queries: IQueries = {}) {
   const handlers = Object.keys(listeners);
   const namespace = '.HostListener';
+  const properties = Object.keys(queries);
 
   class NewCtrl extends ctrl {
     constructor(private $element, ...args: any[]) {
@@ -68,12 +72,24 @@ export function extendWithHostListeners(ctrl: {new(...args: any[])}, listeners: 
         const { eventName } = listeners[handler];
         this.$element.on(eventName + namespace, this[handler].bind(this));
       });
+      properties.forEach(property => {
+        const query = queries[property];
+        const elements = this.$element[0].querySelector(query.selector);
+        if (query.first) {
+          this[property] = angular.element(elements[0]);
+        }
+        else {
+          this[property] = angular.element(elements);
+        }
+      })
     }
     $onDestroy() {
       if (super.$onDestroy) {
         super.$onDestroy();
       }
-      this.$element.off(namespace);
+      if (handlers.length) {
+        this.$element.off(namespace);
+      }
     }
   }
   NewCtrl.$inject = ['$element', ...ctrl.$inject || []];

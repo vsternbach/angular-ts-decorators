@@ -3,7 +3,8 @@ import {
   metadataKeys
 } from './utils';
 import { IHostListeners } from './hostListener';
-import { extendWithHostListeners, replaceLifecycleHooks } from './component';
+import { IQueries } from './query';
+import { extendWithHostListenersAndQueries, replaceLifecycleHooks } from './component';
 import { IController, IDirective, IModule } from 'angular';
 
 export interface DirectiveOptionsDecorated extends IDirective {
@@ -36,7 +37,8 @@ export function registerDirective(module: IModule, ctrl: DirectiveControllerCons
   const options = getMetadata(metadataKeys.options, ctrl);
   replaceLifecycleHooks(ctrl);
   const listeners: IHostListeners = getMetadata(metadataKeys.listeners, ctrl);
-  options.controller = listeners ? extendWithHostListeners(ctrl, listeners) : ctrl;
+  const queries: IQueries = getMetadata(metadataKeys.queries, ctrl);
+  options.controller = listeners || queries ? extendWithHostListenersAndQueries(ctrl, listeners, queries) : ctrl;
   directiveFunc = () => options;
   module.directive(name, directiveFunc);
 }

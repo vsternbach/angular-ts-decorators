@@ -8,5 +8,6 @@ export { NgModule, ModuleConfig } from './module';
 export { HostListener } from './hostListener';
 export { getTypeName } from './utils';
 export { Provider } from './provider';
+export { ViewChild, ViewChildren } from './query';
 export * from './lifecycle_hooks';
 export * from './type';

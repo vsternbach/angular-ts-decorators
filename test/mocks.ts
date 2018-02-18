@@ -5,6 +5,7 @@ import { NgModule } from '../src/module';
 import { Input, Output } from '../src/input';
 import { AfterViewInit, DoCheck, OnChanges, OnDestroy, OnInit, SimpleChanges } from '../src/lifecycle_hooks';
 import { HostListener } from '../src/hostListener';
+import { ViewChild, ViewChildren } from '../src/query';
 
 export const serviceName = 'TestService';
 
@@ -31,6 +32,7 @@ export function directive(selector: string) {
   class MyDirective {
     @Input() testInput;
     @Output() testOutput;
+    @ViewChild('span') child;
 
     constructor(private $log: ng.ILogService,
                 private $parse: ng.IParseService) { }
@@ -53,6 +55,7 @@ export function component(selector: string) {
   class MyComponent implements OnInit, OnChanges, DoCheck, OnDestroy, AfterViewInit {
     @Input() testInput;
     @Output() testOutput;
+    @ViewChild('span') child;
 
     constructor(private $log: ng.ILogService,
                 private $parse: ng.IParseService) { }
