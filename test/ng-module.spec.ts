@@ -77,6 +77,21 @@ describe('NgModule', () => {
         });
       });
 
+      describe('@ViewChild', () => {
+        it('injects $element and adds $postLink lifecycle hooks' , () => {
+          registerNgModule(moduleName, [], [
+            component('camelCaseName')
+          ]);
+          const invokeQueue = angular.module(moduleName)['_invokeQueue'];
+          const ctrlProto = invokeQueue[0][2][1].controller.prototype;
+          const inject = ctrlProto['constructor']['$inject'];
+
+          inject.forEach(dependency => expect(typeof dependency).toBe('string'));
+          expect(inject[0]).toEqual('$element');
+          expect(ctrlProto['$postLink']).toBeDefined();
+        });
+      });
+
       describe('lifecycle hooks', () => {
         it('replaces angular lifecycle hooks to angularjs lifecycle hooks' , () => {
           registerNgModule(moduleName, [], [
@@ -128,6 +143,22 @@ describe('NgModule', () => {
 
       describe('@HostListener', () => {
         it('injects $element and adds $postLink and $onDestroy lifecycle hooks' , () => {
+          registerNgModule(moduleName, [], [
+            directive('[camel-case-name]')
+          ]);
+          const invokeQueue = angular.module(moduleName)['_invokeQueue'];
+          const ctrlProto = invokeQueue[0][2][1]().controller.prototype;
+          const inject = ctrlProto['constructor']['$inject'];
+
+          inject.forEach(dependency => expect(typeof dependency).toBe('string'));
+          expect(inject[0]).toEqual('$element');
+          expect(ctrlProto['$postLink']).toBeDefined();
+          expect(ctrlProto['$onDestroy']).toBeDefined();
+        });
+      });
+
+      describe('@ViewChild', () => {
+        it('injects $element and adds $postLink lifecycle hooks' , () => {
           registerNgModule(moduleName, [], [
             directive('[camel-case-name]')
           ]);
@@ -257,4 +288,3 @@ describe('NgModule', () => {
     });
   });
 });
-
