@@ -13,7 +13,7 @@ export class PlatformRef {
     const moduleName = typeof moduleType === 'string' ? moduleType : (moduleType as NgModule).module.name;
     const strictDi = (compilerOptions.strictDi === true);
     element(document).ready(() => {
-      bootstrap('body', [moduleName], { strictDi });
+      bootstrap(document.body, [moduleName], { strictDi });
     });
   }
 }
