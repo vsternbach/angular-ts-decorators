@@ -4,7 +4,7 @@ import {
   metadataKeys
 } from './utils';
 import { IHostListeners } from './hostListener';
-import { IQueries } from './query';
+import { IViewChildren } from './viewChild';
 import { ngLifecycleHooksMap } from './lifecycle_hooks';
 import { isFunction, IControllerConstructor, IDirective, IModule, IComponentController,
   IComponentOptions } from 'angular';
@@ -47,18 +47,20 @@ export function registerComponent(module: IModule, component: IComponentControll
   const name = getMetadata(metadataKeys.name, component);
   const options = getMetadata(metadataKeys.options, component);
   const listeners: IHostListeners = getMetadata(metadataKeys.listeners, options.controller);
-  const queries: IQueries = getMetadata(metadataKeys.queries, component);
-  if (listeners || queries) {
-    options.controller = extendWithHostListenersAndQueries(options.controller, listeners, queries);
+  const viewChildren: IViewChildren = getMetadata(metadataKeys.viewChildren, component);
+  if (listeners || viewChildren) {
+    options.controller = extendWithHostListenersAndChildren(options.controller, listeners, viewChildren);
   }
   module.component(name, options);
 }
 
 /** @internal */
-export function extendWithHostListenersAndQueries(ctrl: {new(...args: any[])}, listeners: IHostListeners = {}, queries: IQueries = {}) {
+export function extendWithHostListenersAndChildren(ctrl: {new(...args: any[])},
+                                                   listeners: IHostListeners = {},
+                                                   viewChildren: IViewChildren = {}) {
   const handlers = Object.keys(listeners);
   const namespace = '.HostListener';
-  const properties = Object.keys(queries);
+  const properties = Object.keys(viewChildren);
 
   class NewCtrl extends ctrl {
     constructor(private $element, ...args: any[]) {
@@ -73,13 +75,15 @@ export function extendWithHostListenersAndQueries(ctrl: {new(...args: any[])}, l
         this.$element.on(eventName + namespace, this[handler].bind(this));
       });
       properties.forEach(property => {
-        const query = queries[property];
-        const elements = this.$element[0].querySelector(query.selector);
-        if (query.first) {
-          this[property] = angular.element(elements[0]);
+        const child = viewChildren[property];
+        const viewChildEls = this.$element[0].querySelectorAll(child.selector)
+          .map(viewChild => angular.element(viewChild).isolateScope<any>()['$ctrl']);
+
+        if (child.first && viewChildEls.length) {
+          this[property] = viewChildEls[0];
         }
         else {
-          this[property] = angular.element(elements);
+          this[property] = viewChildEls;
         }
       })
     }
