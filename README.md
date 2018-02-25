@@ -36,6 +36,7 @@ Peer dependencies: `"angular": ">=1.5.0"`
 | @Input        | angular.component options binding ('<')  | can be used only inside @Component decorator <br> default input binding value can be overridden by passing parameter to the decorator |
 | @Output       | angular.component options binding ('&')  | can be used only inside @Component decorator |
 | @HostListener       | ---  | see [@HostListener](#hostlistener) for details |
+| @ViewChild(ren)       | ---  | see [@ViewChild](#viewchild) for details |
 | @Directive    | angular.directive                         |   |
 | @Pipe         | angular.filter                            |   |
 
@@ -249,8 +250,21 @@ export class AppModule {
       console.log('click');
     }
   }
-  ```
-   
+  ``` 
+  
+## ViewChild
+ 
+@ViewChild and @ViewChildren are property decorators introduced in angular 2, see [official docs](https://angular.io/api/core/ViewChild)
+ 
+ Usage is more or less the same as in official docs, but it doesn't support template variables obviously (cause they don't exist in angularjs).
+ When provided selector is Component/Directive's type or selector, it's controller class is returned, if other css selector is provided - jqlite object is returned.  
+
+>This feature relies on angularjs debug data, so it won't work for fetching controller classes when `$compileProvider.debugInfoEnabled(false);`
+
+>This decorator uses Array.from, so polyfill must be provided when targeting for older browsers. 
+
+>Please notice, that this feature is kind of experimental, because the way it's implemented is kind of hacky: classes that have @HostListener methods are replaced with a new class that extends the original class. It works with basic use cases, but there could be some implications in some edge cases, so be aware.
+
  ## Inject
  
 @Inject decorator allows to inject providers under a different name, for example if you have a provider like this:
@@ -264,7 +278,8 @@ export class MyController {
   constructor(@Inject('My.Service') service: MyService) {}
 }
   ```
-  
+>Please notice that this decorator relies on explicit annotations either using static $inject property or using tools like ngAnnotate
+   
  ## Bootstraping angularjs application the angular way
  
  In angularjs way the manual boostrap would look like this
