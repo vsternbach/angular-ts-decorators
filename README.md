@@ -263,7 +263,7 @@ export class AppModule {
 
 >This decorator uses Array.from, so polyfill must be provided when targeting for older browsers. 
 
->Please notice, that this feature is kind of experimental, because the way it's implemented is kind of hacky: classes that have @HostListener methods are replaced with a new class that extends the original class. It works with basic use cases, but there could be some implications in some edge cases, so be aware.
+>Please notice, that this feature is kind of experimental, because the way it's implemented is kind of hacky: classes that have @ViewChild properties are replaced with a new class that extends the original class. It works with basic use cases, but there could be some implications in some edge cases, so be aware.
 
  ## Inject
  
