@@ -1,5 +1,5 @@
 import {
-  Declarations, defineMetadata, getAttributeName, getMetadata, isAttributeSelector, kebabToCamel,
+  Declaration, defineMetadata, getAttributeName, getMetadata, isAttributeSelector, kebabToCamel,
   metadataKeys
 } from './utils';
 import { IHostListeners } from './hostListener';
@@ -25,7 +25,7 @@ export function Directive({selector, ...options}: DirectiveOptionsDecorated) {
 
     const selectorName = isAttributeSelector(selector) ? getAttributeName(selector) : selector;
     defineMetadata(metadataKeys.name, kebabToCamel(selectorName), ctrl);
-    defineMetadata(metadataKeys.declaration, Declarations.directive, ctrl);
+    defineMetadata(metadataKeys.declaration, Declaration.Directive, ctrl);
     defineMetadata(metadataKeys.options, options, ctrl);
   };
 }

@@ -1,6 +1,8 @@
 import * as angular from 'angular';
 import {
-  Declarations, defineMetadata, getAttributeName, getMetadata, isAttributeSelector, kebabToCamel,
+  camelToKebab,
+  Declaration, defineMetadata, getAttributeName, getMetadata, getTypeDeclaration, getTypeName, isAttributeSelector,
+  kebabToCamel,
   metadataKeys
 } from './utils';
 import { IHostListeners } from './hostListener';
@@ -37,7 +39,7 @@ export function Component({selector, ...options}: ComponentOptionsDecorated) {
 
     const selectorName = isAttrSelector ? getAttributeName(selector) : selector;
     defineMetadata(metadataKeys.name, kebabToCamel(selectorName), ctrl);
-    defineMetadata(metadataKeys.declaration, isAttrSelector ? Declarations.directive : Declarations.component, ctrl);
+    defineMetadata(metadataKeys.declaration, isAttrSelector ? Declaration.Directive : Declaration.Component, ctrl);
     defineMetadata(metadataKeys.options, options, ctrl);
   };
 }
@@ -76,16 +78,26 @@ export function extendWithHostListenersAndChildren(ctrl: {new(...args: any[])},
       });
       properties.forEach(property => {
         const child = viewChildren[property];
-        const viewChildEls = this.$element[0].querySelectorAll(child.selector)
-          .map(viewChild => angular.element(viewChild).isolateScope<any>()['$ctrl']);
+        let selector: string;
+        if (typeof child.selector !== 'string') {
+          const type = getTypeDeclaration(child.selector);
+          if (type !== Declaration.Component && type !== Declaration.Directive) {
+            console.error(`No valid selector was provided for ViewChild${child.first ? '' : 'ren'} decorator, it should be type or selector of component/directive`);
+            return;
+          }
+          selector = camelToKebab(getTypeName(child.selector));
+        } else selector = child.selector;
 
-        if (child.first && viewChildEls.length) {
-          this[property] = viewChildEls[0];
+        const viewChildEls = Array.from(this.$element[0].querySelectorAll(selector)).map((viewChild: Element) => {
+          const el = angular.element(viewChild);
+          const scope = el && el.isolateScope && el.isolateScope();
+          return scope ? scope['$ctrl'] : el;
+        }).filter(el => !!el);
+
+        if (viewChildEls.length) {
+          this[property] = child.first ? viewChildEls[0] : viewChildEls;
         }
-        else {
-          this[property] = viewChildEls;
-        }
-      })
+      });
     }
     $onDestroy() {
       if (super.$onDestroy) {

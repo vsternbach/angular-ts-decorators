@@ -1,7 +1,7 @@
 import * as angular from 'angular';
 import { PipeTransform, registerPipe } from './pipe';
 import { registerProviders } from './injectable';
-import { camelToKebab, Declarations, getMetadata, getTypeName, metadataKeys } from './utils';
+import { camelToKebab, Declaration, getMetadata, getTypeName, metadataKeys } from './utils';
 import { registerComponent } from './component';
 import { registerDirective } from './directive';
 import { Provider } from './provider';
@@ -37,13 +37,13 @@ export function NgModule({ id, bootstrap = [], declarations = [], imports = [], 
     declarations.forEach((declaration: any) => {
       const declarationType = getMetadata(metadataKeys.declaration, declaration);
       switch (declarationType) {
-        case Declarations.component:
+        case Declaration.Component:
           registerComponent(module, declaration);
           break;
-        case Declarations.directive:
+        case Declaration.Directive:
           registerDirective(module, declaration);
           break;
-        case Declarations.pipe:
+        case Declaration.Pipe:
           registerPipe(module, declaration);
           break;
         default:

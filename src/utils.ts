@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 
 /** @internal */
-export enum Declarations { component, directive, pipe }
+export enum Declaration { Component = 'Component', Directive = 'Directive', Pipe = 'Pipe' }
 
 /** @internal */
 export const metadataKeys = {
@@ -43,6 +43,10 @@ export function defineMetadata(metadataKey: any, metadataValue: any, target: any
   Reflect.defineMetadata(metadataKey, metadataValue, target);
 }
 
-export function getTypeName(target: any) {
+export function getTypeName(target: any): string {
   return getMetadata(metadataKeys.name, target);
+}
+
+export function getTypeDeclaration(target: any): Declaration {
+  return getMetadata(metadataKeys.declaration, target);
 }

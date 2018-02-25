@@ -1,4 +1,4 @@
-import { Declarations, defineMetadata, getMetadata, metadataKeys } from './utils';
+import { Declaration, defineMetadata, getMetadata, metadataKeys } from './utils';
 import { IModule } from 'angular';
 
 export interface PipeTransformConstructor {
@@ -12,7 +12,7 @@ export interface PipeTransform {
 export function Pipe(options: {name: string}) {
   return (Class: PipeTransformConstructor) => {
     defineMetadata(metadataKeys.name, options.name, Class);
-    defineMetadata(metadataKeys.declaration, Declarations.pipe, Class);
+    defineMetadata(metadataKeys.declaration, Declaration.Pipe, Class);
   };
 }
 

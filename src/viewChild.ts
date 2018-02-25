@@ -8,25 +8,21 @@ export interface IViewChildren {
   [property: string]: {
     first: boolean;
     selector: any;
-  }
+  };
 }
 
-export function ViewChild(selector: any): any {
+export function ViewChild(selector: Type<any>|Function|string, opts?: {read?: any}): any {
   return (target: any, key: string) => addBindingToMetadata(target, key, selector, true);
 }
 
-export function ViewChildren(selector: any): any {
+export function ViewChildren(selector: Type<any>|Function|string, opts?: {read?: any}): any {
   return (target: any, key: string) => addBindingToMetadata(target, key, selector, false);
 }
 
 /** @internal */
-function addBindingToMetadata(target: any, key: string, type: any, first: boolean) {
+function addBindingToMetadata(target: any, key: string, selector: Type<any>|Function|string, first: boolean) {
   const targetConstructor = target.constructor;
-  const selector = camelToKebab(getTypeName(type));
-  const children: IViewChildren = getMetadata(metadataKeys.viewChildren, targetConstructor) || {};
-  children[key] = {
-    first,
-    selector: selector
-  };
-  defineMetadata(metadataKeys.viewChildren, children, targetConstructor);
+  const viewChildren: IViewChildren = getMetadata(metadataKeys.viewChildren, targetConstructor) || {};
+  viewChildren[key] = { first, selector };
+  defineMetadata(metadataKeys.viewChildren, viewChildren, targetConstructor);
 }
