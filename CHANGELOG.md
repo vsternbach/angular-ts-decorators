@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.2.0"></a>
+# [3.2.0](https://github.com/vsternbach/angular-ts-decorators/compare/v3.1.0...v3.2.0) (2018-02-25)
+
+
+### Bug Fixes
+
+* **bootstrap:** fix bootstraping on body tag when no jQuery present ([2d45dbc](https://github.com/vsternbach/angular-ts-decorators/commit/2d45dbc))
+* **view child:** refactor to use type as selector ([73e3056](https://github.com/vsternbach/angular-ts-decorators/commit/73e3056))
+* **ViewChild:** finish ViewChild implementation and bugfixes ([ea40c33](https://github.com/vsternbach/angular-ts-decorators/commit/ea40c33))
+
+
+### Features
+
+* **query:** add ViewChild and ViewChildren ([d2b0975](https://github.com/vsternbach/angular-ts-decorators/commit/d2b0975))
+* add ViewChild and ViewChildren decorators ([53a7ddd](https://github.com/vsternbach/angular-ts-decorators/commit/53a7ddd))
+
+
+
 <a name="3.1.0"></a>
 # [3.1.0](https://github.com/vsternbach/angular-ts-decorators/compare/v3.0.5...v3.1.0) (2018-02-18)
 
