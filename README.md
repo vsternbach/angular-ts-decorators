@@ -35,6 +35,7 @@ Peer dependencies: `"angular": ">=1.5.0"`
 | @Component    | angular.component                         |   |
 | @Input        | angular.component options binding ('<')  | can be used only inside @Component decorator <br> default input binding value can be overridden by passing parameter to the decorator |
 | @Output       | angular.component options binding ('&')  | can be used only inside @Component decorator |
+| @ViewParent       | angular.component options require  | pass controller name with syntax according to angularjs require spec |
 | @HostListener       | ---  | see [@HostListener](#hostlistener) for details |
 | @ViewChild(ren)       | ---  | see [@ViewChild](#viewchild) for details |
 | @Directive    | angular.directive                         |   |

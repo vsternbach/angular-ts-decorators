@@ -8,6 +8,7 @@ export const metadataKeys = {
   declaration: 'custom:declaration',
   name: 'custom:name',
   bindings: 'custom:bindings',
+  require: 'custom:require',
   options: 'custom:options',
   listeners: 'custom:listeners',
   viewChildren: 'custom:viewChildren',

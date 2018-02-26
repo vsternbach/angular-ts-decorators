@@ -31,6 +31,11 @@ export function Component({selector, ...options}: ComponentOptionsDecorated) {
       else options['bindings'] = bindings;
     }
 
+    const require = getMetadata(metadataKeys.require, ctrl);
+    if (require) {
+      options.require = require;
+    }
+
     if (isAttrSelector) {
       (options as IDirective).restrict = 'A';
     }
@@ -82,7 +87,8 @@ export function extendWithHostListenersAndChildren(ctrl: {new(...args: any[])},
         if (typeof child.selector !== 'string') {
           const type = getTypeDeclaration(child.selector);
           if (type !== Declaration.Component && type !== Declaration.Directive) {
-            console.error(`No valid selector was provided for ViewChild${child.first ? '' : 'ren'} decorator, it should be type or selector of component/directive`);
+            console.error(`No valid selector was provided for ViewChild${child.first ? '' :
+              'ren'} decorator, it should be type or selector of component/directive`);
             return;
           }
           selector = camelToKebab(getTypeName(child.selector));

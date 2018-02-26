@@ -21,6 +21,10 @@ export function Directive({selector, ...options}: DirectiveOptionsDecorated) {
     if (bindings) {
       options.bindToController = bindings;
     }
+    const require = getMetadata(metadataKeys.require, ctrl);
+    if (require) {
+      options.require = require;
+    }
     options.restrict = options.restrict || 'A';
 
     const selectorName = isAttributeSelector(selector) ? getAttributeName(selector) : selector;
@@ -38,7 +42,8 @@ export function registerDirective(module: IModule, ctrl: DirectiveControllerCons
   replaceLifecycleHooks(ctrl);
   const listeners: IHostListeners = getMetadata(metadataKeys.listeners, ctrl);
   const viewChildren: IViewChildren = getMetadata(metadataKeys.viewChildren, ctrl);
-  options.controller = listeners || viewChildren ? extendWithHostListenersAndChildren(ctrl, listeners, viewChildren) : ctrl;
+  options.controller = listeners || viewChildren ?
+    extendWithHostListenersAndChildren(ctrl, listeners, viewChildren) : ctrl;
   directiveFunc = () => options;
   module.directive(name, directiveFunc);
 }
