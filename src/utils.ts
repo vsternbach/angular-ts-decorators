@@ -1,6 +1,5 @@
 import 'reflect-metadata';
 
-/** @internal */
 export enum Declaration { Component = 'Component', Directive = 'Directive', Pipe = 'Pipe' }
 
 /** @internal */
