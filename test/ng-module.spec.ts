@@ -78,7 +78,7 @@ describe('NgModule', () => {
       });
 
       describe('@ViewChild', () => {
-        it('injects $element and adds $postLink lifecycle hooks' , () => {
+        it('injects $element and adds $postLink and $onChanges lifecycle hooks' , () => {
           registerNgModule(moduleName, [], [
             component('camelCaseName')
           ]);
@@ -89,6 +89,7 @@ describe('NgModule', () => {
           inject.forEach(dependency => expect(typeof dependency).toBe('string'));
           expect(inject[0]).toEqual('$element');
           expect(ctrlProto['$postLink']).toBeDefined();
+          expect(ctrlProto['$onChanges']).toBeDefined();
         });
       });
 
@@ -158,7 +159,7 @@ describe('NgModule', () => {
       });
 
       describe('@ViewChild', () => {
-        it('injects $element and adds $postLink lifecycle hooks' , () => {
+        it('injects $element and adds $postLink and $onChanges lifecycle hooks' , () => {
           registerNgModule(moduleName, [], [
             directive('[camel-case-name]')
           ]);
@@ -169,7 +170,7 @@ describe('NgModule', () => {
           inject.forEach(dependency => expect(typeof dependency).toBe('string'));
           expect(inject[0]).toEqual('$element');
           expect(ctrlProto['$postLink']).toBeDefined();
-          expect(ctrlProto['$onDestroy']).toBeDefined();
+          expect(ctrlProto['$onChanges']).toBeDefined();
         });
       });
     });
