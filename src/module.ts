@@ -67,20 +67,7 @@ export function NgModule({ id, bootstrap = [], declarations = [], imports = [], 
       module.run(run);
     }
 
-    // add bootstrap elements to DOM
-    bootstrap.forEach(component => {
-      module.run(insertComponentToDOM(component));
-    });
     // expose angular module as static property
     Class.module = module;
-  };
-}
-
-function insertComponentToDOM(component: IComponentController) {
-  return () => {
-    const componentName = getTypeName(component);
-    const selector = camelToKebab(componentName);
-    const $el = `<${selector}></${selector}>`;
-    angular.element('body').append($el);
   };
 }

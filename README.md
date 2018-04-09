@@ -217,12 +217,12 @@ export class AppModule {
  want to provide to your module config and run blocks as arguments of config 
  and run methods of the module class and they'll be injected by their names.
  
- ## HostListener
+## HostListener
  
- @HostListener is a special method decorator introduced in angular 2, see [official docs](https://angular.io/docs/ts/latest/guide/style-guide.html#!#directives)
- >Please notice, that this feature is kind of experimental, because the way it's implemented is kind of hacky: classes that have @HostListener methods are replaced with a new class that extends the original class. It works with basic use cases, but there could be some implications in some edge cases, so be aware.
- 
- Usage:
+@HostListener is a special method decorator introduced in angular 2, see [official docs](https://angular.io/docs/ts/latest/guide/style-guide.html#!#directives)
+>Please notice, that this feature is kind of experimental, because the way it's implemented is kind of hacky: classes that have @HostListener methods are replaced with a new class that extends the original class. It works with basic use cases, but there could be some implications in some edge cases, so be aware.
+
+Usage:
  ```js
  import { HostListener } from 'angular-ts-decorators';
  
@@ -232,9 +232,9 @@ export class AppModule {
      console.log('click');
    }
  }
- ```
- The implementation of it in angularjs as follows, it injects $element into component constructor and attaches method decorated with @HostListener as event handler on $element in $postLink and dettaches it in $onDestroy:
-  ```js
+```
+The implementation of it in angularjs as follows, it injects $element into component constructor and attaches method decorated with @HostListener as event handler on $element in $postLink and dettaches it in $onDestroy:
+```js
   
   export class MyDirective {
     constructor(private $element: ng.IAugmentedJQuery) {}
@@ -257,8 +257,8 @@ export class AppModule {
  
 @ViewChild and @ViewChildren are property decorators introduced in angular 2, see [official docs](https://angular.io/api/core/ViewChild)
  
- Usage is more or less the same as in official docs, but it doesn't support template variables obviously (cause they don't exist in angularjs).
- When provided selector is Component/Directive's type or selector, it's controller class is returned, if other css selector is provided - jqlite object is returned.  
+Usage is more or less the same as in official docs, but it doesn't support template variables obviously (cause they don't exist in angularjs).
+When provided selector is Component/Directive's type or selector, it's controller class is returned, if other css selector is provided - jqlite object is returned.  
 
 >This feature relies on angularjs debug data, so it won't work for fetching controller classes when `$compileProvider.debugInfoEnabled(false);`
 
@@ -266,7 +266,7 @@ export class AppModule {
 
 >Please notice, that this feature is kind of experimental, because the way it's implemented is kind of hacky: classes that have @ViewChild properties are replaced with a new class that extends the original class. It works with basic use cases, but there could be some implications in some edge cases, so be aware.
 
- ## Inject
+## Inject
  
 @Inject decorator allows to inject providers under a different name, for example if you have a provider like this:
  ```js
@@ -281,16 +281,33 @@ export class MyController {
   ```
 >Please notice that this decorator relies on explicit annotations either using static $inject property or using tools like ngAnnotate
    
- ## Bootstraping angularjs application the angular way
+## Bootstraping angularjs application the angular way
  
- In angularjs way the manual boostrap would look like this
+In angularjs way the manual boostrap would look like this
  ```
 angular.element(document).ready(() => {
-  angular.bootstrap(document, ['AppModule'], {strictDi: true});
+  angular.bootstrap(document, ['AppModule']);
 });
  ```
-Using `angular-ts-decorators` you can boostrap your application with angular syntax
+With `angular-ts-decorators` you can bootstrap your application using angular syntax
+If your module is decorated with NgModule metadata, you can bootstrap it like so:
 ```
-platformBrowserDynamic().bootstrapModule((AppModule as NgModule).module.name);
+platformBrowserDynamic().bootstrapModule(AppModule);
 ```
->`strictDi = true` by default, you can override it, passing `{strictDi: false}` as the second argument to bootstrapModule
+If you have some module that is registered using angularjs syntax using export module
+```
+export const someModule = angular.module('SomeModule');
+```
+or you are exporting only module name
+```
+export const someModule = angular.module('SomeModule').name;
+```
+Then you would bootstrap it like so:
+```
+platformBrowserDynamic().bootstrapModule(someModule);
+```
+If you have some angularjs module available, you can bootsrap it by it's name
+```
+platformBrowserDynamic().bootstrapModule('SomeModule');
+```
+>By default angularjs adds automatic function annotation for the application, you can override it by passing `{ strictDi: true }` as the second argument to bootstrapModule
