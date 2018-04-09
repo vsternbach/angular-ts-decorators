@@ -296,11 +296,11 @@ platformBrowserDynamic().bootstrapModule(AppModule);
 ```
 If you have some module that is registered using angularjs syntax using export module
 ```
-export const someModule = angular.module('SomeModule');
+export const someModule = angular.module('SomeModule', [(AppModule as NgModule).module.name]);
 ```
 or you are exporting only module name
 ```
-export const someModule = angular.module('SomeModule').name;
+export const someModule = angular.module('SomeModule', [(AppModule as NgModule).module.name]).name;
 ```
 Then you would bootstrap it like so:
 ```
