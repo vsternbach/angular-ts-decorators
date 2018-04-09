@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.4.0"></a>
+# [3.4.0](https://github.com/vsternbach/angular-ts-decorators/compare/v3.3.1...v3.4.0) (2018-04-09)
+
+
+### Bug Fixes
+
+* **bootstrap:** fix bug when compilerOptions are not provided ([3920e0b](https://github.com/vsternbach/angular-ts-decorators/commit/3920e0b))
+* **component:** update children binding in $onChanges ([3e81205](https://github.com/vsternbach/angular-ts-decorators/commit/3e81205)), closes [#62](https://github.com/vsternbach/angular-ts-decorators/issues/62)
+
+
+### Features
+
+* **bootstrap:** refactor bootstrap logic ([ecc5ac9](https://github.com/vsternbach/angular-ts-decorators/commit/ecc5ac9))
+
+
+
 <a name="3.3.1"></a>
 ## [3.3.1](https://github.com/vsternbach/angular-ts-decorators/compare/v3.3.0...v3.3.1) (2018-03-04)
 
