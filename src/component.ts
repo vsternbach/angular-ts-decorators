@@ -73,14 +73,7 @@ export function extendWithHostListenersAndChildren(ctrl: {new(...args: any[])},
     constructor(private $element, ...args: any[]) {
       super(...args);
     }
-    $postLink() {
-      if (super.$postLink) {
-        super.$postLink();
-      }
-      handlers.forEach(handler => {
-        const { eventName } = listeners[handler];
-        this.$element.on(eventName + namespace, this[handler].bind(this));
-      });
+    private _updateViewChildren() {
       properties.forEach(property => {
         const child = viewChildren[property];
         let selector: string;
@@ -103,7 +96,26 @@ export function extendWithHostListenersAndChildren(ctrl: {new(...args: any[])},
         if (viewChildEls.length) {
           this[property] = child.first ? viewChildEls[0] : viewChildEls;
         }
+        else {
+          this[property] = undefined;
+        }
       });
+    }
+    $postLink() {
+      if (super.$postLink) {
+        super.$postLink();
+      }
+      handlers.forEach(handler => {
+        const { eventName } = listeners[handler];
+        this.$element.on(eventName + namespace, this[handler].bind(this));
+      });
+      this._updateViewChildren();
+    }
+    $onChanges(changes) {
+      if (super.$onChanges) {
+        super.$onChanges(changes);
+      }
+      this._updateViewChildren();
     }
     $onDestroy() {
       if (super.$onDestroy) {
