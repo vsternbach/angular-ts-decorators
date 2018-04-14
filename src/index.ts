@@ -10,6 +10,4 @@ export { Provider } from './provider';
 export { ViewChild, ViewChildren } from './viewChild';
 export * from './lifecycle_hooks';
 export * from './type';
-export { /** @deprecated */ getTypeName } from './utils';
-import * as helpers from './utils';
-export { helpers };
+export * from './utils';
