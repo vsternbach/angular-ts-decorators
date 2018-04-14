@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.5.0"></a>
+# [3.5.0](https://github.com/vsternbach/angular-ts-decorators/compare/v3.4.1...v3.5.0) (2018-04-14)
+
+
+### Features
+
+* **utils:** add some utils functions to public api ([1220117](https://github.com/vsternbach/angular-ts-decorators/commit/1220117))
+
+
+
 <a name="3.4.1"></a>
 ## [3.4.1](https://github.com/vsternbach/angular-ts-decorators/compare/v3.4.0...v3.4.1) (2018-04-12)
 
