@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.6.1"></a>
+## [3.6.1](https://github.com/vsternbach/angular-ts-decorators/compare/v3.6.0...v3.6.1) (2018-04-14)
+
+
+### Bug Fixes
+
+* **utils:** fix export util functions ([073eff9](https://github.com/vsternbach/angular-ts-decorators/commit/073eff9))
+
+
+
 <a name="3.6.0"></a>
 # [3.6.0](https://github.com/vsternbach/angular-ts-decorators/compare/v3.5.0...v3.6.0) (2018-04-14)
 
