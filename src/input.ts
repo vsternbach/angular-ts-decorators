@@ -1,7 +1,7 @@
 import { defineMetadata, getMetadata, metadataKeys } from './utils';
 
 export function Input(alias?: string) {
-  return (target: any, key: string) => addBindingToMetadata(target, key, '<', alias);
+  return (target: any, key: string) => addBindingToMetadata(target, key, '<?', alias);
 }
 
 export function Output(alias?: string) {
