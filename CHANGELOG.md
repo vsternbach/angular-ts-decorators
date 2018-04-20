@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.7.0"></a>
+# [3.7.0](https://github.com/vsternbach/angular-ts-decorators/compare/v3.6.1...v3.7.0) (2018-04-20)
+
+
+### Features
+
+* **Input:** make input optional by default ([12cacb2](https://github.com/vsternbach/angular-ts-decorators/commit/12cacb2)), closes [#60](https://github.com/vsternbach/angular-ts-decorators/issues/60)
+
+
+
 <a name="3.6.1"></a>
 ## [3.6.1](https://github.com/vsternbach/angular-ts-decorators/compare/v3.6.0...v3.6.1) (2018-04-14)
 
