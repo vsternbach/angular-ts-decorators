@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.7.2"></a>
+## [3.7.2](https://github.com/vsternbach/angular-ts-decorators/compare/v3.7.1...v3.7.2) (2018-04-21)
+
+
+### Bug Fixes
+
+* **ViewChild:** remove unnecessary dependency on DebugData ([40cccfb](https://github.com/vsternbach/angular-ts-decorators/commit/40cccfb))
+
+
+
 <a name="3.7.1"></a>
 ## [3.7.1](https://github.com/vsternbach/angular-ts-decorators/compare/v3.7.0...v3.7.1) (2018-04-21)
 
