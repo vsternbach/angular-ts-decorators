@@ -87,7 +87,7 @@ export function extendWithHostListenersAndChildren(ctrl: {new(...args: any[])},
           selector = camelToKebab(getTypeName(child.selector));
         } else selector = child.selector;
 
-        const viewChildEls = Array.from(this.$element[0].querySelectorAll(selector)).map((viewChild: Element) => {
+        const viewChildEls = [...this.$element[0].querySelectorAll(selector)].map((viewChild: Element) => {
           const el = angular.element(viewChild);
           const scope = el && el.isolateScope && el.isolateScope();
           return scope ? scope['$ctrl'] : el;
