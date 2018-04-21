@@ -55,7 +55,7 @@ describe('NgModule', () => {
           const bindings = invokeQueue[0][2][1].bindings;
           expect(bindings).toBeDefined();
           expect(bindings).toEqual({
-            testInput: '<',
+            testInput: '<?',
             testOutput: '&'
           });
         });
@@ -136,7 +136,7 @@ describe('NgModule', () => {
           const directiveObject = invokeQueue[0][2][1]();
           expect(directiveObject).toBeDefined();
           expect(directiveObject.bindToController).toEqual({
-              testInput: '<',
+              testInput: '<?',
               testOutput: '&',
           });
         });
