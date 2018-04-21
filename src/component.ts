@@ -87,11 +87,13 @@ export function extendWithHostListenersAndChildren(ctrl: {new(...args: any[])},
           selector = camelToKebab(getTypeName(child.selector));
         } else selector = child.selector;
 
-        const viewChildEls = [...this.$element[0].querySelectorAll(selector)].map((viewChild: Element) => {
-          const el = angular.element(viewChild);
-          const scope = el && el.isolateScope && el.isolateScope();
-          return scope ? scope['$ctrl'] : el;
-        }).filter(el => !!el);
+        const viewChildEls = Array.prototype.slice.call(this.$element[0].querySelectorAll(selector))
+          .map((viewChild: Element) => {
+            const el = angular.element(viewChild);
+            const $ctrl = el && el.controller(kebabToCamel(selector));
+            return $ctrl || el;
+          })
+          .filter(el => !!el);
 
         if (viewChildEls.length) {
           this[property] = child.first ? viewChildEls[0] : viewChildEls;

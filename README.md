@@ -201,13 +201,13 @@ import { UppercasePipe } from 'greeting/uppercase.filter';
   ]
 })
 export class AppModule {
-  /*@ngInject*/
   static config($compileProvider: ng.ICompileProvider) {
+    'ngInject';
     $compileProvider.debugInfoEnabled(false);
   }
 
-  /*@ngInject*/
   static run(GreetingService: GreetingService) {
+    'ngInject';
     console.log(GreetingService.getGreeting());
   }
 }
@@ -259,8 +259,6 @@ The implementation of it in angularjs as follows, it injects $element into compo
  
 Usage is more or less the same as in official docs, but it doesn't support template variables obviously (cause they don't exist in angularjs).
 When provided selector is Component/Directive's type or selector, it's controller class is returned, if other css selector is provided - jqlite object is returned.  
-
->This feature relies on angularjs debug data, so it won't work for fetching controller classes when `$compileProvider.debugInfoEnabled(false);`
 
 >Please notice, that this feature is kind of experimental, because the way it's implemented is kind of hacky: classes that have @ViewChild properties are replaced with a new class that extends the original class. It works with basic use cases, but there could be some implications in some edge cases, so be aware.
 
