@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.7.3"></a>
+## [3.7.3](https://github.com/vsternbach/angular-ts-decorators/compare/v3.7.2...v3.7.3) (2018-04-23)
+
+
+### Bug Fixes
+
+* **Inject:** add support for class methods ([14a6dcb](https://github.com/vsternbach/angular-ts-decorators/commit/14a6dcb)), closes [#65](https://github.com/vsternbach/angular-ts-decorators/issues/65)
+
+
+
 <a name="3.7.2"></a>
 ## [3.7.2](https://github.com/vsternbach/angular-ts-decorators/compare/v3.7.1...v3.7.2) (2018-04-21)
 
