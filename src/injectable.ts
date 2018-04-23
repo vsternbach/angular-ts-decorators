@@ -12,6 +12,12 @@ export function Injectable(name?: string) {
 
 export function Inject(name: string) {
   return (target: any, propertyKey: string, parameterIndex: number) => {
+    // if @Inject decorator is on target's method
+    if (propertyKey && Array.isArray(target[propertyKey])) {
+      target[propertyKey][parameterIndex] = name;
+      return; // exit, don't change injection on target's constructor
+    }
+    // if @Inject decorator is on target's constructor
     if (target.$inject) {
       target.$inject[parameterIndex] = name;
     } else {
