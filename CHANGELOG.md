@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.7.4"></a>
+## [3.7.4](https://github.com/vsternbach/angular-ts-decorators/compare/v3.7.3...v3.7.4) (2018-04-30)
+
+
+### Bug Fixes
+
+* **ViewChild:** add support for querying ViewChild by element id ([4c92d69](https://github.com/vsternbach/angular-ts-decorators/commit/4c92d69)), closes [#66](https://github.com/vsternbach/angular-ts-decorators/issues/66)
+
+
+
 <a name="3.7.3"></a>
 ## [3.7.3](https://github.com/vsternbach/angular-ts-decorators/compare/v3.7.2...v3.7.3) (2018-04-23)
 
