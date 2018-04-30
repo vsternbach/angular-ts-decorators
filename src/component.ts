@@ -1,4 +1,5 @@
 import * as angular from 'angular';
+import { ElementRef } from './element_ref';
 import {
   camelToKebab,
   Declaration, defineMetadata, getAttributeName, getMetadata, getTypeDeclaration, getTypeName, isAttributeSelector,
@@ -85,13 +86,16 @@ export function extendWithHostListenersAndChildren(ctrl: {new(...args: any[])},
             return;
           }
           selector = camelToKebab(getTypeName(child.selector));
-        } else selector = child.selector;
+        } else selector = `#${child.selector}`;
 
         const viewChildEls = Array.prototype.slice.call(this.$element[0].querySelectorAll(selector))
           .map((viewChild: Element) => {
+            // if ViewChild selector is type use selector derived from type
+            // otherwise (i.e. id of the element), get it's element name (localName)
+            const componentName = typeof child.selector === 'string' ? viewChild.localName : selector;
             const el = angular.element(viewChild);
-            const $ctrl = el && el.controller(kebabToCamel(selector));
-            return $ctrl || el;
+            const $ctrl = el && el.controller(kebabToCamel(componentName));
+            return child.read ? new ElementRef(el) : ($ctrl || new ElementRef(el));
           })
           .filter(el => !!el);
 
