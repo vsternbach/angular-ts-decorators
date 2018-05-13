@@ -139,14 +139,11 @@ export function extendWithHostListenersAndChildren(ctrl: {new(...args: any[])},
 /** @internal */
 export function replaceLifecycleHooks(ctrl: IControllerConstructor) {
   const ctrlClass = ctrl.prototype;
-  const ngHooksFound: string[] = getHooksOnCtrlClass(ctrlClass);
+  const ngHooksFound = getHooksOnCtrlClass(ctrlClass);
 
   ngHooksFound.forEach((ngHook: string) => {
     const angularJsHook: string = ngLifecycleHooksMap[ngHook];
-
     ctrlClass[angularJsHook] = ctrlClass[ngHook];
-
-    delete ctrlClass[ngHook];
   });
 }
 
