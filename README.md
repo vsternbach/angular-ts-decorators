@@ -7,7 +7,7 @@ A collection of angular 2 style decorators for angularjs 1.5.x projects written 
 [![dependencies Status](https://david-dm.org/vsternbach/angular-ts-decorators/status.svg)](https://david-dm.org/vsternbach/angular-ts-decorators)
 [![bitHound Overall Score](https://www.bithound.io/github/vsternbach/angular-ts-decorators/badges/score.svg)](https://www.bithound.io/github/vsternbach/angular-ts-decorators)
 
-[![NPM](https://nodei.co/npm/angular-ts-decorators.png?downloads=true)](https://nodei.co/npm/angular-ts-decorators/)
+[![NPM](https://nodei.co/npm/angular-ts-decorators.png?downloads=true)](https://nodei.co/npm/angular-ts-decorators/) [![Greenkeeper badge](https://badges.greenkeeper.io/vsternbach/angular-ts-decorators.svg)](https://greenkeeper.io/)
 
 See example of usage [here](https://github.com/vsternbach/tasks-playground)
 
