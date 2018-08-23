@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.7.7"></a>
+## [3.7.7](https://github.com/vsternbach/angular-ts-decorators/compare/v3.7.6...v3.7.7) (2018-08-23)
+
+
+### Bug Fixes
+
+* **build:** update rollup config according to new format ([c78f180](https://github.com/vsternbach/angular-ts-decorators/commit/c78f180))
+
+
+
 <a name="3.7.6"></a>
 ## [3.7.6](https://github.com/vsternbach/angular-ts-decorators/compare/v3.7.5...v3.7.6) (2018-08-23)
 
