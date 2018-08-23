@@ -8,7 +8,7 @@ A collection of angular 2 style decorators for angularjs 1.5.x projects written 
 
 [![NPM](https://nodei.co/npm/angular-ts-decorators.png?downloads=true)](https://nodei.co/npm/angular-ts-decorators/)
 
-See example of usage [here](https://github.com/vsternbach/tasks-playground)
+See example of usage [here](https://github.com/vsternbach/angularjs-typescript-webpack)
 
 ## Prerequisites
 `angular-ts-decorators` tries to mimic [angular 2 style](https://angular.io/docs/ts/latest/guide/style-guide.html) decorators as closely as possible.
