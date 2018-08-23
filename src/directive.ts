@@ -24,6 +24,7 @@ export function Directive({selector, ...options}: DirectiveOptionsDecorated) {
     const require = getMetadata(metadataKeys.require, ctrl);
     if (require) {
       options.require = require;
+      if (!options.bindToController) options.bindToController = true;
     }
     options.restrict = options.restrict || 'A';
 
