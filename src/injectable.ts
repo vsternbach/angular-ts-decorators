@@ -4,9 +4,7 @@ import { IModule } from 'angular';
 
 export function Injectable(name?: string) {
   return (Class: any) => {
-    if (name) {
-      defineMetadata(metadataKeys.name, name, Class);
-    }
+    defineMetadata(metadataKeys.name, name || Class.name, Class);
   };
 }
 

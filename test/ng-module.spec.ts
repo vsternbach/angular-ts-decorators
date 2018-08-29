@@ -1,6 +1,6 @@
 import * as angular from 'angular';
 import { component, directive, registerNgModule, TestService } from './mocks';
-import { Pipe, PipeTransform } from '../src';
+import { Pipe, PipeTransform, Injectable, metadataKeys, getMetadata } from '../src';
 
 describe('NgModule', () => {
   const moduleName = 'TestModule';
@@ -286,6 +286,25 @@ describe('NgModule', () => {
         expect(invokeQueue[0][2][0]).toEqual(name);
         expect(invokeQueue[0][2][1].$inject).toEqual(['$injector', '$timeout']);
       });
+    });
+  });
+
+  describe('@Injectable', () => {
+    @Injectable('a')
+    class NamedService {}
+
+    @Injectable()
+    class DefaultNameService {}
+
+    beforeAll((() => {
+      this.nameA = getMetadata(metadataKeys.name, NamedService);
+      this.nameB = getMetadata(metadataKeys.name, DefaultNameService);
+    }));
+    it('assigns the given name to Named Service', () => {
+        expect(this.nameA).toEqual('a');
+    });
+    it('assigns the class Name to Named Service', () => {
+      expect(this.nameB).toEqual('DefaultNameService');
     });
   });
 });
