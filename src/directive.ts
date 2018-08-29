@@ -1,6 +1,7 @@
 import {
   Declaration, defineMetadata, getAttributeName, getMetadata, isAttributeSelector, kebabToCamel,
-  metadataKeys
+  metadataKeys,
+  addStaticInjections
 } from './utils';
 import { IHostListeners } from './hostListener';
 import { IViewChildren } from './viewChild';
@@ -27,6 +28,8 @@ export function Directive({selector, ...options}: DirectiveOptionsDecorated) {
       if (!options.bindToController) options.bindToController = true;
     }
     options.restrict = options.restrict || 'A';
+
+    addStaticInjections(ctrl);
 
     const selectorName = isAttributeSelector(selector) ? getAttributeName(selector) : selector;
     defineMetadata(metadataKeys.name, kebabToCamel(selectorName), ctrl);

@@ -1,4 +1,4 @@
-import { Injectable } from '../src/injectable';
+import { Injectable, Inject } from '../src/injectable';
 import { Directive } from '../src/directive';
 import { Component } from '../src/component';
 import { NgModule } from '../src/module';
@@ -17,7 +17,7 @@ export class TestService {
     return 'This is static method';
   }
 
-  constructor(private $http: any) {}
+  constructor(@Inject('$http') private $http: any) {}
 
   someMethod(): string {
     return this.someProp;
@@ -39,8 +39,8 @@ export function directive(selector: string) {
     @Output() testOutput;
     @ViewChild(ChildComponent) child;
 
-    constructor(private $log: ng.ILogService,
-                private $parse: ng.IParseService) { }
+    constructor(@Inject('$log') private $log: ng.ILogService,
+                @Inject('$parse') private $parse: ng.IParseService) { }
     $onInit() {
       console.log(this.$log, this.$parse);
     }
@@ -113,3 +113,12 @@ export const registerNgModule = (name: string = '',
 
   return TestModule;
 };
+
+@Component({
+  selector: 'test-injectables'
+})
+export class MethodInjectables {
+  constructor(@Inject('x') x, @Inject('y') y, @Inject('z') z) {}
+  public someMethod(@Inject('a') a, @Inject('b') b) {}
+  public otherMethod(@Inject('c') c, @Inject('d') d) {}
+}

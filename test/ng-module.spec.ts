@@ -1,6 +1,7 @@
 import * as angular from 'angular';
-import { component, directive, registerNgModule, TestService } from './mocks';
-import { Pipe, PipeTransform, Injectable, metadataKeys, getMetadata } from '../src';
+import { component, directive, registerNgModule, TestService, MethodInjectables } from './mocks';
+import { Pipe, PipeTransform, Injectable, metadataKeys, getMetadata, injectionsKey } from '../src';
+
 
 describe('NgModule', () => {
   const moduleName = 'TestModule';
@@ -305,6 +306,34 @@ describe('NgModule', () => {
     });
     it('assigns the class Name to Named Service', () => {
       expect(this.nameB).toEqual('DefaultNameService');
+    });
+  });
+
+  describe('@Inject', () => {
+    describe('method injections added to metadata', () => {
+      beforeEach((() => {
+        this.someInjectables  = getMetadata(injectionsKey('someMethod'),  MethodInjectables.prototype);
+        this.otherInjectables = getMetadata(injectionsKey('otherMethod'), MethodInjectables.prototype);
+        this.constructorInjectables = getMetadata(injectionsKey(), MethodInjectables);
+      }));
+      it('someMethod has injectables set', () => {
+        expect(this.someInjectables).toEqual(['a', 'b']);
+      });
+      it('otherMethod has injectables set', () => {
+        expect(this.otherInjectables).toEqual(['c', 'd']);
+      });
+      it('constructor injections set', () => {
+        expect(this.constructorInjectables).toEqual(['x', 'y', 'z']);
+      });
+      it('static injections added to $inject of Component', () => {
+        expect(MethodInjectables.$inject).toEqual(['x', 'y', 'z']);
+      });
+      it('static injections added to $inject of Injectable', () => {
+        expect(TestService.$inject).toEqual(['$http']);
+      });
+      it('static injections added to $inject of Directives', () => {
+        expect(directive('test-directive').$inject).toEqual(['$log', '$parse']);
+      });
     });
   });
 });

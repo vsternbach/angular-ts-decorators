@@ -1,25 +1,30 @@
-import { defineMetadata, getMetadata, metadataKeys } from './utils';
+import { defineMetadata, getMetadata, metadataKeys, injectionsKey, addStaticInjections } from './utils';
 import { Provider } from './provider';
 import { IModule } from 'angular';
 
 export function Injectable(name?: string) {
   return (Class: any) => {
     defineMetadata(metadataKeys.name, name || Class.name, Class);
+    addStaticInjections(Class);
   };
 }
 
 export function Inject(name: string) {
   return (target: any, propertyKey: string, parameterIndex: number) => {
+    // store the injection for later use
+    const key = injectionsKey(propertyKey);
+    const injections = getMetadata(key, target) || [];
+    injections[parameterIndex] = name;
+    defineMetadata(key, injections, target);
+
     // if @Inject decorator is on target's method
     if (propertyKey && Array.isArray(target[propertyKey])) {
       target[propertyKey][parameterIndex] = name;
       return; // exit, don't change injection on target's constructor
     }
     // if @Inject decorator is on target's constructor
-    if (target.$inject) {
+    if (target.$inject) { // backwards compatiple. If $inject is there add to it.
       target.$inject[parameterIndex] = name;
-    } else {
-      console.error(`Annotations should be provided as static $inject property in order to use @Inject decorator`);
     }
   };
 }

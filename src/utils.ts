@@ -11,6 +11,7 @@ export const metadataKeys = {
   options: 'custom:options',
   listeners: 'custom:listeners',
   viewChildren: 'custom:viewChildren',
+  injections: 'custom:injections'
 };
 
 export function kebabToCamel(input: string) {
@@ -20,6 +21,7 @@ export function kebabToCamel(input: string) {
 export function camelToKebab(str: string) {
   return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 }
+
 
 /** @internal */
 export function getAttributeName(selector: string) {
@@ -48,3 +50,14 @@ export function getTypeName(target: any): string {
 export function getTypeDeclaration(target: any): Declaration {
   return getMetadata(metadataKeys.declaration, target);
 }
+
+export function injectionsKey(property?: string) {
+  return property ? `${metadataKeys.injections}:${property}` : `${metadataKeys.injections}`;
+}
+export function addStaticInjections(clz) {
+  const injections = getMetadata(injectionsKey(), clz);
+  if (!clz.$inject && injections) {
+    clz.$inject = injections;
+  }
+}
+
