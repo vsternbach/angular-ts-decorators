@@ -11,7 +11,9 @@ export const metadataKeys = {
   options: 'custom:options',
   listeners: 'custom:listeners',
   viewChildren: 'custom:viewChildren',
-  injections: 'custom:injections'
+  injections: 'custom:injections',
+  run: 'custom:runMethods',
+  config: 'custom:configMethods'
 };
 
 export function kebabToCamel(input: string) {

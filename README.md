@@ -39,6 +39,8 @@ Peer dependencies: `"angular": ">=1.5.0"`
 | @ViewChild(ren)       | ---  | see [@ViewChild](#viewchild) for details |
 | @Directive    | angular.directive                         |   |
 | @Pipe         | angular.filter                            |   |
+| @Run         | angular.module.run                         | See [The @Run and @Config decorators](#the-run-and-config-decorators) for details. **This is not available in Angular 2 but makes sense in an AngularJS context**|
+| @Config      | angular.module.config                      |  See [The @Run and @Config decorators](#the-run-and-config-decorators) for details. **This is not available in Angular 2 but makes sense in an AngularJS context** |
 
 ## Usage with examples
 
@@ -157,6 +159,8 @@ import { Injectable } from 'angular-ts-decorators';
 export class GreetingService {
   private greeting = 'Hello World!';
 
+  constructor(@Inject('$log') $log) {}
+
   // Configuration function
   public setGreeting(greeting: string) {
     this.greeting = greeting;
@@ -194,7 +198,7 @@ import { UppercasePipe } from 'greeting/uppercase.filter';
   ],
   declarations: [UppercasePipe],
   providers: [
-      GreetingService, // you can register this way only if you provide class name to @Injectable decorator
+      GreetingService, // the the id given in @Injectable is used or else the default name (class name) is used.
       {provide: 'GreetingService', useClass: GreetingService},
       {provide: 'GreetingServiceFactory', useFactory: () => new GreetingService()}
   ]
@@ -215,7 +219,31 @@ export class AppModule {
  anything into it, instead specify all of the injections you 
  want to provide to your module config and run blocks as arguments of config 
  and run methods of the module class and they'll be injected by their names.
- 
+
+## The @Run and @Config decorators
+As mentioned in the previous section one can specify static run and config methods. This however have its limitations as you can have only have one of each and injection needs to be handled by a third party entity. But there is a different approach using the @Run and @Config decorators within the module class. 
+
+You can add as many as you wish and name them whatever you find appropriate and you can use the @Inject(..) decorator on the parameters 
+
+```js
+import { NgModule, Config, Run, Inject } from 'angular-ts-decorators';
+
+@NgModule({
+  id: 'AppModule',
+})
+export class AppModule {
+  @Config()
+  public compileConfiguration(@Inject('$compileProvider') $compileProvider: ng.ICompileProvider) {
+    $compileProvider.debugInfoEnabled(false);
+  }
+
+  @Run()
+  public doGreeting(@Inject('GreetingService') GreetingService: GreetingService) {
+    console.log(GreetingService.getGreeting());
+  }
+}
+```
+
 ## HostListener
  
 @HostListener is a special method decorator introduced in angular 2, see [official docs](https://angular.io/docs/ts/latest/guide/style-guide.html#!#directives)
@@ -274,7 +302,7 @@ export class MyController {
   constructor(@Inject('My.Service') service: MyService) {}
 }
   ```
->Please notice that this decorator relies on explicit annotations either using static $inject property or using tools like ngAnnotate
+>Please notice that this decorator will add a static $inject property if is not there. 
    
 ## Bootstraping angularjs application the angular way
  
