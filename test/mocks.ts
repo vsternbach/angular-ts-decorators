@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '../src/injectable';
 import { Directive } from '../src/directive';
 import { Component } from '../src/component';
-import { NgModule } from '../src/module';
+import { NgModule, Run, Config } from '../src/module';
 import { Input, Output } from '../src/input';
 import { AfterViewInit, DoCheck, OnChanges, OnDestroy, OnInit, SimpleChanges } from '../src/lifecycle_hooks';
 import { HostListener } from '../src/hostListener';
@@ -105,14 +105,40 @@ export const registerNgModule = (name: string = '',
     providers,
   })
   class TestModule {
-
     static config($httpProvider: ng.IHttpProvider) {}
 
     static run($rootScope: ng.IRootScopeService) {}
+
   }
 
   return TestModule;
 };
+
+@NgModule({
+  id: 'ronny'
+})
+export class RonnyTheRunModule {
+
+   @Run()
+   public someRunMethod(@Inject('$transitions') $transitions, @Inject('$state') $state) {}
+
+   @Run()
+   public otherRunMethod(@Inject('$log') $log) {}
+}
+
+
+@NgModule({
+  id: 'conny'
+})
+export class ConnyTheConfigModule {
+
+   @Config()
+   public someConfigMethod(@Inject('$transitions') $transitions, @Inject('$state') $state) {}
+
+   @Config()
+   public otherConfigMethod() {}
+}
+
 
 @Component({
   selector: 'test-injectables'

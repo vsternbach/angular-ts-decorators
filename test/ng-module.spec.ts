@@ -1,5 +1,5 @@
 import * as angular from 'angular';
-import { component, directive, registerNgModule, TestService, MethodInjectables } from './mocks';
+import { component, directive, registerNgModule, TestService, MethodInjectables, RonnyTheRunModule, ConnyTheConfigModule } from './mocks';
 import { Pipe, PipeTransform, Injectable, metadataKeys, getMetadata, injectionsKey } from '../src';
 
 
@@ -7,7 +7,7 @@ describe('NgModule', () => {
   const moduleName = 'TestModule';
 
   describe('has run and config methods', () => {
-    it('module should have run and config blocks', () => {
+    it('module should have run and config blocks', () => { // backwards compatible
       const NgModuleClass = registerNgModule(moduleName, [], [], []);
       expect(NgModuleClass.module.name).toBe(moduleName);
       expect(angular.module(moduleName)['_runBlocks'].length).toBe(1);
@@ -16,6 +16,48 @@ describe('NgModule', () => {
 
       expect(angular.module(moduleName)['_runBlocks'][0]).toBe(NgModuleClass.run);
       expect(angular.module(moduleName)['_configBlocks'][0][2][0]).toBe(NgModuleClass.config);
+    });
+
+    describe('@Run adds run functions with injections', () => {
+      beforeAll(() => {
+        this.module = (RonnyTheRunModule as any).module;
+      });
+      it ('has to two run blocks as', () => {
+        expect(this.module['_runBlocks'].length).toBe(2);
+      });
+      it ('are both arrays with injected names', () => {
+        let [some, other] = this.module['_runBlocks'];
+        if (other.length > 2) {
+            [some, other] = [other, some];
+        }
+        expect(some[0]).toEqual('$transitions');
+        expect(some[1]).toEqual('$state');
+        expect(some[2]).toBe(RonnyTheRunModule.prototype.someRunMethod);
+
+        expect(other[0]).toEqual('$log');
+        expect(other[1]).toBe(RonnyTheRunModule.prototype.otherRunMethod);
+      });
+    });
+
+    describe('@Config adds config functions with injections', () => {
+      beforeAll(() => {
+        this.module = (ConnyTheConfigModule as any).module;
+      });
+      it ('has to two run blocks as', () => {
+        expect(this.module['_configBlocks'].length).toBe(2);
+      });
+      it ('are both arrays with injected names', () => {
+        let some = this.module['_configBlocks'][0][2][0];
+        let other = this.module['_configBlocks'][1][2][0];
+        if (other.length > 2) {
+            [some, other] = [other, some];
+        }
+        expect(some[0]).toEqual('$transitions');
+        expect(some[1]).toEqual('$state');
+        expect(some[2]).toBe(ConnyTheConfigModule.prototype.someConfigMethod);
+
+        expect(other[0]).toBe(ConnyTheConfigModule.prototype.otherConfigMethod);
+      });
     });
   });
 
