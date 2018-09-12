@@ -336,18 +336,11 @@ describe('NgModule', () => {
     @Injectable('a')
     class NamedService {}
 
-    @Injectable()
-    class DefaultNameService {}
-
     beforeAll((() => {
       this.nameA = getMetadata(metadataKeys.name, NamedService);
-      this.nameB = getMetadata(metadataKeys.name, DefaultNameService);
     }));
     it('assigns the given name to Named Service', () => {
         expect(this.nameA).toEqual('a');
-    });
-    it('assigns the class Name to Named Service', () => {
-      expect(this.nameB).toEqual('DefaultNameService');
     });
   });
 
