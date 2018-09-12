@@ -198,7 +198,7 @@ import { UppercasePipe } from 'greeting/uppercase.filter';
   ],
   declarations: [UppercasePipe],
   providers: [
-      GreetingService, // the the id given in @Injectable is used or else the default name (class name) is used.
+      GreetingService, // you can register this way only if you provide class name to @Injectable decorator
       {provide: 'GreetingService', useClass: GreetingService},
       {provide: 'GreetingServiceFactory', useFactory: () => new GreetingService()}
   ]
@@ -219,6 +219,43 @@ export class AppModule {
  anything into it, instead specify all of the injections you 
  want to provide to your module config and run blocks as arguments of config 
  and run methods of the module class and they'll be injected by their names.
+
+## The Injectable by NAME pattern
+Due to minification one should either use thirdparty tooling for injections or specify a name on both the Injectable and the Injected. Below is shown a pattern using a static NAME on all decoreated classes. This avoids dealing with magic strings.
+
+```js
+import { Injectable } from 'angular-ts-decorators';
+import { AuthStore } from './auth.store';
+
+@Injectable(AuthService.NAME) // <<< The @Injectable name is using the class static NAME string 
+export class AuthService {
+
+  public static NAME = 'AuthService';
+
+  // When @Inject'ing other injectables the NAME is used
+  constructor(   
+     @Inject(AuthStore.NAME) private authStore: AuthStore,
+     @Inject(AuthStrategyResolver.NAME) private authStrategyResolver: AuthStrategyResolver) {
+  }
+  ...
+}
+```
+Compared to the standard inject strategy of AngularJS this avoids aligning the order of parameters in two different places. With this approach you can add/remove an @Inject line in the constructor and be done with it.
+ 
+Using this naming scheme extends to Modules as well:
+
+```js
+export const AUTH_MODULE = 'lw.auth';
+
+@NgModule({
+    id: AuthModule.NAME,
+    imports: [AngularMaterial.NAME, SessionsModule.NAME, 'auth0.auth0', 'ui.router'],
+    providers: [AuthStore, AuthService, ...],
+})
+export class AuthModule {
+  public static NAME = 'lw.auth'; // <<< Name of module to be used in Imports
+}
+```
 
 ## The @Run and @Config decorators
 As mentioned in the previous section one can specify static run and config methods. This however have its limitations as you can have only have one of each and injection needs to be handled by a third party entity. But there is a different approach using the @Run and @Config decorators within the module class. 

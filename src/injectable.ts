@@ -4,7 +4,9 @@ import { IModule } from 'angular';
 
 export function Injectable(name?: string) {
   return (Class: any) => {
-    defineMetadata(metadataKeys.name, name || Class.name, Class);
+    if (name) {
+      defineMetadata(metadataKeys.name, name, Class);
+    }
     addStaticInjections(Class);
   };
 }
