@@ -116,9 +116,10 @@ describe('NgModule', () => {
           directive('camel-case-name'),
           directive('[camelCaseName]'),
           directive('[camel-case-name]'),
+          directive('.camel-case-name'),
         ]);
         const invokeQueue = angular.module(moduleName)['_invokeQueue'];
-        expect(invokeQueue.length).toEqual(4);
+        expect(invokeQueue.length).toEqual(5);
         invokeQueue.forEach((value: any) => {
           expect(value[0]).toEqual('$compileProvider');
           expect(value[1]).toEqual('directive');

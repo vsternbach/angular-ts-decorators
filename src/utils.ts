@@ -2,6 +2,15 @@ import 'reflect-metadata';
 
 export enum Declaration { Component = 'Component', Directive = 'Directive', Pipe = 'Pipe' }
 
+export type DirectiveRestriction = 'A' | 'E' | 'C';
+
+/** @internal */
+export const knownDirectiveTypes: Record<DirectiveRestriction, RegExp> = {
+  A: /^\[([a-z][a-zA-Z\-_]*?)\]$/,
+  E: /^([a-z\-]*)$/,
+  C: /^\.([a-z][a-zA-Z\-_]*?)$/
+};
+
 /** @internal */
 export const metadataKeys = {
   declaration: 'custom:declaration',
@@ -29,6 +38,15 @@ export function getAttributeName(selector: string) {
 /** @internal */
 export function isAttributeSelector(selector: string) {
   return /^[\[].*[\]]$/g.test(selector);
+}
+
+/** @internal */
+export function tryGetDirectiveSelector(selector: string): Partial<{ selector: string, restrict: DirectiveRestriction }> {
+  for (const restrictBy of Object.keys(knownDirectiveTypes)) {
+    const match = selector.match(knownDirectiveTypes[restrictBy]);
+    if (match && match[1]) return { selector: match[1], restrict: restrictBy as DirectiveRestriction };
+  }
+  return {};
 }
 
 /** @internal */

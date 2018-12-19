@@ -1,6 +1,6 @@
 import {
   Declaration, defineMetadata, getAttributeName, getMetadata, isAttributeSelector, kebabToCamel,
-  metadataKeys
+  metadataKeys, tryGetDirectiveSelector
 } from './utils';
 import { IHostListeners } from './hostListener';
 import { IViewChildren } from './viewChild';
@@ -26,9 +26,10 @@ export function Directive({selector, ...options}: DirectiveOptionsDecorated) {
       options.require = require;
       if (!options.bindToController) options.bindToController = true;
     }
-    options.restrict = options.restrict || 'A';
 
-    const selectorName = isAttributeSelector(selector) ? getAttributeName(selector) : selector;
+    const selectorTyped = tryGetDirectiveSelector(selector);
+    const selectorName = selectorTyped.selector || selector;
+    options.restrict = options.restrict || selectorTyped.restrict || 'A';
     defineMetadata(metadataKeys.name, kebabToCamel(selectorName), ctrl);
     defineMetadata(metadataKeys.declaration, Declaration.Directive, ctrl);
     defineMetadata(metadataKeys.options, options, ctrl);
