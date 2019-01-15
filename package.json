@@ -30,7 +30,7 @@
   "jsnext:main": "angular-ts-decorators.js",
   "types": "types/index.d.ts",
   "dependencies": {
-    "reflect-metadata": "0.1.12",
+    "reflect-metadata": "0.1.13",
     "tslib": "1.9.3"
   },
   "devDependencies": {
