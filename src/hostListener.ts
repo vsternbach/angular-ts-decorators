@@ -1,4 +1,5 @@
 import { defineMetadata, getMetadata, metadataKeys } from './utils';
+import * as angular from 'angular';
 
 /** @internal */
 export interface IHostListeners {
@@ -20,7 +21,7 @@ export function HostListener(eventName?: string, args?: string[]) {
     /**
      * listeners = { onMouseEnter: { eventName: 'mouseenter mouseover', args: [] } }
      */
-    const listeners: IHostListeners = getMetadata(metadataKeys.listeners, targetConstructor) || {};
+    const listeners: IHostListeners  = angular.extend({}, getMetadata(metadataKeys.listeners, targetConstructor) || {});
     listeners[propertyKey] = { eventName, args };
     defineMetadata(metadataKeys.listeners, listeners, targetConstructor);
   };

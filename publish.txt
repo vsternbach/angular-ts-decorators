@@ -1,0 +1,4 @@
+Steps to publish the git package to npm:
+1. npm run build
+2. npm login
+3. npm publish ./dist --access public

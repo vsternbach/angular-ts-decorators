@@ -1,17 +1,17 @@
 {
-  "name": "angular-ts-decorators",
-  "version": "3.7.7",
+  "name": "@joefirebaugh/angular-ts-decorators",
+  "version": "3.7.9",
   "license": "MIT",
   "author": {
-    "name": "Vlad Sternbach",
-    "email": "vlad.sternbach@gmail.com",
-    "url": "https://github.com/vsternbach"
+    "name": "Joe Habenaro",
+    "email": "joehabenaro@gmail.com",
+    "url": "https://github.com/coolblades"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vsternbach/angular-ts-decorators.git"
+    "url": "git+https://github.com/coolblades/angular-ts-decorators.git"
   },
-  "homepage": "https://github.com/vsternbach/angular-ts-decorators",
+  "homepage": "https://github.com/coolblades/angular-ts-decorators",
   "keywords": [
     "angular decorators",
     "angular-decorators",
@@ -44,7 +44,7 @@
     "jasmine-core": "^3.2.0",
     "karma": "^3.1.4",
     "karma-chrome-launcher": "^2.0.0",
-    "karma-coverage": "^1.1.1",
+    "karma-coverage": "^1.1.2",
     "karma-jasmine": "^2.0.0",
     "karma-typescript": "^3.0.0",
     "rimraf": "^2.6.1",
