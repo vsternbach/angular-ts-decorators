@@ -1,6 +1,7 @@
 import { ElementRef } from './element_ref';
 import { defineMetadata, getMetadata, metadataKeys } from './utils';
 import { Type } from './type';
+import * as angular from 'angular';
 
 /** @internal */
 export interface IViewChildren {
@@ -26,7 +27,7 @@ function addBindingToMetadata(target: any,
                               read: typeof ElementRef,
                               first: boolean) {
   const targetConstructor = target.constructor;
-  const viewChildren: IViewChildren = Object.assign({},
+  const viewChildren: IViewChildren = angular.extend({},
     getMetadata(metadataKeys.viewChildren, targetConstructor) || {});
   viewChildren[key] = { first, selector, read };
   defineMetadata(metadataKeys.viewChildren, viewChildren, targetConstructor);
