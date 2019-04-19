@@ -26,7 +26,8 @@ function addBindingToMetadata(target: any,
                               read: typeof ElementRef,
                               first: boolean) {
   const targetConstructor = target.constructor;
-  const viewChildren: IViewChildren = getMetadata(metadataKeys.viewChildren, targetConstructor) || {};
+  const viewChildren: IViewChildren = Object.assign({},
+    getMetadata(metadataKeys.viewChildren, targetConstructor) || {});
   viewChildren[key] = { first, selector, read };
   defineMetadata(metadataKeys.viewChildren, viewChildren, targetConstructor);
 }

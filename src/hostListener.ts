@@ -20,7 +20,7 @@ export function HostListener(eventName?: string, args?: string[]) {
     /**
      * listeners = { onMouseEnter: { eventName: 'mouseenter mouseover', args: [] } }
      */
-    const listeners: IHostListeners = getMetadata(metadataKeys.listeners, targetConstructor) || {};
+    const listeners: IHostListeners  = Object.assign({}, getMetadata(metadataKeys.listeners, targetConstructor) || {});
     listeners[propertyKey] = { eventName, args };
     defineMetadata(metadataKeys.listeners, listeners, targetConstructor);
   };
