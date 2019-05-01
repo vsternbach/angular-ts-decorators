@@ -15,7 +15,8 @@ export function ViewParent(controller: string) {
 /** @internal */
 function addBindingToMetadata(target: any, key: string, direction: string, alias?: string) {
   const targetConstructor = target.constructor;
-  const bindings = getMetadata(metadataKeys.bindings, targetConstructor) || {};
+  const definedMetadata = getMetadata(metadataKeys.bindings, targetConstructor);
+  const bindings = definedMetadata !== undefined ? {...definedMetadata} : {};
   bindings[key] = alias || direction;
   defineMetadata(metadataKeys.bindings, bindings, targetConstructor);
 }
@@ -23,7 +24,8 @@ function addBindingToMetadata(target: any, key: string, direction: string, alias
 /** @internal */
 function addRequireToMetadata(target: any, key: string, controller: string) {
   const targetConstructor = target.constructor;
-  const require = getMetadata(metadataKeys.require, targetConstructor) || {};
+  const definedMetadata = getMetadata(metadataKeys.require, targetConstructor);
+  const require = definedMetadata !== undefined ? {...definedMetadata} : {};
   require[key] = controller;
   defineMetadata(metadataKeys.require, require, targetConstructor);
 }
