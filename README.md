@@ -29,7 +29,7 @@ Peer dependencies: `"angular": ">=1.5.0"`
 | Decorator     | angularjs analog                            | Details   |
 |:------------- |:------------------------------------------|:----------|
 | @NgModule     | angular.module                            |   |
-| @Injectable   | angular.service / angular.provider        | registers as provider if decorated class implements $get method   |
+| @Injectable   | angular.service        |   |
 | @Inject       | ---  | see [@Inject](#inject) for details |
 | @Component    | angular.component                         |   |
 | @Input        | angular.component options binding ('<')  | can be used only inside @Component decorator <br> default input binding value can be overridden by passing parameter to the decorator |
@@ -212,9 +212,8 @@ export class AppModule {
 }
 ```
 >Please notice, that you can't define constructor and $inject 
- anything into it, instead specify all of the injections you 
- want to provide to your module config and run blocks as arguments of config 
- and run methods of the module class and they'll be injected by their names.
+ anything into it, instead you need to specify all of the injections you 
+ want to provide for your module config and run blocks using 'ngInject' comment inside those static methods respectively.
  
 ## HostListener
  
@@ -278,31 +277,32 @@ export class MyController {
    
 ## Bootstraping angularjs application the angular way
  
-In angularjs way the manual boostrap would look like this
+In angularjs the manual boostrap would look like this
  ```
 angular.element(document).ready(() => {
   angular.bootstrap(document, ['AppModule']);
 });
  ```
 With `angular-ts-decorators` you can bootstrap your application using angular syntax
-If your module is decorated with NgModule metadata, you can bootstrap it like so:
+
+If your main module is a class decorated with NgModule metadata, you can bootstrap it like so:
 ```
 platformBrowserDynamic().bootstrapModule(AppModule);
 ```
-If you have some module that is registered using angularjs syntax using export module
+If your main module is registered using angularjs syntax exporting the module itself like so:
 ```
-export const someModule = angular.module('SomeModule', [(AppModule as NgModule).module.name]);
+export const appModule = angular.module('AppModule', [(SomeModule as NgModule).module.name]);
 ```
-or you are exporting only module name
+or exporting only module name like so:
 ```
-export const someModule = angular.module('SomeModule', [(AppModule as NgModule).module.name]).name;
+export const appModule = angular.module('AppModule', [(SomeModule as NgModule).module.name]).name;
 ```
-Then you would bootstrap it like so:
+Then you can bootstrap it by name like so:
 ```
-platformBrowserDynamic().bootstrapModule(someModule);
+platformBrowserDynamic().bootstrapModule(appModule);
 ```
-If you have some angularjs module available, you can bootsrap it by it's name
+or like so
 ```
-platformBrowserDynamic().bootstrapModule('SomeModule');
+platformBrowserDynamic().bootstrapModule('AppModule');
 ```
 >By default angularjs adds automatic function annotation for the application, you can override it by passing `{ strictDi: true }` as the second argument to bootstrapModule
