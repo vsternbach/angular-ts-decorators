@@ -32,11 +32,14 @@ export function registerProviders(module: IModule, providers: Provider[]) {
     // providers registered using { provide, useClass/useFactory/useValue } syntax
     if (provider.provide) {
       const name = provider.provide;
-      if (provider.useClass && provider.useClass instanceof Function) {
+      if (provider.useClass) {
         module.service(name, provider.useClass);
       }
-      else if (provider.useFactory && provider.useFactory instanceof Function) {
-        provider.useFactory.$inject = provider.deps || provider.useFactory.$inject;
+      else if (provider.useFactory) {
+        if (provider.deps) {
+          provider.useFactory = replaceDependencies(provider.useFactory, provider.deps);
+        }
+
         module.factory(name, provider.useFactory);
       }
       else if (provider.useValue) {
@@ -55,4 +58,14 @@ export function registerProviders(module: IModule, providers: Provider[]) {
       }
     }
   });
+}
+
+
+function replaceDependencies(injectableFunction: any, deps: any[]) {
+  if (Array.isArray(injectableFunction)) {
+    injectableFunction = injectableFunction[injectableFunction.length - 1];
+  }
+
+  injectableFunction.$inject = deps;
+  return injectableFunction;
 }
