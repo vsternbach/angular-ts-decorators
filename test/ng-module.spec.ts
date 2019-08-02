@@ -224,6 +224,39 @@ describe('NgModule', () => {
           expect(value[2][1]).toBe(providers[index].useFactory);
         });
       });
+      it('registers provider with factory function annotated with array syntax', () => {
+        const providers = [
+          {provide: 'useFactoryTestService', useFactory: ['foo', (foo) => new TestService(foo)] },
+          {provide: 'foo', useValue: 'bar'}
+        ];
+        registerNgModule(moduleName, [], [], providers);
+
+        const invokeQueue = angular.module(moduleName)['_invokeQueue'];
+        expect(invokeQueue.length).toEqual(providers.length);
+        const providerInvoke = invokeQueue[1];
+        expect(providerInvoke[0]).toEqual('$provide');
+        expect(providerInvoke[1]).toEqual('factory');
+        expect(providerInvoke[2][0]).toEqual(providers[0].provide);
+        expect(providerInvoke[2][1]).toBe(providers[0].useFactory);
+      });
+      it('registers provider with factory function annotated with $inject syntax', () => {
+        const useFactory = (foo) => new TestService(foo);
+        useFactory.$inject = ['foo'];
+
+        const providers = [
+          {provide: 'useFactoryTestService', useFactory },
+          {provide: 'foo', useValue: 'bar'}
+        ];
+        registerNgModule(moduleName, [], [], providers);
+
+        const invokeQueue = angular.module(moduleName)['_invokeQueue'];
+        expect(invokeQueue.length).toEqual(providers.length);
+        const providerInvoke = invokeQueue[1];
+        expect(providerInvoke[0]).toEqual('$provide');
+        expect(providerInvoke[1]).toEqual('factory');
+        expect(providerInvoke[2][0]).toEqual(providers[0].provide);
+        expect(providerInvoke[2][1]).toBe(providers[0].useFactory);
+      });
     });
 
     describe('useValue', () => {
