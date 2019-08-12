@@ -34,7 +34,7 @@
     "tslib": "1.10.0"
   },
   "devDependencies": {
-    "@types/angular": "^1.6.54",
+    "@types/angular": "^1.6.56",
     "@types/jasmine": "^3.3.12",
     "@types/node": "^12.0.2",
     "angular": "^1.7.8",
