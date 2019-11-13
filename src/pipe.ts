@@ -25,5 +25,6 @@ export function registerPipe(module: IModule, filter: PipeTransformConstructor) 
     return instance.transform.bind(instance);
   };
   filterFactory.$inject = ['$injector', ...filter.$inject || []];
+  filterFactory.$stateful = filter.$stateful;
   module.filter(name, filterFactory);
 }
