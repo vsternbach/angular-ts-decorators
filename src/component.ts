@@ -4,7 +4,8 @@ import {
   camelToKebab,
   Declaration, defineMetadata, getAttributeName, getMetadata, getTypeDeclaration, getTypeName, isAttributeSelector,
   kebabToCamel,
-  metadataKeys
+  metadataKeys,
+  addStaticInjections
 } from './utils';
 import { IHostListeners } from './hostListener';
 import { IViewChildren } from './viewChild';
@@ -40,6 +41,8 @@ export function Component({selector, ...options}: ComponentOptionsDecorated) {
     if (isAttrSelector) {
       (options as IDirective).restrict = 'A';
     }
+
+    addStaticInjections(ctrl);
 
     replaceLifecycleHooks(ctrl);
 

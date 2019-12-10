@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.1](https://github.com/vsternbach/angular-ts-decorators/compare/v3.7.7...v4.0.1) (2019-12-10)
+
+
+### Bug Fixes
+
+* **package:** update tslib to version 1.10.0 ([c512659](https://github.com/vsternbach/angular-ts-decorators/commit/c512659))
+
+
+
 ### [3.7.8](https://github.com/vsternbach/angular-ts-decorators/compare/v3.7.7...v3.7.8) (2019-05-21)
 
 

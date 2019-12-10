@@ -1,12 +1,13 @@
 import * as angular from 'angular';
-import { component, directive, registerNgModule, TestService } from './mocks';
-import { Pipe, PipeTransform } from '../src';
+import { component, directive, registerNgModule, TestService, MethodInjectables, RonnyTheRunModule, ConnyTheConfigModule } from './mocks';
+import { Pipe, PipeTransform, Injectable, metadataKeys, getMetadata, injectionsKey } from '../src';
+
 
 describe('NgModule', () => {
   const moduleName = 'TestModule';
 
   describe('has run and config methods', () => {
-    it('module should have run and config blocks', () => {
+    it('module should have run and config blocks', () => { // backwards compatible
       const NgModuleClass = registerNgModule(moduleName, [], [], []);
       expect(NgModuleClass.module.name).toBe(moduleName);
       expect(angular.module(moduleName)['_runBlocks'].length).toBe(1);
@@ -15,6 +16,48 @@ describe('NgModule', () => {
 
       expect(angular.module(moduleName)['_runBlocks'][0]).toBe(NgModuleClass.run);
       expect(angular.module(moduleName)['_configBlocks'][0][2][0]).toBe(NgModuleClass.config);
+    });
+
+    describe('@Run adds run functions with injections', () => {
+      beforeAll(() => {
+        this.module = (RonnyTheRunModule as any).module;
+      });
+      it ('has to two run blocks as', () => {
+        expect(this.module['_runBlocks'].length).toBe(2);
+      });
+      it ('are both arrays with injected names', () => {
+        let [some, other] = this.module['_runBlocks'];
+        if (other.length > 2) {
+            [some, other] = [other, some];
+        }
+        expect(some[0]).toEqual('$transitions');
+        expect(some[1]).toEqual('$state');
+        expect(some[2]).toBe(RonnyTheRunModule.prototype.someRunMethod);
+
+        expect(other[0]).toEqual('$log');
+        expect(other[1]).toBe(RonnyTheRunModule.prototype.otherRunMethod);
+      });
+    });
+
+    describe('@Config adds config functions with injections', () => {
+      beforeAll(() => {
+        this.module = (ConnyTheConfigModule as any).module;
+      });
+      it ('has to two run blocks as', () => {
+        expect(this.module['_configBlocks'].length).toBe(2);
+      });
+      it ('are both arrays with injected names', () => {
+        let some = this.module['_configBlocks'][0][2][0];
+        let other = this.module['_configBlocks'][1][2][0];
+        if (other.length > 2) {
+            [some, other] = [other, some];
+        }
+        expect(some[0]).toEqual('$transitions');
+        expect(some[1]).toEqual('$state');
+        expect(some[2]).toBe(ConnyTheConfigModule.prototype.someConfigMethod);
+
+        expect(other[0]).toBe(ConnyTheConfigModule.prototype.otherConfigMethod);
+      });
     });
   });
 
@@ -285,6 +328,46 @@ describe('NgModule', () => {
         expect(invokeQueue[0][1]).toEqual('register');
         expect(invokeQueue[0][2][0]).toEqual(name);
         expect(invokeQueue[0][2][1].$inject).toEqual(['$injector', '$timeout']);
+      });
+    });
+  });
+
+  describe('@Injectable', () => {
+    @Injectable('a')
+    class NamedService {}
+
+    beforeAll((() => {
+      this.nameA = getMetadata(metadataKeys.name, NamedService);
+    }));
+    it('assigns the given name to Named Service', () => {
+        expect(this.nameA).toEqual('a');
+    });
+  });
+
+  describe('@Inject', () => {
+    describe('method injections added to metadata', () => {
+      beforeEach((() => {
+        this.someInjectables  = getMetadata(injectionsKey('someMethod'),  MethodInjectables.prototype);
+        this.otherInjectables = getMetadata(injectionsKey('otherMethod'), MethodInjectables.prototype);
+        this.constructorInjectables = getMetadata(injectionsKey(), MethodInjectables);
+      }));
+      it('someMethod has injectables set', () => {
+        expect(this.someInjectables).toEqual(['a', 'b']);
+      });
+      it('otherMethod has injectables set', () => {
+        expect(this.otherInjectables).toEqual(['c', 'd']);
+      });
+      it('constructor injections set', () => {
+        expect(this.constructorInjectables).toEqual(['x', 'y', 'z']);
+      });
+      it('static injections added to $inject of Component', () => {
+        expect(MethodInjectables.$inject).toEqual(['x', 'y', 'z']);
+      });
+      it('static injections added to $inject of Injectable', () => {
+        expect(TestService.$inject).toEqual(['$http']);
+      });
+      it('static injections added to $inject of Directives', () => {
+        expect(directive('test-directive').$inject).toEqual(['$log', '$parse']);
       });
     });
   });

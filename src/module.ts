@@ -1,7 +1,7 @@
 import * as angular from 'angular';
 import { PipeTransform, registerPipe } from './pipe';
 import { registerProviders } from './injectable';
-import { camelToKebab, Declaration, getMetadata, getTypeName, metadataKeys } from './utils';
+import { camelToKebab, Declaration, getMetadata, getTypeName, metadataKeys, injectionsKey, defineMetadata } from './utils';
 import { registerComponent } from './component';
 import { registerDirective } from './directive';
 import { Provider } from './provider';
@@ -21,6 +21,22 @@ export interface NgModule {
   config?(...args: any[]): any;
   run?(...args: any[]): any;
   [p: string]: any;
+}
+
+const addMethod = (target, propertyKey, metaKey) => {
+  const method = target[propertyKey];
+  const injections = getMetadata(injectionsKey(propertyKey), target) || [];
+  const runMethods = getMetadata(metaKey, target) || [];
+  runMethods.push([...injections, method]);
+  defineMetadata(metaKey, runMethods, target);
+};
+
+export function Run() {
+  return (target: any, propertyKey: string) => addMethod(target, propertyKey, metadataKeys.run);
+}
+
+export function Config() {
+  return (target: any, propertyKey: string) => addMethod(target, propertyKey, metadataKeys.config);
 }
 
 export function NgModule({ id, bootstrap = [], declarations = [], imports = [], providers = [] }: ModuleConfig) {
@@ -58,6 +74,17 @@ export function NgModule({ id, bootstrap = [], declarations = [], imports = [], 
     if (providers) {
       registerProviders(module, providers);
     }
+
+    const runMethods = getMetadata(metadataKeys.run, Class.prototype);
+    if (runMethods) {
+      runMethods.forEach((r) => { module.run(r); });
+    }
+    const configMethods = getMetadata(metadataKeys.config, Class.prototype);
+    if (configMethods) {
+      configMethods.forEach((c) => { module.config(c); });
+    }
+
+    // Backwards compatible ...
     // config and run blocks registration
     const { config, run } = Class;
     if (config) {

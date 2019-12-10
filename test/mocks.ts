@@ -1,7 +1,7 @@
-import { Injectable } from '../src/injectable';
+import { Injectable, Inject } from '../src/injectable';
 import { Directive } from '../src/directive';
 import { Component } from '../src/component';
-import { NgModule } from '../src/module';
+import { NgModule, Run, Config } from '../src/module';
 import { Input, Output } from '../src/input';
 import { AfterViewInit, DoCheck, OnChanges, OnDestroy, OnInit, SimpleChanges } from '../src/lifecycle_hooks';
 import { HostListener } from '../src/hostListener';
@@ -17,7 +17,7 @@ export class TestService {
     return 'This is static method';
   }
 
-  constructor(private $http: any) {}
+  constructor(@Inject('$http') private $http: any) {}
 
   someMethod(): string {
     return this.someProp;
@@ -39,8 +39,8 @@ export function directive(selector: string) {
     @Output() testOutput;
     @ViewChild(ChildComponent) child;
 
-    constructor(private $log: ng.ILogService,
-                private $parse: ng.IParseService) { }
+    constructor(@Inject('$log') private $log: ng.ILogService,
+                @Inject('$parse') private $parse: ng.IParseService) { }
     $onInit() {
       console.log(this.$log, this.$parse);
     }
@@ -105,11 +105,46 @@ export const registerNgModule = (name: string = '',
     providers,
   })
   class TestModule {
-
     static config($httpProvider: ng.IHttpProvider) {}
 
     static run($rootScope: ng.IRootScopeService) {}
+
   }
 
   return TestModule;
 };
+
+@NgModule({
+  id: 'ronny'
+})
+export class RonnyTheRunModule {
+
+   @Run()
+   public someRunMethod(@Inject('$transitions') $transitions, @Inject('$state') $state) {}
+
+   @Run()
+   public otherRunMethod(@Inject('$log') $log) {}
+}
+
+
+@NgModule({
+  id: 'conny'
+})
+export class ConnyTheConfigModule {
+
+   @Config()
+   public someConfigMethod(@Inject('$transitions') $transitions, @Inject('$state') $state) {}
+
+   @Config()
+   public otherConfigMethod() {}
+}
+
+
+@Component({
+  selector: 'test-injectables'
+})
+export class MethodInjectables {
+  constructor(@Inject('x') x, @Inject('y') y, @Inject('z') z) {}
+  public someMethod(@Inject('a') a, @Inject('b') b) {}
+  public otherMethod(@Inject('c') c, @Inject('d') d) {}
+}

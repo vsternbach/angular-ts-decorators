@@ -39,6 +39,8 @@ Peer dependencies: `"angular": ">=1.5.0"`
 | @ViewChild(ren)       | ---  | see [@ViewChild](#viewchild) for details |
 | @Directive    | angular.directive                         |   |
 | @Pipe         | angular.filter                            |   |
+| @Run         | angular.module.run                         | See [The @Run and @Config decorators](#the-run-and-config-decorators) for details. **This is not available in Angular 2 but makes sense in an AngularJS context**|
+| @Config      | angular.module.config                      |  See [The @Run and @Config decorators](#the-run-and-config-decorators) for details. **This is not available in Angular 2 but makes sense in an AngularJS context** |
 
 ## Usage with examples
 
@@ -64,7 +66,7 @@ export const TodoFormComponent = {
   controller: class TodoFormComponent {
     todo;
     onAddTodo;
-    
+
     $onChanges(changes) {
       if (changes.todo) {
         this.todo = Object.assign({}, this.todo);
@@ -106,7 +108,7 @@ const templateUrl = require('./todo-form.html');
 export class TodoFormComponent implements OnChanges {
     @Input() todo;
     @Output() onAddTodo;
-    
+
     ngOnChanges(changes) {
       if (changes.todo) {
         this.todo = {...this.todo};
@@ -124,7 +126,7 @@ export class TodoFormComponent implements OnChanges {
 ```
 > Notice how @Input and @Output decorators replace bindings of the
 component, by default @Input correlates to '<' value of the binding
-and @Output - to the '&' value, you can override bindings values 
+and @Output - to the '&' value, you can override bindings values
 only in @Input decorator by passing '=' or '@' if you need to.
 
 And we'll register it with angular like so:
@@ -138,15 +140,15 @@ import { TodoFormComponent } from './todo-form.component';
 })
 export class TodoFormModule {}
 ```
-> You should declare all of the components (@Component), directives (@Directive) and filters (@Pipe) 
-you want to register with some module in `declarations` 
-of @NgModule decorator, all of the services (@Injectable) and providers (also @Injectable with $get method) you 
-should declare as `providers` of @NgModule decorator, and all of the modules your 
-module depends on in `imports`. Name of the class decorated 
-with @NgModule is the name of the module you should provide in 
-`imports` of other module declaration that depends on this module. 
-In addition you can define config and run blocks for your module 
-by adding config and run methods to your module class  declaration. 
+> You should declare all of the components (@Component), directives (@Directive) and filters (@Pipe)
+you want to register with some module in `declarations`
+of @NgModule decorator, all of the services (@Injectable) and providers (also @Injectable with $get method) you
+should declare as `providers` of @NgModule decorator, and all of the modules your
+module depends on in `imports`. Name of the class decorated
+with @NgModule is the name of the module you should provide in
+`imports` of other module declaration that depends on this module.
+In addition you can define config and run blocks for your module
+by adding config and run methods to your module class  declaration.
 
 Here's an example of service using @Injectable decorator
 ```js
@@ -156,6 +158,8 @@ import { Injectable } from 'angular-ts-decorators';
 @Injectable()
 export class GreetingService {
   private greeting = 'Hello World!';
+
+  constructor(@Inject('$log') $log) {}
 
   // Configuration function
   public setGreeting(greeting: string) {
@@ -211,19 +215,84 @@ export class AppModule {
   }
 }
 ```
->Please notice, that you can't define constructor and $inject 
- anything into it, instead you need to specify all of the injections you 
+>Please notice, that you can't define constructor and $inject anything into it, instead you need to specify all of the injections you
  want to provide for your module config and run blocks using 'ngInject' comment inside those static methods respectively.
- 
+
+ anything into it, instead specify all of the injections you
+ want to provide to your module config and run blocks as arguments of config
+ and run methods of the module class and they'll be injected by their names.
+
+## The Injectable by NAME pattern
+Due to minification one should either use thirdparty tooling for injections or specify a name on both the Injectable and the Injected. Below is shown a pattern using a static NAME on all decoreated classes. This avoids dealing with magic strings.
+
+```js
+import { Injectable } from 'angular-ts-decorators';
+import { AuthStore } from './auth.store';
+
+@Injectable(AuthService.NAME) // <<< The @Injectable name is using the class static NAME string
+export class AuthService {
+
+  public static NAME = 'AuthService';
+
+  // When @Inject'ing other injectables the NAME is used
+  constructor(
+     @Inject(AuthStore.NAME) private authStore: AuthStore,
+     @Inject(AuthStrategyResolver.NAME) private authStrategyResolver: AuthStrategyResolver) {
+  }
+  ...
+}
+```
+Compared to the standard inject strategy of AngularJS this avoids aligning the order of parameters in two different places. With this approach you can add/remove an @Inject line in the constructor and be done with it.
+
+
+Using this naming scheme extends to Modules as well:
+
+```js
+export const AUTH_MODULE = 'lw.auth';
+
+@NgModule({
+    id: AuthModule.NAME,
+    imports: [AngularMaterial.NAME, SessionsModule.NAME, 'auth0.auth0', 'ui.router'],
+    providers: [AuthStore, AuthService, ...],
+})
+export class AuthModule {
+  public static NAME = 'lw.auth'; // <<< Name of module to be used in Imports
+}
+```
+
+## The @Run and @Config decorators
+As mentioned in the previous section one can specify static run and config methods. This however have its limitations as you can have only have one of each and injection needs to be handled by a third party entity. But there is a different approach using the @Run and @Config decorators within the module class.
+
+You can add as many as you wish and name them whatever you find appropriate and you can use the @Inject(..) decorator on the parameters
+
+```js
+import { NgModule, Config, Run, Inject } from 'angular-ts-decorators';
+
+@NgModule({
+  id: 'AppModule',
+})
+export class AppModule {
+  @Config()
+  public compileConfiguration(@Inject('$compileProvider') $compileProvider: ng.ICompileProvider) {
+    $compileProvider.debugInfoEnabled(false);
+  }
+
+  @Run()
+  public doGreeting(@Inject('GreetingService') GreetingService: GreetingService) {
+    console.log(GreetingService.getGreeting());
+  }
+}
+```
+
 ## HostListener
- 
+
 @HostListener is a special method decorator introduced in angular 2, see [official docs](https://angular.io/docs/ts/latest/guide/style-guide.html#!#directives)
 >Please notice, that this feature is kind of experimental, because the way it's implemented is kind of hacky: classes that have @HostListener methods are replaced with a new class that extends the original class. It works with basic use cases, but there could be some implications in some edge cases, so be aware.
 
 Usage:
  ```js
  import { HostListener } from 'angular-ts-decorators';
- 
+
  export class MyDirective {
    @HostListener('click mouseover')
    onClick() {
@@ -233,35 +302,35 @@ Usage:
 ```
 The implementation of it in angularjs as follows, it injects $element into component constructor and attaches method decorated with @HostListener as event handler on $element in $postLink and dettaches it in $onDestroy:
 ```js
-  
+
   export class MyDirective {
     constructor(private $element: ng.IAugmentedJQuery) {}
-    
+
     $postLink() {
       this.$element.on('click mouseover', this.onClick.bind(this));
-    }  
-    
+    }
+
     $onDestroy() {
       this.$element.off('click mouseover', this.onClick);
     }
-    
+
     onClick() {
       console.log('click');
     }
   }
-  ``` 
-  
+  ```
+
 ## ViewChild
- 
+
 @ViewChild and @ViewChildren are property decorators introduced in angular 2, see [official docs](https://angular.io/api/core/ViewChild)
- 
+
 Usage is more or less the same as in official docs, but it doesn't support template variables obviously (cause they don't exist in angularjs).
-When provided selector is Component/Directive's type or selector, it's controller class is returned, if other css selector is provided - jqlite object is returned.  
+When provided selector is Component/Directive's type or selector, it's controller class is returned, if other css selector is provided - jqlite object is returned.
 
 >Please notice, that this feature is kind of experimental, because the way it's implemented is kind of hacky: classes that have @ViewChild properties are replaced with a new class that extends the original class. It works with basic use cases, but there could be some implications in some edge cases, so be aware.
 
 ## Inject
- 
+
 @Inject decorator allows to inject providers under a different name, for example if you have a provider like this:
  ```js
 @Injectable('My.Service')
@@ -273,10 +342,10 @@ export class MyController {
   constructor(@Inject('My.Service') service: MyService) {}
 }
   ```
->Please notice that this decorator relies on explicit annotations either using static $inject property or using tools like ngAnnotate
-   
+>Please notice that this decorator will add a static $inject property if is not there.
+
 ## Bootstraping angularjs application the angular way
- 
+
 In angularjs the manual boostrap would look like this
  ```
 angular.element(document).ready(() => {
