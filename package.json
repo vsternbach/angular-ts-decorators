@@ -40,7 +40,7 @@
     "angular": "^1.7.8",
     "angular-mocks": "^1.7.8",
     "copyfiles": "^2.1.0",
-    "coveralls": "^3.0.3",
+    "coveralls": "^3.1.0",
     "jasmine-core": "^3.4.0",
     "karma": "^4.1.0",
     "karma-chrome-launcher": "^2.2.0",
